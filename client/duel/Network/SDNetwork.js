@@ -1,6 +1,5 @@
 
 let socket = io();
-
 socket.on('updateGameData', function(gameData){
     console.log(gameData);
 });
@@ -12,5 +11,6 @@ let network = {
     logIn: function(userName) {
         socket.emit('log in',userName);
     },
+
 
 };
