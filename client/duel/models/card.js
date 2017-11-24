@@ -24,25 +24,27 @@ class card {
 	}
 	
 	draw() {
-		var statHealth = "Health: " + this.health;
+		var statHealth = "Health Test: " + this.health;
 		var statArmor = "Armor: " + this.armor;
 		var statSpeed = "Speed: " + this.speed;
 		var statAttack = "Attack 1";
 		var statAttack2 = "Attack 2";
 		
-		push();
+		push();	
 		if(this.mouseHit) {
 			//fill('#00ff00')
 			if (this.owner == 0 ) {
 				translate(-27.5,-80);
+				//this.mouseClicked(this.changeGray);
 			}
 			else {
 				translate(-27.5, 0);
 			}
 			scale(2,2);
+
 		}
 		rect(0, 0, 55, 80, 3); // draw card
-		translate(0,0);
+		translate(4,16);
 		text(statHealth, 0, 0); 
 		translate(0,14);
 		text(statArmor,0,0);
