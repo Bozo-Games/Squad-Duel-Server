@@ -24,7 +24,7 @@ class card {
 	}
 	
 	draw() {
-		var statHealth = "Health Test: " + this.health;
+		var statHealth = "Health: " + this.health;
 		var statArmor = "Armor: " + this.armor;
 		var statSpeed = "Speed: " + this.speed;
 		var statAttack = "Attack 1";
