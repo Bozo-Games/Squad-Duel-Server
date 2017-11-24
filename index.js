@@ -29,22 +29,38 @@ io.on('connection', function(socket) {
             if(game.playerB.socketID !== undefined) {
                 game.watchers.push(socket.id);
                 console.log('new Game watcher ' + socket.id);
+                io.sockets.connected[socket.id].emit('debug msg','you have become a watcher');
             } else {
                 game.playerB.socketID = socket.id;
                 game.playerB.name = userName;
                 game.playerB.status = 'Filled'
                 console.log(userName +' is logging in as Player B');
+                io.sockets.connected[game.playerB.socketID].emit('debug msg','you have logged into Player B');
             }
         } else {
             game.playerA.socketID = socket.id;
             game.playerA.name = userName;
             game.playerA.status = 'Filled';
             console.log(userName +' is logging in as Player A');
+            io.sockets.connected[game.playerA.socketID].emit('debug msg','you have logged into Player A');
         }
-
-
+        updatePlayers();
     });
     socket.on('submit card', function (cardJSON) {
 
     });
 });
+
+function updatePlayers() {
+    let json = game.toJSON();
+
+    if(game.playerA.socketID !== undefined) {
+        io.sockets.connected[game.playerA.socketID].emit('updateGameData',json);
+    }
+    if(game.playerB.socketID !== undefined) {
+        io.sockets.connected[game.playerB.socketID].emit('updateGameData',json);
+    }
+    for(var i = 0; i < game.watchers.length; i++) {
+        io.sockets.connected[game.watchers[i]].emit('updateGameData',json);
+    }
+}
