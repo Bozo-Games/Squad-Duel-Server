@@ -9,6 +9,7 @@ class card {
 		//this.attack1 = json.attack1 === undefined ? new Attack() : new Attack(json.attack1);
 		//this.attack2 = json.attack2 === undefined ? new Attack() : new Attack(json.attack2);
 		this.mouseHit = false;
+		this.isSelected = false;
 	}
 
 	toJSON(){
@@ -18,31 +19,37 @@ class card {
 			armor:this.armor,
 			speed:this.speed,
 			power:this.power,
-			attack1:this.attack1.toJSON(),
-			attack2:this.attack2.toJSON()
+			//attack1:this.attack1.toJSON(),
+			//attack2:this.attack2.toJSON()
 		};
 	}
 	
 	draw() {
-		var statHealth = "Health Test: " + this.health;
+		var statHealth = "Health: " + this.health;
 		var statArmor = "Armor: " + this.armor;
 		var statSpeed = "Speed: " + this.speed;
 		var statAttack = "Attack 1";
 		var statAttack2 = "Attack 2";
 		
 		push();	
+
 		if(this.mouseHit) {
 			//fill('#00ff00')
 			if (this.owner == 0 ) {
 				translate(-27.5,-80);
-				//this.mouseClicked(this.changeGray);
+				  if (mouseIsPressed) {
+				  	if (mouseButton == LEFT) {
+				  		console.log('Clicked card');
+						this.isSelected = true;
+				  	}
+				}
 			}
 			else {
 				translate(-27.5, 0);
 			}
 			scale(2,2);
-
 		}
+
 		rect(0, 0, 55, 80, 3); // draw card
 		translate(4,16);
 		text(statHealth, 0, 0); 
