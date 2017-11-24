@@ -1,13 +1,12 @@
 class hand {
     constructor(json) {
         json = json === undefined ? {} : json;
-        this.cards = json.cards === undefined ? 5 : json.cards;
         this.owner = json.owner === undefined ? 0 : json.owner;
         if(json.cardsInHand === undefined) {
             this.cardsInHand = [];
             var defaultCardSize = 5;
             for(var i = 0; i < defaultCardSize; i++) {
-                this.cardsInHand.push(new card());
+                this.cardsInHand.push(new card({owner:this.owner}));
             }
         } else {
             this.cardsInHand = [];
@@ -18,8 +17,8 @@ class hand {
     }
 
     draw() {
-        var split = width/this.cards;
-        var counter = this.cards;
+        var split = width/this.cardsInHand.length;
+        var counter = this.cardsInHand.length;
         var xi, yi;
         var step = width / this.cardsInHand.length;
         push();
@@ -30,15 +29,30 @@ class hand {
         }
         else {
             xi = 50;
-            yi = 50;
-            translate(50,50);
+            yi = 20;
+            translate(50,20);
         }
-        for (var i = 0; i < this.cardsInHand.length; i++) {
-            if (this.cardsInHand[i].mouseHit == true) {
+        for (var i = this.cardsInHand.length-1; i >= 0; i--) {
+            if (this.cardsInHand[i].mouseHit == true && this.cardsInHand[i].owner == 0) { // player hand
                 this.cardsInHand[i].mouseHit = collidePointRect(mouseX,mouseY,xi-27.5,yi-80,110, 160, 3);
+
+                if (this.cardsInHand[i].isSelected){
+                    console.log(this.cardsInHand[i].toJSON());
+                    //pass card to duel object
+                    //let duelView = new Duel(this.cardsInHand[i].toJSON());
+                    this.cardsInHand.splice(i,1);
+                    //duelView.draw();
+                }
+
+            } else if (this.cardsInHand[i].mouseHit == true && this.cardsInHand[i].owner == 1) {
+
+                this.cardsInHand[i].mouseHit = collidePointRect(mouseX,mouseY,xi-27.5,yi,110, 160, 3);
+
             } else {
+
                 this.cardsInHand[i].mouseHit = collidePointRect(mouseX,mouseY,xi,yi,55, 80, 3);
             }
+
             this.cardsInHand[i].draw();
             translate(step,0);
             xi += step;
