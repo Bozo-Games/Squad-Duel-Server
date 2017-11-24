@@ -1,4 +1,3 @@
-
 "use strict";
 const Player = require('./Player.js');
 class Game {
@@ -8,15 +7,24 @@ class Game {
         this.playerB = json.playerB === undefined ? new Player({status: 'Open'}) : new Player(json.playerB);
         this.watchers = json.watchers === undefined ? [] : json.watchers; //an array of scocket IDs
         this.currentState = json.currentState === undefined ? 'New Game' : json.currentState;
+
+        this.selectedCardA = json.selectedCardA;
+        this.selectedCardB = json.selectedCardB;
+        this.selectedAttackA = json.selectedAttackA;
+        this.selectedAttackB = json.selectedAttackB;
     }
     toJSON() {
         return {
             playerA: this.playerA === undefined ? undefined : this.playerA.toJSON(),
             playerB: this.playerB === undefined ? undefined : this.playerB.toJSON(),
+            selectedCardA: this.selectedCardA,
+            selectedCardB: this.selectedCardB,
+            selectedAttackA: this.selectedAttackA,
+            selectedAttackB: this.selectedAttackB,
             watchers: this.watchers,
             currentState: this.currentState
         }
     }
-};
+}
 
 module.exports = Game;
