@@ -1,13 +1,15 @@
 class card {
 	constructor(json) {
-		json = json === undefined ? {} : json;
-		this.owner = json.owner === undefined ? 0 : json.owner; // player 0, opponent 1
+		json = json === undefined ? cardList[Math.floor(Math.random() * 17)] : json;
+		//this.cardId = json.cardId === 
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
 		this.speed = json.speed === undefined ? 0 : json.speed; 
-		this.power = json.power === undefined ? 0 : json.power; 
-		//this.attack1 = json.attack1 === undefined ? new Attack() : new Attack(json.attack1);
-		//this.attack2 = json.attack2 === undefined ? new Attack() : new Attack(json.attack2);
+//		this.power = json.power === undefined ? 0 : json.power; 
+		this.attack1 = json.attack1 === undefined ? new attack() : new attack(json.attack1);
+		this.attack2 = json.attack2 === undefined ? new attack() : new attack(json.attack2);
+
+		this.owner = json.owner === undefined ? 0 : json.owner; // player 0, opponent 1
 		this.mouseHit = false;
 		this.isSelected = false;
 	}
@@ -19,8 +21,8 @@ class card {
 			armor:this.armor,
 			speed:this.speed,
 			power:this.power,
-			//attack1:this.attack1.toJSON(),
-			//attack2:this.attack2.toJSON()
+			attack1:this.attack1.toJSON(),
+			attack2:this.attack2.toJSON()
 		};
 	}
 	
@@ -28,8 +30,8 @@ class card {
 		var statHealth = "Health: " + this.health;
 		var statArmor = "Armor: " + this.armor;
 		var statSpeed = "Speed: " + this.speed;
-		var statAttack = "Attack 1";
-		var statAttack2 = "Attack 2";
+		var statAttack = this.attack1.attackName;
+		var statAttack2 = this.attack2.attackName;
 		
 		push();	
 

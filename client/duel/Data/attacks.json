@@ -1,3 +1,13 @@
 [
-{flat:0,peirce:30}
+{attackid: 0,flat : 10, crushing: 0, piercing: 0, defense: 0, speed: 0,, name : Strong Strike },
+{attackid: 1,flat : 8, crushing: 0, piercing: 0, defense: 0, speed: 1,, name : Fierce Strike },
+{attackid: 2,flat : 6, crushing: 0, piercing: 0, defense: 0, speed: 2,, name : Swift Strike },
+{attackid: 3,flat : 4, crushing: 0, piercing: 0, defense: 0, speed: 3,, name : Lightning Strike },
+{attackid: 4,flat : 0, crushing: 5, piercing: 0, defense: 0, speed: 0,, name : Strong Bash },
+{attackid: 5,flat : 0, crushing: 4, piercing: 0, defense: 0, speed: 1,, name : Fierce Bash },
+{attackid: 6,flat : 0, crushing: 3, piercing: 0, defense: 0, speed: 2,, name : Swift Bash },
+{attackid: 7,flat : 0, crushing: 0, piercing: 5, defense: 0, speed: 0,, name : Strong Pierce },
+{attackid: 8,flat : 0, crushing: 0, piercing: 4, defense: 0, speed: 1,, name : Fierce Pierce },
+{attackid: 9,flat : 0, crushing: 0, piercing: 3, defense: 0, speed: 2,, name : Swift Pierce },
+{attackid: 10,flat : 0, crushing: 0, piercing: 0, defense: 5, speed: 5 , name : Block}
 ]

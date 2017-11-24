@@ -2,6 +2,7 @@ class hand {
     constructor(json) {
         json = json === undefined ? {} : json;
         this.owner = json.owner === undefined ? 0 : json.owner;
+        this.inControl = 1; 
         if(json.cardsInHand === undefined) {
             this.cardsInHand = [];
             var defaultCardSize = 5;
@@ -33,15 +34,19 @@ class hand {
             translate(50,20);
         }
         for (var i = this.cardsInHand.length-1; i >= 0; i--) {
+            this.cardsInHand[i].draw();
+
             if (this.cardsInHand[i].mouseHit == true && this.cardsInHand[i].owner == 0) { // player hand
                 this.cardsInHand[i].mouseHit = collidePointRect(mouseX,mouseY,xi-27.5,yi-80,110, 160, 3);
 
-                if (this.cardsInHand[i].isSelected){
+                if (this.cardsInHand[i].isSelected && this.inControl == 1) { 
+                    
                     console.log(this.cardsInHand[i].toJSON());
-                    //pass card to duel object
+                    game.duel.cardSelected = this.cardsInHand[i]; //pass card to duel object
                     //let duelView = new Duel(this.cardsInHand[i].toJSON());
                     this.cardsInHand.splice(i,1);
-                    //duelView.draw();
+                    this.inControl = 0;
+
                 }
 
             } else if (this.cardsInHand[i].mouseHit == true && this.cardsInHand[i].owner == 1) {
@@ -52,10 +57,9 @@ class hand {
 
                 this.cardsInHand[i].mouseHit = collidePointRect(mouseX,mouseY,xi,yi,55, 80, 3);
             }
-
-            this.cardsInHand[i].draw();
             translate(step,0);
             xi += step;
+
         }
         pop();
     }

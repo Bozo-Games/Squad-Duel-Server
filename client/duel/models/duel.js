@@ -1,7 +1,7 @@
 class Duel {
 		constructor(json) {
 		json = json === undefined ? {} : json;
-        this.cardSelected = json.cardSelected === undefined ? 0 : new card(cardFromHand);
+        this.cardSelected = json.cardSelected === undefined ? undefined : new card(cardFromHand);
         //new card(json.cardsInHand[i])
 
 		this.mouseHit = false;
@@ -9,6 +9,12 @@ class Duel {
 
 
 	draw() {
+		push();
+
+		translate(width/2, height/2);
+		if (this.cardSelected != undefined) {
+			this.cardSelected.draw();
+		}
 		//rect(0, 0, 666, 666, 3); // draw card
 
 		/*
@@ -18,8 +24,6 @@ class Duel {
 		var statAttack = "Attack 1";
 		var statAttack2 = "Attack 2";
 		
-		push();	
-
 
 
 		rect(0, 0, 55, 80, 3); // draw card
@@ -35,6 +39,7 @@ class Duel {
 		rect(-2, 3, 50, 12, 1);
 		translate(0,14);
 		text(statAttack2,0,0);		
-		pop();*/
+		*/
+		pop();
 	}
 }
