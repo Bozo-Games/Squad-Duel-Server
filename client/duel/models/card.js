@@ -1,7 +1,6 @@
 class card {
 	constructor(json) {
 		json = json === undefined ? cardList[Math.floor(Math.random() * 17)] : json;
-		//this.cardId = json.cardId === 
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
 		this.speed = json.speed === undefined ? 0 : json.speed; 
