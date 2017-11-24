@@ -1,3 +1,5 @@
+
+"use strict";
 class Player {
     constructor(json) {
         json = json === undefined ? {} : json;

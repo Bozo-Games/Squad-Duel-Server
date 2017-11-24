@@ -1,3 +1,5 @@
+
+"use strict";
 const Player = require('./Player.js');
 class Game {
     constructor(json) {
