@@ -58,21 +58,21 @@ class card {
 		}
 		rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
 		tint('Black');
-		image(character, this.cardWidth*.25, this.cardWidth*.1,character.width/5,character.height/5);
+		image(IMG.icon.character, this.cardWidth*.25, this.cardWidth*.1,character.width/5,character.height/5);
 		
 		textSize(14);
 		translate(4,this.cardHeight*.5); //drop below image
-		image(health, -2, -10,health.width/7,health.height/7); // render icon	
+		image(IMG.icon.health, -2, -10,health.width/7,health.height/7); // render icon
 		fill('red')
 		text(statHealth, 4, 5); // health value
 
 		translate(this.cardWidth/3,0); //drop below image
-		image(armor, -4, -10,armor.width/7,armor.height/7); // render icon	
+		image(IMG.icon.armor, -4, -10,armor.width/7,armor.height/7); // render icon
 		fill('green')
 		text(statArmor, 3, 5); // health value
 		
 		translate(this.cardWidth/3,0); //drop below image
-		image(speed, -4, -10,speed.width/7,speed.height/7); // render icon	
+		image(IMG.icon.speed, -4, -10,speed.width/7,speed.height/7); // render icon
 		fill('pink')
 		text(statSpeed, 3, 5); // health value
 
