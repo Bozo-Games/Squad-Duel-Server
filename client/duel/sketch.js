@@ -1,10 +1,15 @@
-let game;
-var mouseHit = false;
+"use strict";
+//let hand1 = new hand();
+//let hand2 = new hand({owner:1});
+let game = new Game({playerHand : new hand() , oppHand : new hand({owner:1}) });
 
-
+let mouseHit = false;
+let logInDiv;
+let canvas;
+let input;
+let logInBtn;
 function setup() {
-	var canvas = createCanvas(800, 600);
-
+	canvas = createCanvas(800, 600);
 	canvas.parent('game');
 	game = new Game({playerHand : new hand() , oppHand : new hand({owner:1}) });
 	
@@ -17,8 +22,19 @@ function setup() {
 	piercing = loadImage('duel/Icons/piercing.svg');
 	speed = loadImage('duel/Icons/speed.svg');
 
-
-
+    logInDiv = createDiv("");
+    logInDiv.position(200,150);
+    logInDiv.size(400,300);
+    logInDiv.class('logInOverlay');
+    input = createInput();
+    input.position(50,100);
+    input.size(300,50);
+    input.parent(logInDiv);
+    logInBtn = createButton("Join Game");
+    logInBtn.position(50,200);
+    logInBtn.size(300,50);
+    logInBtn.parent(logInDiv);
+    logInBtn.mousePressed(logUserIn);
 }
 
 function windowResized() {
@@ -30,10 +46,11 @@ function windowResized() {
 function draw() {
 	background(180);  
 	game.draw();
-	//image(icon, 0, height/2, icon.width/2, icon.height/2);
-
+	//hand2.draw();
 }
-
+function logUserIn(){
+    network.logIn(input.value());
+}
 let attackList  = 
 {
 "0":{attackId: 0,flat : 10, crushing: 0, piercing: 0, defense: 0, speed: 0, attackName : "Strong Strike"},

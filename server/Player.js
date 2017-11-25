@@ -1,18 +1,33 @@
 
 "use strict";
+const PlayerStatus = {
+    Open: 0,
+    Filled: 1
+};
 class Player {
     constructor(json) {
         json = json === undefined ? {} : json;
         this.socketID = json.socketID;
-        this.status = json.status === undefined ? "Open" : json.status;
+
         this.name = json.name;
     }
     toJSON() {
         return {
-            socketID: this.socketID,
+            socketID: this._socketID,
             status: this.status,
             name: this.name
         }
+    }
+    get socketID() {
+        return this._socketID;
+    }
+    set socketID(val) {
+        if(val !== undefined) {
+            this.status = PlayerStatus.Filled;
+        } else {
+            this.status = PlayerStatus.Open;
+        }
+        this._socketID = val;
     }
 }
 
