@@ -1,6 +1,6 @@
 class attack {
 	constructor(json) {
-		json = json === undefined ? attackList[Math.floor(Math.random() * 11)] : json;
+		json = json === undefined ? attackList[Math.floor(Math.random() * 10)] : json;
 		this.attackId = json.attackId === undefined ? 0 : json.attackId;
 		this.flat = json.flat === undefined ? 0 : json.flat; 
 		this.crushing = json.crushing === undefined ? 0 : json.crushing; 
@@ -11,7 +11,7 @@ class attack {
 		this.attackName = json.attackName === undefined ? 'unknown' : json.attackName;
 
 		if (this.flat > this.crushing && this.flat > this.piercing) {
-		//	this.icon = 
+			this.icon = IMG.icon.flat;
  		} else if (this.crushing > this.flat && this.crushing > this.piercing)  {
 
  		} else if (this.piercing > this.flat && this.piercing > this.crushing)  {

@@ -7,7 +7,9 @@ class hand {
             this.cardsInHand = [];
             var defaultHandSize = 5;
             for(var i = 0; i < defaultHandSize; i++) {
-                this.cardsInHand.push(new card());
+                let c = cardList[Math.floor(Math.random() * 19)];
+                c.owner = this.owner;
+                this.cardsInHand.push(new card(c));
             }
         } else {
             this.cardsInHand = [];

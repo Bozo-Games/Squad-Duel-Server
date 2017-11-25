@@ -57,8 +57,11 @@ function setup() {
 }
 
 function windowResized() {
-	if (windowWidth < 800 && windowHeight < 600 ) {
+	if (windowWidth < 800 || windowHeight < 600 ) {
  		resizeCanvas(windowWidth, windowHeight);
+ 	} else {
+ 		resizeCanvas(800, 600);
+
  	}
 }
 

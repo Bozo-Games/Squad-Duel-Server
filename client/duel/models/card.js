@@ -1,6 +1,7 @@
 class card {
 	constructor(json) {
-		json = json === undefined ? {} : json;
+		json = json === undefined ? cardList[Math.floor(Math.random() * 18)] : json;
+		console.log(json)
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
 		this.speed = json.speed === undefined ? 0 : json.speed; 
@@ -52,7 +53,7 @@ class card {
 				}
 			}
 			else {
-				translate(-cardWidth/2, 0);
+				translate(-this.cardWidth/2, 0);
 			}
 			scale(2,2);
 		}
@@ -80,7 +81,7 @@ class card {
 		translate(0,this.cardHeight*.7); //drop below image
 		rect(this.cardWidth *.05, 0, this.cardWidth *.90, 12, 2);
 		fill('black');
-		image(flat, -4, -10,flat.width/7,flat.height/7); // render icon	
+		image(IMG.icon.flat, -4, -10,IMG.icon.flat.width/7,IMG.icon.flat.height/7); // render icon	
 		text(statAttack,this.cardWidth *.1,this.cardHeight*.8);
 		pop();
 
