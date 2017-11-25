@@ -1,4 +1,3 @@
-
 "use strict";
 let socket = io();
 socket.on('updateGameData', function(gameData){
@@ -11,12 +10,21 @@ socket.on('updateGameData', function(gameData){
 socket.on('debug msg', function(msg){
     console.log(msg);
 });
+socket.on('new game', function(data){
+    location.reload();
+});
+socket.on('request hand', function(data){
+    network.reportHand(game.playerHand.toJSON());
+});
 
 let network = {
     logIn: function(userName) {
         socket.emit('log in',userName);
         logInDiv.remove();
     },
+    reportHand: function (handJSON) {
+        socket.emit('reporting hand',handJSON);
+    }
     didSelectCard: function(cardJSON) {
         socket.emit('selected card',cardJSON);
     },

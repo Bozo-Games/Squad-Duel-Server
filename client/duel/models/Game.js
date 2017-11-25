@@ -20,9 +20,8 @@ class Game {
 			p = this.playerB.name;
 			o = this.playerA.name;
 		}
-
 		push();
-        translate(20,480);
+        translate(25,480);
         text(p, 0, 0);
 		pop();
 		push();

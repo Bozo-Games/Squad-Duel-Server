@@ -62,7 +62,9 @@ io.on('connection', function(socket) {
     });
     socket.on('reset game', function (cardJSON) {
         game = new Game();
-        updatePlayers();
+        for(let i =0 ; i < io.sockets.connected.length; i++) {
+            io.sockets.connected[i].emit('new game',{});
+        }
     });
 });
 
