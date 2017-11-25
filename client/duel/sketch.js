@@ -1,24 +1,59 @@
+"use strict";
+//let hand1 = new hand();
+//let hand2 = new hand({owner:1});
 let game;
-var mouseHit = false;
+
+let mouseHit = false;
+let logInDiv;
+let canvas;
+let input;
+let logInBtn;
 
 
+//image globals
+let IMG = {
+    icon: {
+        armor: undefined,
+        character: undefined,
+        crushing: undefined,
+        flat: undefined,
+        health: undefined,
+        piercing: undefined,
+        speed: undefined
+    }
+};
+
+
+function preload() {
+    console.log('ok');
+    IMG.icon.armor = loadImage('duel/Icons/armor.svg');
+    IMG.icon.character = loadImage('duel/Icons/character.svg');
+    IMG.icon.crushing = loadImage('duel/Icons/crushing.svg');
+    IMG.icon.flat = loadImage('duel/Icons/flat.svg');
+    IMG.icon.health = loadImage('duel/Icons/health.svg');
+    IMG.icon.piercing = loadImage('duel/Icons/piercing.svg');
+    IMG.icon.speed = loadImage('duel/Icons/speed.svg');
+}
 function setup() {
-	var canvas = createCanvas(800, 600);
-
+	canvas = createCanvas(800, 600);
 	canvas.parent('game');
 	game = new Game({playerHand : new hand() , oppHand : new hand({owner:1}) });
 	
 	//fill('Black');
-	armor = loadImage('duel/Icons/armor.svg');
-	character = loadImage('duel/Icons/character.svg');
-	crushing = loadImage('duel/Icons/crushing.svg');
-	flat = loadImage('duel/Icons/flat.svg');
-	health = loadImage('duel/Icons/health.svg');
-	piercing = loadImage('duel/Icons/piercing.svg');
-	speed = loadImage('duel/Icons/speed.svg');
 
-
-
+    logInDiv = createDiv("");
+    logInDiv.position(200,150);
+    logInDiv.size(400,300);
+    logInDiv.class('logInOverlay');
+    input = createInput();
+    input.position(50,100);
+    input.size(300,50);
+    input.parent(logInDiv);
+    logInBtn = createButton("Join Game");
+    logInBtn.position(50,200);
+    logInBtn.size(300,50);
+    logInBtn.parent(logInDiv);
+    logInBtn.mousePressed(logUserIn);
 }
 
 function windowResized() {
@@ -30,12 +65,12 @@ function windowResized() {
 function draw() {
 	background(180);  
 	game.draw();
-	//image(icon, 0, height/2, icon.width/2, icon.height/2);
-
+	//hand2.draw();
 }
-
-let attackList  = 
-{
+function logUserIn(){
+    network.logIn(input.value());
+}
+let attackList  = {
 "0":{attackId: 0,flat : 10, crushing: 0, piercing: 0, defense: 0, speed: 0, attackName : "Strong Strike"},
 "1":{attackId: 1,flat : 8, crushing: 0, piercing: 0, defense: 0, speed: 1, attackName : "Fierce Strike"},
 "2":{attackId: 2,flat : 6, crushing: 0, piercing: 0, defense: 0, speed: 2, attackName : "Swift Strike"},

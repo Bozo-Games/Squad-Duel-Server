@@ -48,8 +48,23 @@ io.on('connection', function(socket) {
         }
         updatePlayers();
     });
-    socket.on('submit card', function (cardJSON) {
+    socket.on('selected card', function(cardJSON){
+        if(socket.id === game.playerA.socketID) {
+            if(game.selectedCardA === undefined) {
 
+            } else {
+
+            }
+        } else if(socket.id === game.playerB.socketID) {
+
+        }
+        updatePlayers();
+    });
+    socket.on('reset game', function (cardJSON) {
+        game = new Game();
+        for(let i =0 ; i < io.sockets.connected.length; i++) {
+            io.sockets.connected[i].emit('new game',{});
+        }
     });
 });
 
