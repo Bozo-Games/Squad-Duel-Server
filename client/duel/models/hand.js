@@ -1,21 +1,34 @@
+var defaultHandSize = 5; //TODO factor out into helper class
 class hand {
     constructor(json) {
         json = json === undefined ? {} : json;
         this.owner = json.owner === undefined ? 0 : json.owner;
         this.inControl = 1; 
         if(json.cardsInHand === undefined) {
-            this.cardsInHand = [];
+            this.cardsInHand = [];/*
             var defaultHandSize = 5;
             for(var i = 0; i < defaultHandSize; i++) {
-                let c = cardList[Math.floor(Math.random() * 19)];
+                let n = Math.floor(Math.random() * 18);
+                let c = cardList[n];
+                if(c === undefined) {console.log(n);}
                 c.owner = this.owner;
                 this.cardsInHand.push(new card(c));
-            }
+            }*/
         } else {
             this.cardsInHand = [];
             for(var i = 0; i < json.cardsInHand.length; i++) {
                 this.cardsInHand.push(new card(json.cardsInHand[i]));
             }
+        }
+    }
+    toJSON() {
+        let cardJSON = [];
+        for(var i = 0; i < this.cardsInHand.length; i++) {
+            cardJSON.push(this.cardsInHand[i].toJSON());
+        }
+        return {
+            owner: this.owner,
+            cardsInHand:cardJSON
         }
     }
 
@@ -65,4 +78,19 @@ class hand {
         }
         pop();
     }
+}
+
+
+function generateHnad(owner) {
+    "use strict";
+    let cih = [];
+    var defaultHandSize = 5;
+    for(var i = 0; i < defaultHandSize; i++) {
+        let n = Math.floor(Math.random() * 18);
+        let c = cardList[n];
+        if(c === undefined) {console.log(n);}
+        c.owner = owner;
+        cih.push(new card(c));
+    }
+
 }

@@ -1,7 +1,6 @@
 class card {
 	constructor(json) {
 		json = json === undefined ? cardList[Math.floor(Math.random() * 18)] : json;
-		console.log(json)
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
 		this.speed = json.speed === undefined ? 0 : json.speed; 
@@ -27,7 +26,6 @@ class card {
 			health:this.health,
 			armor:this.armor,
 			speed:this.speed,
-			power:this.power,
 			attack1:this.attack1.toJSON(),
 			attack2:this.attack2.toJSON()
 		};

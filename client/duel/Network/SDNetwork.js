@@ -6,6 +6,23 @@ socket.on('updateGameData', function(gameData){
     game.playerA.name =  gameData.playerA.name === undefined ? "No one" : gameData.playerA.name;
     game.playerB.soketID = gameData.playerB.socketID;
     game.playerB.name =  gameData.playerB.name === undefined ? "No one" : gameData.playerB.name;
+
+    if(socket.id === game.playerA.socketID ) {
+        gameData.handA.owner = 0;
+        game.playerHand = new hand(gameData.handA);
+        gameData.handB.owner = 1;
+        game.oppHand = new hand(gameData.handB);
+    } else if(socket.id === game.playerB.socketID) {
+        gameData.handB.owner = 0;
+        game.playerHand = new hand(gameData.handB);
+        gameData.handA.owner = 1;
+        game.oppHand = new hand(gameData.handA);
+    } else {  //implies Watcher
+        gameData.handA.owner = 0;
+        game.playerHand = new hand(gameData.handA);
+        gameData.handB.owner = 1;
+        game.oppHand = new hand(gameData.handB);
+    }
 });
 socket.on('debug msg', function(msg){
     console.log(msg);
@@ -13,7 +30,11 @@ socket.on('debug msg', function(msg){
 socket.on('new game', function(data){
     location.reload();
 });
-socket.on('request hand', function(data){
+socket.on('report hand', function(data){
+    if(game.playerHand === undefined) {
+        let gh = generateHnad(1);
+        game.playerHand = new hand(gh);
+    }
     network.reportHand(game.playerHand.toJSON());
 });
 

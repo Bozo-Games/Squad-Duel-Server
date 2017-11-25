@@ -1,8 +1,12 @@
 class Game {
 	constructor(json) {
-		this.json = json === undefined ? {} : json;
+		json = json === undefined ? {} : json;
+		/*
 		this.playerHand = json.playerHand === undefined ? this.playerHand = new hand() : new hand(json.playerHand);
-		this.oppHand = json.oppHand === undefined ? this.oppHand = new hand({owner:1}) : new hand(json.oppHand);
+		this.oppHand = json.oppHand === undefined ? this.oppHand = new hand({owner:1}) : new hand(json.oppHand);*/
+
+        this.playerHand = json.playerHand === undefined ? undefined : new hand(json.playerHand);
+        this.oppHand = json.oppHand === undefined ? undefined : new hand(json.oppHand);
 		this.duel = json.duel === undefined ? this.duel = new Duel() : new Duel(json.duel);
 		//TODO factor out player into it's own class
 		this.playerA = {name: "No Name", socketID: undefined};
@@ -10,8 +14,11 @@ class Game {
 	}
 
 	draw() {
-		this.playerHand.draw();
-		this.oppHand.draw();
+		if(this.playerHand !== undefined) {
+            this.playerHand.draw();
+		} else if(this.oppHand !== undefined) {
+            this.oppHand.draw();
+        }
 		this.duel.draw();
 
 		let p = this.playerA.name;

@@ -1,9 +1,6 @@
 
 "use strict";
-const PlayerStatus = {
-    Open: 0,
-    Filled: 1
-};
+const E = require('./enums.js');
 class Player {
     constructor(json) {
         json = json === undefined ? {} : json;
@@ -23,12 +20,11 @@ class Player {
     }
     set socketID(val) {
         if(val !== undefined) {
-            this.status = PlayerStatus.Filled;
+            this.status = E.PlayerStatus.Filled;
         } else {
-            this.status = PlayerStatus.Open;
+            this.status = E.PlayerStatus.Open;
         }
         this._socketID = val;
     }
 }
-
 module.exports = Player;

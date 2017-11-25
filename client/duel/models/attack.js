@@ -23,6 +23,7 @@ class attack {
 
 	toJSON(){
 		return {
+			attackIdId: this.attackId,
 			flat:this.flat,
 			crushing:this.crushing,
 			piercing:this.piercing,

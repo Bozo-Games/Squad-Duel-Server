@@ -1,20 +1,13 @@
 "use strict";
+const E = require('./enums.js');
 const Player = require('./Player.js');
-const GameStates = {
-    NewGame: 0,
-    WaitingForPlayerA: 1,
-    WaitingForPlayerB: 2,
-    WaitingForPlayers: 3,
-    ReadyToDuel: 4,
-};
 class Game {
     constructor(json) {
         json = json === undefined ? {} : json;
         this.playerA = json.playerA === undefined ? new Player({status: 'Open'}) : new Player(json.playerA);
         this.playerB = json.playerB === undefined ? new Player({status: 'Open'}) : new Player(json.playerB);
         this.watchers = json.watchers === undefined ? [] : json.watchers; //an array of scocket IDs
-        this.currentState = json.currentState === undefined ? GameStates.NewGame: json.currentState;
-
+        this.currentState = json.currentState === undefined ? E.GameStates.NewGame: json.currentState;
 
         this.handA = json.handA; //just the reported JSON
         this.handB = json.handB; //just the reported JSON
@@ -32,32 +25,34 @@ class Game {
             selectedCardB: this.selectedCardB,
             selectedAttackA: this.selectedAttackA,
             selectedAttackB: this.selectedAttackB,
+            handA: this.handA === undefined ? {} : this.handA,
+            handB: this.handB === undefined ? {} : this.handB,
             watchers: this.watchers,
             currentState: this.currentState
         }
     }
     updateState() {
         switch (this.currentState) {
-            case GameStates.NewGame:
-                if(this.playerA.status === PlayerStatus.Filled && this.playerB.status === PlayerStatus.Filled ) {
-                    this.currentState = GameStates.WaitingForPlayers;
+            case E.GameStates.NewGame:
+                if(this.playerA.status === E.PlayerStatus.Filled && this.playerB.status === E.PlayerStatus.Filled ) {
+                    this.currentState = E.GameStates.WaitingForPlayers;
                 }
                 break;
-            case GameStates.WaitingForPlayerA:
+            case E.GameStates.WaitingForPlayerA:
                 if(this.selectedAttackA !== undefined && this.selectedAttackB !==  undefined) {
-                    this.currentState = GameStates.ReadyToDuel;
+                    this.currentState = E.GameStates.ReadyToDuel;
                 }
                 break;
-            case GameStates.WaitingForPlayerB:
+            case E.GameStates.WaitingForPlayerB:
                 if(this.selectedAttackA !== undefined && this.selectedAttackB !==  undefined) {
-                    this.currentState = GameStates.ReadyToDuel;
+                    this.currentState = E.GameStates.ReadyToDuel;
                 }
                 break;
-            case GameStates.WaitingForPlayers:
+            case E.GameStates.WaitingForPlayers:
                 if(this.selectedAttackA !== undefined && this.selectedAttackB ===  undefined) {
-                    this.currentState = GameStates.WaitingForPlayerB;
+                    this.currentState = E.GameStates.WaitingForPlayerB;
                 } else if(this.selectedAttackB !== undefined && this.selectedAttackA ===  undefined) {
-                    this.currentState == GameStates.WaitingForPlayerA;
+                    this.currentState = E.GameStates.WaitingForPlayerA;
                 }
                 break;
             default:

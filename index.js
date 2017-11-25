@@ -37,6 +37,7 @@ io.on('connection', function(socket) {
                 game.playerB.name = userName;
                 game.playerB.status = 'Filled'
                 console.log(userName +' is logging in as Player B');
+                io.sockets.connected[game.playerB.socketID].emit('report hand');
                 io.sockets.connected[game.playerB.socketID].emit('debug msg','you have logged into Player B');
             }
         } else {
@@ -44,8 +45,19 @@ io.on('connection', function(socket) {
             game.playerA.name = userName;
             game.playerA.status = 'Filled';
             console.log(userName +' is logging in as Player A');
+            io.sockets.connected[game.playerA.socketID].emit('report hand');
             io.sockets.connected[game.playerA.socketID].emit('debug msg','you have logged into Player A');
         }
+        game.updateState();
+        updatePlayers();
+    });
+    socket.on('reporting hand', function (handJSON) {
+        if(socket.id === game.playerA.socketID) {
+            game.handA = handJSON;
+        } else if(socket.id === game.playerB.socketID) {
+            game.handB = handJSON;
+        }
+        game.updateState();
         updatePlayers();
     });
     socket.on('selected card', function(cardJSON){
