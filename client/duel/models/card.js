@@ -59,7 +59,8 @@ class card {
 		rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
 		tint('Black');
 		image(character, this.cardWidth*.25, this.cardWidth*.1,character.width/5,character.height/5);
-		
+
+		push();	
 		textSize(14);
 		translate(4,this.cardHeight*.5); //drop below image
 		image(health, -2, -10,health.width/7,health.height/7); // render icon	
@@ -74,22 +75,17 @@ class card {
 		translate(this.cardWidth/3,0); //drop below image
 		image(speed, -4, -10,speed.width/7,speed.height/7); // render icon	
 		fill('pink')
-		text(statSpeed, 3, 5); // health value
+		text(statSpeed, 3	, 5); // health value
+		pop();
 
+		push();
+		translate(0,this.cardHeight*.7); //drop below image
+		rect(this.cardWidth *.05, 0, this.cardWidth *.90, 12, 2);
+		fill('black');
+		image(flat, -4, -10,flat.width/7,flat.height/7); // render icon	
+		text(statAttack,this.cardWidth *.1,this.cardHeight*.8);
+		pop();
 
-
-	/*
-		translate(0,14);
-		text(statArmor,0,0);
-		translate(0,14);
-		text(statSpeed,0,0);
-		rect(-2, 9, 50, 12, 1);
-		translate(0,20);
-		text(statAttack,0,0);
-		rect(-2, 3, 50, 12, 1);
-		translate(0,14);
-		text(statAttack2,0,0);
-		*/
 		pop();
 
 

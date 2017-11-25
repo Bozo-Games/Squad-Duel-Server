@@ -9,7 +9,16 @@ class attack {
 		this.speed = json.speed === undefined ? 0 : json.speed;
 		this.power = json.power === undefined ? 0 : json.power;
 		this.attackName = json.attackName === undefined ? 'unknown' : json.attackName;
- 
+
+		if (this.flat > this.crushing && this.flat > this.piercing) {
+		//	this.icon = 
+ 		} else if (this.crushing > this.flat && this.crushing > this.piercing)  {
+
+ 		} else if (this.piercing > this.flat && this.piercing > this.crushing)  {
+
+ 		} else {
+
+ 		}
 	}
 
 	toJSON(){
