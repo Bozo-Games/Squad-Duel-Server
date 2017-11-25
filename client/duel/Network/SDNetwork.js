@@ -24,7 +24,7 @@ let network = {
     },
     reportHand: function (handJSON) {
         socket.emit('reporting hand',handJSON);
-    }
+    },
     didSelectCard: function(cardJSON) {
         socket.emit('selected card',cardJSON);
     },

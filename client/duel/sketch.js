@@ -25,7 +25,7 @@ let IMG = {
 
 
 function preload() {
-
+    console.log('ok');
     IMG.icon.armor = loadImage('duel/Icons/armor.svg');
     IMG.icon.character = loadImage('duel/Icons/character.svg');
     IMG.icon.crushing = loadImage('duel/Icons/crushing.svg');
