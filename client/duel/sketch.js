@@ -7,17 +7,31 @@ function setup() {
 
 	canvas.parent('game');
 	game = new Game({playerHand : new hand() , oppHand : new hand({owner:1}) });
+	
+	//fill('Black');
+	armor = loadImage('duel/Icons/armor.svg');
+	character = loadImage('duel/Icons/character.svg');
+	crushing = loadImage('duel/Icons/crushing.svg');
+	flat = loadImage('duel/Icons/flat.svg');
+	health = loadImage('duel/Icons/health.svg');
+	piercing = loadImage('duel/Icons/piercing.svg');
+	speed = loadImage('duel/Icons/speed.svg');
+
+
 
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+	if (windowWidth < 800 && windowHeight < 600 ) {
+ 		resizeCanvas(windowWidth, windowHeight);
+ 	}
 }
 
 function draw() {
 	background(180);  
 	game.draw();
-	//hand2.draw();
+	//image(icon, 0, height/2, icon.width/2, icon.height/2);
+
 }
 
 let attackList  = 

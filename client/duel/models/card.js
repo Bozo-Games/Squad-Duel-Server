@@ -1,6 +1,6 @@
 class card {
 	constructor(json) {
-		json = json === undefined ? cardList[Math.floor(Math.random() * 17)] : json;
+		json = json === undefined ? {} : json;
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
 		this.speed = json.speed === undefined ? 0 : json.speed; 
@@ -12,8 +12,12 @@ class card {
 		this.owner = json.owner === undefined ? 0 : json.owner; // player 0, opponent 1
 		this.mouseHit = false;
 		this.isSelected = false;
-		this.cardWidth = json.cardWidth === undefined ? 55 : json.cardWidth; //default card width
-		this.cardHeight = json.cardHeight === undefined ? 80 : json.cardHeight; // default card height
+		this.cardWidthRatio = 11; //default card width
+		this.cardHeightRatio = 16; // default card height
+		this.cardScale = 6;
+		this.cardWidth = this.cardWidthRatio * this.cardScale;
+		this.cardHeight = this.cardHeightRatio * this.cardScale;
+
 	}
 
 	toJSON(){
@@ -29,11 +33,9 @@ class card {
 	}
 	
 	draw() {
-		//var cardWidth = 55;
-		//var cardHeight = 80;
-		var statHealth = "Health: " + this.health;
-		var statArmor = "Armor: " + this.armor;
-		var statSpeed = "Speed: " + this.speed;
+		var statHealth = this.health;
+		var statArmor = this.armor;
+		var statSpeed = this.speed;
 		var statAttack = this.attack1.attackName;
 		var statAttack2 = this.attack2.attackName;
 		
@@ -41,7 +43,7 @@ class card {
 
 		if(this.mouseHit) {
 			if (this.owner == 0 ) {
-				translate(-27.5,-80);
+				translate(-this.cardWidth/2,-this.cardHeight);
 				  if (mouseIsPressed) {
 				  	if (mouseButton == LEFT) {
 				  		console.log('Clicked card');
@@ -50,14 +52,33 @@ class card {
 				}
 			}
 			else {
-				translate(-27.5, 0);
+				translate(-cardWidth/2, 0);
 			}
 			scale(2,2);
 		}
+		rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
+		tint('Black');
+		image(character, this.cardWidth*.25, this.cardWidth*.1,character.width/5,character.height/5);
+		
+		textSize(14);
+		translate(4,this.cardHeight*.5); //drop below image
+		image(health, -2, -10,health.width/7,health.height/7); // render icon	
+		fill('red')
+		text(statHealth, 4, 5); // health value
 
-		rect(0, 0, 55, 80, 3); // draw card
-		translate(4,16);
-		text(statHealth, 0, 0); 
+		translate(this.cardWidth/3,0); //drop below image
+		image(armor, -4, -10,armor.width/7,armor.height/7); // render icon	
+		fill('green')
+		text(statArmor, 3, 5); // health value
+		
+		translate(this.cardWidth/3,0); //drop below image
+		image(speed, -4, -10,speed.width/7,speed.height/7); // render icon	
+		fill('pink')
+		text(statSpeed, 3, 5); // health value
+
+
+
+	/*
 		translate(0,14);
 		text(statArmor,0,0);
 		translate(0,14);
@@ -67,7 +88,8 @@ class card {
 		text(statAttack,0,0);
 		rect(-2, 3, 50, 12, 1);
 		translate(0,14);
-		text(statAttack2,0,0);		
+		text(statAttack2,0,0);
+		*/
 		pop();
 
 
