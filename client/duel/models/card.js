@@ -8,9 +8,12 @@ class card {
 		this.attack1 = json.attack1 === undefined ? new attack() : new attack(json.attack1);
 		this.attack2 = json.attack2 === undefined ? new attack() : new attack(json.attack2);
 
+
 		this.owner = json.owner === undefined ? 0 : json.owner; // player 0, opponent 1
 		this.mouseHit = false;
 		this.isSelected = false;
+		this.cardWidth = json.cardWidth === undefined ? 55 : json.cardWidth; //default card width
+		this.cardHeight = json.cardHeight === undefined ? 80 : json.cardHeight; // default card height
 	}
 
 	toJSON(){
@@ -26,6 +29,8 @@ class card {
 	}
 	
 	draw() {
+		//var cardWidth = 55;
+		//var cardHeight = 80;
 		var statHealth = "Health: " + this.health;
 		var statArmor = "Armor: " + this.armor;
 		var statSpeed = "Speed: " + this.speed;
@@ -35,7 +40,6 @@ class card {
 		push();	
 
 		if(this.mouseHit) {
-			//fill('#00ff00')
 			if (this.owner == 0 ) {
 				translate(-27.5,-80);
 				  if (mouseIsPressed) {

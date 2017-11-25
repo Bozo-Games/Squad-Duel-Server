@@ -4,9 +4,14 @@ var mouseHit = false;
 
 function setup() {
 	var canvas = createCanvas(800, 600);
+
 	canvas.parent('game');
 	game = new Game({playerHand : new hand() , oppHand : new hand({owner:1}) });
 
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function draw() {

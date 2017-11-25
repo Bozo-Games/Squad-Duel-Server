@@ -5,9 +5,9 @@ class hand {
         this.inControl = 1; 
         if(json.cardsInHand === undefined) {
             this.cardsInHand = [];
-            var defaultCardSize = 5;
-            for(var i = 0; i < defaultCardSize; i++) {
-                this.cardsInHand.push(new card({owner:this.owner}));
+            var defaultHandSize = 5;
+            for(var i = 0; i < defaultHandSize; i++) {
+                this.cardsInHand.push(new card());
             }
         } else {
             this.cardsInHand = [];
