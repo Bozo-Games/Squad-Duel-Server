@@ -9,6 +9,10 @@ class Game {
         this.playerB = {name: "No Name", socketID: undefined};
 	}
 
+	mouseReleased() {
+		this.playerHand.mouseReleased();
+	}
+	
 	draw() {
 		this.playerHand.draw();
 		this.oppHand.draw();

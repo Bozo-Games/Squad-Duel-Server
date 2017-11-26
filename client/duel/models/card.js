@@ -9,11 +9,10 @@ class card {
 		this.attack1 = json.attack1 === undefined ? new attack() : new attack(json.attack1);
 		this.attack2 = json.attack2 === undefined ? new attack() : new attack(json.attack2);
 
-
 		this.owner = json.owner === undefined ? 0 : json.owner; // player 0, opponent 1
 		this.mouseHit = false;
 		this.isSelected = false;
-		this.cardWidthRatio = 11; //default card width
+		this.cardWidthRatio = 12; //default card width
 		this.cardHeightRatio = 16; // default card height
 		this.cardScale = 6;
 		this.cardWidth = this.cardWidthRatio * this.cardScale;
@@ -33,7 +32,21 @@ class card {
 		};
 	}
 	
+	mouseReleased () {
+  		if (mouseButton == LEFT && this.mouseHit) {
+  			console.log('Clicked card');
+			this.isSelected = true;
+			//this.mouseHit = false;
+		}
+	}
+	
+
 	draw() {
+		this.handDraw ();
+	}
+		
+	handDraw() {
+
 		var statHealth = this.health;
 		var statArmor = this.armor;
 		var statSpeed = this.speed;
@@ -45,12 +58,7 @@ class card {
 		if(this.mouseHit) {
 			if (this.owner == 0 ) {
 				translate(-this.cardWidth/2,-this.cardHeight);
-				  if (mouseIsPressed) {
-				  	if (mouseButton == LEFT) {
-				  		console.log('Clicked card');
-						this.isSelected = true;
-				  	}
-				}
+				
 			}
 			else {
 				translate(-this.cardWidth/2, 0);
@@ -60,8 +68,8 @@ class card {
 		rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
 		tint('Black');
 		image(IMG.icon.character, this.cardWidth*.25, this.cardWidth*.1,IMG.icon.character.width/5,IMG.icon.character.height/5);
-		
-		textSize(14);
+
+		push();
 		translate(4,this.cardHeight*.5); //drop below image
 		image(IMG.icon.health, -2, -10,IMG.icon.health.width/7,IMG.icon.health.height/7); // render icon
 		fill('red');
@@ -76,18 +84,27 @@ class card {
 		image(IMG.icon.speed, -4, -10,IMG.icon.speed.width/7,IMG.icon.speed.height/7); // render icon
 		fill('pink');
 		text(statSpeed, 3, 5); // health value
+		pop();
 
 		push();
-		translate(0,this.cardHeight*.7); //drop below image
-		rect(this.cardWidth *.05, 0, this.cardWidth *.90, 12, 2);
+		textSize(10);
+		translate(0,this.cardHeight*.66); //drop below image
+		rect(this.cardWidth *.03, 0, this.cardWidth *.92, 12, 2);
 		fill('black');
-		image(IMG.icon.flat, -4, -10,IMG.icon.flat.width/7,IMG.icon.flat.height/7); // render icon	
-		text(statAttack,this.cardWidth *.1,this.cardHeight*.8);
+		image(this.attack1.icon, 2, 0,this.attack1.icon.width/12,this.attack1.icon.height/12); // render icon	
+		text(statAttack,this.attack1.icon.width *.09,10);
 		pop();
 
+		push();
+		textSize(10);
+		translate(0,this.cardHeight*.84); //drop below image
+		rect(this.cardWidth *.03, 0, this.cardWidth *.92, 12, 2);
+		fill('black');
+		image(this.attack2.icon, 2, 0,this.attack2.icon.width/12,this.attack2.icon.height/12); // render icon	
+		text(statAttack2,this.attack2.icon.width *.09,10);
 		pop();
-
-
+		
+		pop();
 
 	}
 
