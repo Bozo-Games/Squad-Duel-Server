@@ -24,6 +24,7 @@ class hand {
         }
     }
 
+
     draw() {
         var split = width/this.cardsInHand.length;
         var counter = this.cardsInHand.length;
@@ -41,7 +42,9 @@ class hand {
             translate(50,20);
         }
         for (var i = this.cardsInHand.length-1; i >= 0; i--) {
+            this.isSelected = false;
             this.cardsInHand[i].draw();
+
 
             if (this.cardsInHand[i].mouseHit == true && this.cardsInHand[i].owner == 0) { // player hand
                 this.cardsInHand[i].mouseHit = collidePointRect(mouseX,mouseY,xi-this.cardsInHand[i].cardWidth/2,yi-this.cardsInHand[i].cardHeight,this.cardsInHand[i].cardWidth*2, this.cardsInHand[i].cardHeight*2, 3);
@@ -52,7 +55,7 @@ class hand {
                     game.duel.cardSelected = this.cardsInHand[i]; //pass card to duel object
                     this.cardsInHand.splice(i,1);
                     this.inControl = 0;
-                    
+
 
                 } else if (this.cardsInHand[i].isSelected && this.inControl == 0) { 
                     
@@ -60,6 +63,7 @@ class hand {
                     var cardFromDuel = game.duel.cardSelected;
                     game.duel.cardSelected = this.cardsInHand[i]; //pass card to duel object
                     this.cardsInHand.splice(i,1);
+                    cardFromDuel.isSelected = false;
                     this.cardsInHand.push(cardFromDuel);
 
                 }

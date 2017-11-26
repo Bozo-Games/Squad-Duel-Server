@@ -71,10 +71,12 @@ class card {
 
 		push();
 		translate(4,this.cardHeight*.5); //drop below image
+
+		push();
 		image(IMG.icon.health, -2, -10,IMG.icon.health.width/7,IMG.icon.health.height/7); // render icon
 		fill('red');
 		text(statHealth, 4, 5); // health value
-
+		pop();
 		translate(this.cardWidth/3,0); //drop below image
 		image(IMG.icon.armor, -4, -10,IMG.icon.armor.width/7,IMG.icon.armor.height/7); // render icon
 		fill('green');
