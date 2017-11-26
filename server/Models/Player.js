@@ -1,11 +1,9 @@
-
 "use strict";
-const E = require('./enums.js');
+const E = require('../Helpers/Enums.js');
 class Player {
     constructor(json) {
         json = json === undefined ? {} : json;
         this.socketID = json.socketID;
-
         this.name = json.name;
     }
     toJSON() {

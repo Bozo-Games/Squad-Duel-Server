@@ -14,82 +14,43 @@ http.listen(3000, function(){
 });
 
 
-const Player = require('./server/Player.js');
-const Game = require('./server/Game.js');
-let game = new Game();
+const Player = require('./server/Models/Player.js');
+const Game = require('./server/Models/Game.js');
+const Card = require('./server/Models/Card.js');
+const Routes = require('./client/duel/Network/socketRoutes.js');
+let currentGame = new Game();
 io.on('connection', function(socket) {
+    socket.on(Routes.getUpdate, function () {
+        socket.emit('update',currentGame.toJSON());
+    });
+    socket.on(Routes.logIn, function (userName) {
+        currentGame.playerJoin(new Player({socketID:socket.id, name:userName}));
+        updatePlayers();
+    });
+    socket.on(Routes.selectCard,function (cardJSON) {
+        currentGame.selectCard(new Player({socketID:socket.id}), new Card(cardJSON));
+        updatePlayers();
+    });
+    socket.on(Routes.selectAttack, function (attackJSON) {
+        currentGame.selectAttack(new Player({socketID:socket.id}), new Card(attackJSON));
+        updatePlayers();
+    });
     socket.on('disconnect', function(){
-        console.log(socket.id + 'disconnected');
-        if(game.playerA.socketID === socket.id) {
-            game.playerA = new Player();
-        } else if (game.playerB.socketID === socket.id) {
-            game.playerB = new Player();
-        }
-    });
-    socket.on('log in', function(userName){
-        if(game.playerA.socketID !== undefined) {
-            if(game.playerB.socketID !== undefined) {
-                game.watchers.push(socket.id);
-                console.log('new Game watcher ' + socket.id);
-                io.sockets.connected[socket.id].emit('debug msg','you have become a watcher');
-            } else {
-                game.playerB.socketID = socket.id;
-                game.playerB.name = userName;
-                game.playerB.status = 'Filled'
-                console.log(userName +' is logging in as Player B');
-                io.sockets.connected[game.playerB.socketID].emit('report hand');
-                io.sockets.connected[game.playerB.socketID].emit('debug msg','you have logged into Player B');
-            }
-        } else {
-            game.playerA.socketID = socket.id;
-            game.playerA.name = userName;
-            game.playerA.status = 'Filled';
-            console.log(userName +' is logging in as Player A');
-            io.sockets.connected[game.playerA.socketID].emit('report hand');
-            io.sockets.connected[game.playerA.socketID].emit('debug msg','you have logged into Player A');
-        }
-        game.updateState();
+        currentGame.playerLeave(new Player({socketID:socket.id}));
         updatePlayers();
-    });
-    socket.on('reporting hand', function (handJSON) {
-        if(socket.id === game.playerA.socketID) {
-            game.handA = handJSON;
-        } else if(socket.id === game.playerB.socketID) {
-            game.handB = handJSON;
-        }
-        game.updateState();
-        updatePlayers();
-    });
-    socket.on('selected card', function(cardJSON){
-        if(socket.id === game.playerA.socketID) {
-            if(game.selectedCardA === undefined) {
-
-            } else {
-
-            }
-        } else if(socket.id === game.playerB.socketID) {
-
-        }
-        updatePlayers();
-    });
-    socket.on('reset game', function (cardJSON) {
-        game = new Game();
-        for(let i =0 ; i < io.sockets.connected.length; i++) {
-            io.sockets.connected[i].emit('new game',{});
-        }
     });
 });
 
 function updatePlayers() {
-    let json = game.toJSON();
-
-    if(game.playerA.socketID !== undefined) {
-        io.sockets.connected[game.playerA.socketID].emit('updateGameData',json);
+    let json = currentGame.toJSON();
+    console.log(json);
+    if(currentGame.playerA.socketID !== undefined) {
+        io.sockets.connected[currentGame.playerA.socketID].emit('update',json);
     }
-    if(game.playerB.socketID !== undefined) {
-        io.sockets.connected[game.playerB.socketID].emit('updateGameData',json);
+    if(currentGame.playerB.socketID !== undefined) {
+        io.sockets.connected[currentGame.playerB.socketID].emit('update',json);
     }
-    for(var i = 0; i < game.watchers.length; i++) {
-        io.sockets.connected[game.watchers[i]].emit('updateGameData',json);
+    for(var i = 0; i < currentGame.watchers.length; i++) {
+        io.sockets.connected[currentGame.watchers[i]].emit('update',json);
     }
 }

@@ -1,9 +1,9 @@
 "use strict";
-const Player = require('./Player.js');
+const generate = require('../Helpers/DataGenerator.js');
 class Attack {
     constructor(json) {
-        json = json === undefined ? {} : json;
-        this.id = json.id === undefined ? 0 : json.id;
+        json = json === undefined ? generate.attack() : json;
+        this.id = json.id === undefined ? -1 : json.id;
         this.flat = json.flat === undefined ? 0 : json.flat;
         this.crushing = json.crushing === undefined ? 0 : json.crushing;
         this.piercing = json.piercing === undefined ? 0 : json.piercing;
@@ -14,19 +14,15 @@ class Attack {
 
     toJSON(){
         return {
-            id: this.id,
+            attackIdId: this.attackId,
             flat:this.flat,
             crushing:this.crushing,
             piercing:this.piercing,
             defense:this.defense,
             speed:this.speed,
-            power:this.power
+            power:this.power,
+            attackName:this.attackName
         };
     }
 }
-let attackDB = [
-    new Attack({id: 0, flat: 0,    crushing: 0,    piercing: 0,    defense: 0, speed:0,    power:0}),
-    new Attack({id: 1, flat: 0,    crushing: 1,    piercing: 0,    defense: 0, speed:0,    power:0}),
-];
-module.exports = attackDB;
 module.exports = Attack;
