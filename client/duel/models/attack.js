@@ -13,11 +13,11 @@ class attack {
 		if (this.flat > this.crushing && this.flat > this.piercing) {
 			this.icon = IMG.icon.flat;
  		} else if (this.crushing > this.flat && this.crushing > this.piercing)  {
-
+			this.icon = IMG.icon.crushing;
  		} else if (this.piercing > this.flat && this.piercing > this.crushing)  {
-
+			this.icon = IMG.icon.piercing;
  		} else {
-
+			this.icon = IMG.icon.defense;
  		}
 	}
 

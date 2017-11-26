@@ -15,6 +15,10 @@ class Game {
         this.playerB = {name: "No Name", socketID: undefined};
 	}
 
+	mouseReleased() {
+		this.playerHand.mouseReleased();
+	}
+	
 	draw() {
 		if(this.playerHand !== undefined) {
             this.playerHand.draw();
