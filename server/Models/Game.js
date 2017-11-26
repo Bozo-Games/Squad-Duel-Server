@@ -1,5 +1,5 @@
 "use strict";
-const E = require('../Helpers/Enums.js');
+const E = require('../../client/duel/Helpers/Enums.js');
 const Player = require('./Player.js');
 const Card = require('./Card.js');
 const Duel = require('./Duel.js');

@@ -1,5 +1,5 @@
 "use strict";
-const E = require('../Helpers/Enums.js');
+const E = require('../../client/duel/Helpers/Enums.js');
 class Player {
     constructor(json) {
         json = json === undefined ? {} : json;
@@ -25,4 +25,5 @@ class Player {
         this._socketID = val;
     }
 }
+
 module.exports = Player;

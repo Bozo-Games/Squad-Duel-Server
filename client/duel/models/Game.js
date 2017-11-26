@@ -1,6 +1,8 @@
 class Game {
 	constructor(json) {
 		json = json === undefined ? {} : json;
+
+
 		/*
 		this.playerHand = json.playerHand === undefined ? this.playerHand = new hand() : new hand(json.playerHand);
 		this.oppHand = json.oppHand === undefined ? this.oppHand = new hand({owner:1}) : new hand(json.oppHand);*/

@@ -1,7 +1,7 @@
 "use strict";
 const Card = require('./Card.js');
 const Attack = require('./Attack.js');
-const E = require('../Helpers/Enums.js');
+const E = require('../../client/duel/Helpers/Enums.js');
 class Duel {
     constructor(json) {
         json = json === undefined ? {} : json;
