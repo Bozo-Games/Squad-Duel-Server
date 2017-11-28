@@ -28,20 +28,23 @@ class Game {
 	}
 
 	mouseReleased() {
-		//this.playerHand.mouseReleased();
+		this.playerHand.mouseReleased();
 	}
 	
 	draw(width,height) {
 
         this.duel.draw();
+        this.playerHand.owner = 0;
+        this.oppHand.owner = 1;
+        this.playerHand.draw();
+        this.oppHand.draw();
+
 		push();
 			translate(0,height*2/3);
 			this.player.draw(width*0.8, height/3,true);
         	translate(width*0.1, height/3 * 0.1);
-			this.playerHand.draw(width*0.8, height/3 * 0.8);
 		pop();
         this.opp.draw();
-		this.oppHand.draw();
 
 		//debug drawing
         let cs = STR.game.state[this.currentState];

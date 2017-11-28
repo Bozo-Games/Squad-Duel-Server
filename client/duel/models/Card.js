@@ -40,6 +40,7 @@ class Card {
 	
 	//draw
 	draw(width,height) {
+		/*
         const aspectRatio = 2.5/3.5;
 		push(); //background
 		fill('#777777');
@@ -51,7 +52,8 @@ class Card {
             rect((width-w)/2,0,w,height,5);
 		}
 
-		pop(); //background
+		pop(); //background*/
+		this.handDraw();
 	}
 		
 	handDraw() {
@@ -67,7 +69,6 @@ class Card {
 		if(this.mouseHit) {
 			if (this.owner == 0 ) {
 				translate(-this.cardWidth/2,-this.cardHeight);
-				
 			}
 			else {
 				translate(-this.cardWidth/2, 0);
