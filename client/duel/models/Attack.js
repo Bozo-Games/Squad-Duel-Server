@@ -1,6 +1,7 @@
-class attack {
+class Attack {
 	constructor(json) {
-		json = json === undefined ? attackList[Math.floor(Math.random() * 10)] : json;
+		console.log(json);
+		json = json === undefined ? {} : json;
 		this.attackId = json.attackId === undefined ? 0 : json.attackId;
 		this.flat = json.flat === undefined ? 0 : json.flat; 
 		this.crushing = json.crushing === undefined ? 0 : json.crushing; 
@@ -8,6 +9,7 @@ class attack {
 		this.defense = json.defense === undefined ? 0 : json.defense; 
 		this.speed = json.speed === undefined ? 0 : json.speed;
 		this.power = json.power === undefined ? 0 : json.power;
+
 		this.attackName = json.attackName === undefined ? 'unknown' : json.attackName;
 
 		if (this.flat > this.crushing && this.flat > this.piercing) {
@@ -20,7 +22,6 @@ class attack {
 			this.icon = IMG.icon.defense;
  		}
 	}
-
 	toJSON(){
 		return {
 			attackIdId: this.attackId,
@@ -32,5 +33,25 @@ class attack {
 			power:this.power,
 			attackName:this.attackName
 		};
+	}
+	handDraw(cardWidth,cardHeight) {
+        push();
+			textSize(cardHeight*0.1);
+			translate(cardWidth *.1,0);
+			rect(0, 0, cardWidth *.8, cardHeight*0.1+8, 2);
+			fill('black');
+			image(this.icon, 4, 4,cardHeight*0.1,cardHeight*0.1); // render icon
+        	textAlign(LEFT,TOP);
+        	let size = Math.floor(cardHeight*0.1);
+			textSize(size);
+        	while(textWidth(this.attackName) > cardWidth *.8 - cardHeight*0.1 - 12) {
+        		size --;
+                textSize(size);
+        		if(size < 10) {
+        			break;
+				}
+			}
+			text(this.attackName,cardHeight*0.1+8,4);
+        pop();
 	}
 }

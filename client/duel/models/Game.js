@@ -26,7 +26,10 @@ class Game {
 		this.currentState = json.currentState === undefined ? E.GameStates.NewGame : json.currentState;
 
 	}
-
+    mouseMoved() {
+	    this.playerHand.mouseMoved();
+	    //this.duel.mouseMoved(); //TODO add to duel class
+    }
 	mouseReleased() {
 		this.playerHand.mouseReleased();
 	}

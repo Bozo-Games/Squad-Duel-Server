@@ -16,8 +16,8 @@ let network = {
         socket.emit(Routes.logIn,userName);
         logInDiv.remove();
     },
-    didSelectCard: function(cardJSON) {
-        socket.emit('selected card',cardJSON);
+    selectCard: function(cardJSON) {
+        socket.emit(Routes.selectCard,cardJSON);
     },
     didSelectAttack: function (attackJSON) {
         socket.emit('selected attack',attackJSON);
