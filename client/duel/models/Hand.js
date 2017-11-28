@@ -1,42 +1,39 @@
 var defaultHandSize = 5; //TODO factor out into helper class
-class hand {
+class Hand {
     constructor(json) {
-        json = json === undefined ? {} : json;
-        this.owner = json.owner === undefined ? 0 : json.owner;
-        this.inControl = 1; 
-        if(json.cardsInHand === undefined) {
-            this.cardsInHand = [];/*
-            var defaultHandSize = 5;
-            for(var i = 0; i < defaultHandSize; i++) {
-                let n = Math.floor(Math.random() * 18);
-                let c = cardList[n];
-                if(c === undefined) {console.log(n);}
-                c.owner = this.owner;
-                this.cardsInHand.push(new card(c));
-            }*/
-        } else {
-            this.cardsInHand = [];
-            for(var i = 0; i < json.cardsInHand.length; i++) {
-                this.cardsInHand.push(new card(json.cardsInHand[i]));
-            }
+        json = json === undefined ? {cards: []} : json;
+        this.cards = [];
+        for(let i = 0; i < json.cards.length; i++) {
+            this.cards.push(new Card(json.cards[i]));
         }
     }
-    toJSON() {
-        let cardJSON = [];
-        for(var i = 0; i < this.cardsInHand.length; i++) {
-            cardJSON.push(this.cardsInHand[i].toJSON());
+    toJSON(){
+        let cardsJSON = [];
+        for(let i = 0; i < this.cards.length; i++) {
+            cardsJSON.push(this.cards[i].toJSON());
         }
         return {
-        owner: this.owner,
-        cardsInHand:cardJSON
-        }
+            cards:cardsJSON
+        };
     }
-    mouseReleased(){
-        for (var i = this.cardsInHand.length-1; i >= 0; i--) {
-            this.cardsInHand[i].mouseReleased();
+    //mose events
+    mouseMoved(width,height) {
+
+    }
+    mouseReleased(width,height){
+
+    }
+    //draw Methods
+    draw(width,height) {
+        translate( (width / (this.cards.length+1)),0);
+        for(let i = 0; i < this.cards.length; i ++) {
+            this.cards[i].draw(0.8 * (width / (this.cards.length+1)),height);
+            translate( (width / (this.cards.length+1)),0);
         }
     }
 
+
+    /* old draw code
     draw() {
         var split = width/this.cardsInHand.length;
         var counter = this.cardsInHand.length;
@@ -89,11 +86,12 @@ class hand {
 
         }
         pop();
-    }
+    } */
 }
 
 
 function generateHnad(owner) {
+    console.log('warning using old code in Hand.js');
     "use strict";
     let cih = [];
     var defaultHandSize = 5;

@@ -17,4 +17,4 @@ const E = {
         success: 1,
     }
 };
-module.exports = E;
+module.exports = E; //leave here so server can use

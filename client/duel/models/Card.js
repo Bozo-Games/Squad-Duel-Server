@@ -1,4 +1,4 @@
-class card {
+class Card {
 	constructor(json) {
 		json = json === undefined ? cardList[Math.floor(Math.random() * 18)] : json;
 		this.health = json.health === undefined ? 0 : json.health; 
@@ -29,7 +29,7 @@ class card {
 			attack2:this.attack2.toJSON()
 		};
 	}
-	
+	//mouse events
 	mouseReleased () {
   		if (mouseButton == LEFT && this.mouseHit) {
   			console.log('Clicked card');
@@ -38,9 +38,20 @@ class card {
 		}
 	}
 	
+	//draw
+	draw(width,height) {
+        const aspectRatio = 2.5/3.5;
+		push(); //background
+		fill('#777777');
+		if(height > width) {
+			let h = 1/aspectRatio * width;
+            rect(0,(height-h)/2,width,h,5);
+		} else {
+            let w = aspectRatio * height;
+            rect((width-w)/2,0,w,height,5);
+		}
 
-	draw() {
-		this.handDraw ();
+		pop(); //background
 	}
 		
 	handDraw() {

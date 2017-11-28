@@ -21,6 +21,7 @@ const Routes = require('./client/duel/Network/socketRoutes.js');
 let currentGame = new Game();
 io.on('connection', function(socket) {
     socket.on(Routes.getUpdate, function () {
+        console.log('update ' + socket.id);
         socket.emit('update',currentGame.toJSON());
     });
     socket.on(Routes.logIn, function (userName) {
@@ -35,8 +36,14 @@ io.on('connection', function(socket) {
         currentGame.selectAttack(new Player({socketID:socket.id}), new Card(attackJSON));
         updatePlayers();
     });
+    socket.on(Routes.newGame, function () {
+        currentGame = new Game();
+        updatePlayers();
+    });
     socket.on('disconnect', function(){
+        console.log('disconnecting');
         currentGame.playerLeave(new Player({socketID:socket.id}));
+        console.log(currentGame.playerA.socketID );
         updatePlayers();
     });
 });
@@ -45,12 +52,13 @@ function updatePlayers() {
     let json = currentGame.toJSON();
     console.log(json);
     if(currentGame.playerA.socketID !== undefined) {
+        console.log(currentGame.playerA.socketID);
         io.sockets.connected[currentGame.playerA.socketID].emit('update',json);
     }
     if(currentGame.playerB.socketID !== undefined) {
         io.sockets.connected[currentGame.playerB.socketID].emit('update',json);
     }
-    for(var i = 0; i < currentGame.watchers.length; i++) {
+    for(let i = 0; i < currentGame.watchers.length; i++) {
         io.sockets.connected[currentGame.watchers[i]].emit('update',json);
     }
 }

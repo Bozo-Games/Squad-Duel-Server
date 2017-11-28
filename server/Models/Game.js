@@ -1,5 +1,6 @@
 "use strict";
 const E = require('../../client/duel/Helpers/Enums.js');
+const generate = require('../Helpers/DataGenerator.js')
 const Player = require('./Player.js');
 const Card = require('./Card.js');
 const Duel = require('./Duel.js');
@@ -31,11 +32,18 @@ class Game {
             currentState: this.currentState
         }
     }
+    dealNewHands() {
+        this.handA = new Hand(generate.hand());
+        this.handB = new Hand(generate.hand());
+    }
     playerJoin(player) {
         if(this.playerA.socketID === undefined) {
             this.playerA = player;
+            this.currentState = E.GameStates.WaitingForPlayerB;
+            this.dealNewHands();
         } else if(this.playerB.socketID === undefined) {
             this.playerB = player;
+            this.dealNewHands();
         } else {
             let found = false;
             for(let i = this.watchers.length-1; i >= 0; i--) {
@@ -51,8 +59,10 @@ class Game {
     }
     playerLeave(player) {
         if(this.playerA.socketID === player.socketID) {
+            this.playerA = new Player();
             this.currentState = E.GameStates.playerBWinsByForfeit;
         } else if (this.playerB.socketID === player.socketID) {
+            this.playerB = new Player();
             this.currentState = E.GameStates.playerAWinsByForfeit;
         } else {
             for(let i = this.watchers.length-1; i >= 0; i--) {

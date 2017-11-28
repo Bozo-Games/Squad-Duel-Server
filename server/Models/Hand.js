@@ -7,7 +7,7 @@ class Hand {
     constructor(json) {
         json = json === undefined ? {cards: []} : json;
         this.cards = [];
-        for(let i = 0; i < json.cards; i++) {
+        for(let i = 0; i < json.cards.length; i++) {
             this.cards.push(new Card(json.cards[i]));
         }
     }

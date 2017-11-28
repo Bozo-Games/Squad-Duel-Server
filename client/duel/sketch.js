@@ -36,7 +36,7 @@ function setup() {
 	canvas = createCanvas(800, 600);
 	canvas.parent('game');
 	game = new Game();//{playerHand : new hand() , oppHand : new hand({owner:1}) });
-	
+	network.getUpdate();
 	//fill('Black');
 
     logInDiv = createDiv("");
@@ -64,7 +64,7 @@ function windowResized() {
 
 function draw() {
 	background(180);  
-	game.draw();
+	game.draw(width,height);
 }
 function mouseReleased() {
 	game.mouseReleased();
@@ -72,7 +72,10 @@ function mouseReleased() {
   	// prevent default
   	return false;
 }
-
+function debug() {
+    network.newGame();
+    location.reload();
+}
 function logUserIn(){
     network.logIn(input.value());
 }
