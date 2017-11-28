@@ -71,6 +71,7 @@ class Hand {
                     
                     console.log(this.cards[i].toJSON());
                     var cardFromDuel = game.duel.cardSelected;
+                    cardFromDuel.isSelected = false;
                     game.duel.cardSelected = this.cards[i]; //pass card to duel object
                     this.cards.splice(i,1);
                     this.cards.push(cardFromDuel);
