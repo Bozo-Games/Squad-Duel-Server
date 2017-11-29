@@ -11,9 +11,9 @@ class Duel {
 	draw() {
 		push();
 
-		translate(width/2, height/2);
+		translate(width/3, height/3);
 		if (this.cardSelected != undefined) {
-			this.cardSelected.draw();
+			this.cardSelected.duelDraw();
 		}
 		//rect(0, 0, 666, 666, 3); // draw card
 

@@ -55,7 +55,7 @@ class Hand {
         }
         for (var i = this.cards.length-1; i >= 0; i--) {
             this.cards[i].owner = this.owner;
-            this.cards[i].draw();
+            this.cards[i].handDraw();
 
             if (this.cards[i].mouseHit == true && this.cards[i].owner == 0) { // player hand
                 this.cards[i].mouseHit = collidePointRect(mouseX,mouseY,xi-this.cards[i].cardWidth/2,yi-this.cards[i].cardHeight,this.cards[i].cardWidth*2, this.cards[i].cardHeight*2, 3);

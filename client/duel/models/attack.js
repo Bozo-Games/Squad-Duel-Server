@@ -12,12 +12,16 @@ class attack {
 
 		if (this.flat > this.crushing && this.flat > this.piercing) {
 			this.icon = IMG.icon.flat;
+			this.power = this.flat;
  		} else if (this.crushing > this.flat && this.crushing > this.piercing)  {
 			this.icon = IMG.icon.crushing;
+			this.power = this.crushing;
  		} else if (this.piercing > this.flat && this.piercing > this.crushing)  {
 			this.icon = IMG.icon.piercing;
+			this.power = this.piercing;
  		} else {
-			this.icon = IMG.icon.defense;
+			this.icon = IMG.icon.health;
+			this.power = this.defense;
  		}
 	}
 
