@@ -20,6 +20,16 @@ class Duel {
             attackB:this.attackB === undefined ? undefined :this.attackB.toJSON()
         };
     }
+    toString() {
+        const ca = this.cardA === undefined ? 'undefined' : this.cardA.toString();
+        const cb = this.cardB === undefined ? 'undefined' : this.cardB.toString();
+        const aa = this.attackA === undefined ? 'undefined' : this.attackA.toString();
+        const ab = this.attackB === undefined ? 'undefined' : this.attackB.toString();
+        return "{cardA: "+ca+",\n"+
+            "attackA:"+aa+",\n"+
+            "cardB:"+cb+",\n"+
+            "attackB:"+ab+",\n}";
+    }
     proccessDuel() {
         return {status:E.Status.success};
     }

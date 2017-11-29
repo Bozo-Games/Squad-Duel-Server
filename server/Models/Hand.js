@@ -20,5 +20,14 @@ class Hand {
             cards:cardsJSON
         };
     }
+    toString(){
+
+        let cardsString= '{cards:[';
+        for(let i = 0; i < this.cards.length; i++) {
+            cardsString += this.cards[i].toString() +', \n';
+        }
+        cardsString += '}';
+        return cardsString;
+    }
 }
 module.exports = Hand;

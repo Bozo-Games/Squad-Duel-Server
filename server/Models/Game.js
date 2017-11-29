@@ -32,6 +32,13 @@ class Game {
             currentState: this.currentState
         }
     }
+    toString() {
+        return "{playerA: "+this.playerA.toString() +",\n"+
+            "handA: "+this.handA.toString()+",\n"+
+            "playerB: "+this.playerB.toString() +",\n"+
+            "handB: "+this.handB.toString()+",\n"+
+            "duel: "+this.duel.toString();
+    }
     dealNewHands() {
         this.handA = new Hand(generate.hand());
         this.handB = new Hand(generate.hand());
@@ -76,7 +83,6 @@ class Game {
     selectCard(player, card) {
         console.log(card.id);
         ["A","B"].forEach(function (key) {
-            console.log(card.id);
             if(this.duel["card"+key] !== undefined) {
                 if(this.duel["card"+key].id === card.id) {
                     //do nothing
@@ -86,7 +92,6 @@ class Game {
                 }
             }
             for(let i = this["hand"+key].cards.length-1;  i >= 0; i--) {
-                console.log(this["hand"+key].cards[i].id  + ' =?= ' + card.id);
                 if(this["hand"+key].cards[i].id === card.id) {
                     console.log('found '+this["hand"+key].cards.length);
                     this["hand"+key].cards.splice(i,1);

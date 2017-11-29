@@ -31,5 +31,18 @@ class Card {
             attacks:attacksJSON
         };
     }
+    toString(){
+        let attacksStrings = '[';
+        for(let i = 0; i < this.attacks.length; i++) {
+            attacksStrings += this.attacks[i].toString() + ',';
+        }
+        attacksStrings += ']';
+        return "{\n"+
+            "\tid: "+this.id+"\n"+
+            "\thealth:"+this.health+"\n"+
+            "\tarmor:"+this.armor+"\n"+
+            "\tspeed:"+this.speed+"\n"+
+            "\tattacks:"+attacksStrings+"\n}";
+    }
 }
 module.exports = Card;

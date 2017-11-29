@@ -52,7 +52,7 @@ io.on('connection', function(socket) {
 
 function updatePlayers() {
     let json = currentGame.toJSON();
-    console.log(json);
+    console.log(currentGame.toString());
     if(currentGame.playerA.socketID !== undefined) {
         console.log(currentGame.playerA.socketID);
         io.sockets.connected[currentGame.playerA.socketID].emit('update',json);

@@ -88,25 +88,25 @@ class Card {
             }
 		    translate(this.cardWidth*0.08,this.cardHeight*.25); //drop below image
 		    push(); //health
-                tint('red');
+                tint(colors.health);
 		        image(IMG.icon.health, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
-		        fill('black');
+		        fill(colors.iconText);
 		        text(statHealth, this.cardWidth*0.175, this.cardWidth*0.125); // health value
 		    pop();//health
             translate(this.cardWidth*0.25,0);
             push(); //Armor
-                tint('green');
+                tint(colors.armor);
                 image(IMG.icon.armor, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
-                fill('black');
+                fill(colors.iconText);
                 text(statArmor, this.cardWidth*0.175, this.cardWidth*0.125); // health value
             pop(); //Armor
             translate(this.cardWidth*0.25,0);
-            push(); //Armor
-                tint('pink');
+            push(); //speed
+                tint(colors.speed);
                 image(IMG.icon.speed, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
-                fill('black');
+                fill(colors.iconText);
                 text(statSpeed, this.cardWidth*0.175, this.cardWidth*0.125); // health value
-            pop(); //Armor
+            pop(); //speed
 		pop();//stats
 
         push(); //attacks
@@ -117,99 +117,52 @@ class Card {
             }
         pop(); //attacks
         pop(); //card
-        /*
-		push();
-		textSize(10);
-		translate(0,this.cardHeight*.66); //drop below image
-		rect(this.cardWidth *.03, 0, this.cardWidth *.92, 12, 2);
-		fill('black');
-		image(this.attacks[0].icon, 2, 0,this.attacks[0].icon.width/12,this.attacks[0].icon.height/12); // render icon	
-		text(statAttack,this.attacks[0].icon.width *.09,10);
-		pop();
-
-		push();
-		textSize(10);
-		translate(0,this.cardHeight*.84); //drop below image
-		rect(this.cardWidth *.03, 0, this.cardWidth *.92, 12, 2);
-		fill('black');
-		image(this.attacks[1].icon, 2, 0,this.attacks[1].icon.width/12,this.attacks[1].icon.height/12); // render icon	
-		text(statAttack2,this.attacks[1].icon.width *.09,10);
-		pop();
-		
-		pop();*/
 
 	}
-		duelDraw() {
+	duelDraw() {
+	    const cardWidth = this.cardWidth * 2;
+	    const cardHeight = this.cardHeight;
 
-		var statHealth = this.health;
-		var statArmor = this.armor;
-		var statSpeed = this.speed;
-		var statAttack = this.attacks[0].attackName;
-		var	statAttackSpeed = this.attacks[0].speed + this.speed;
-		var	statAttackDamage = this.attacks[0].power;
-		var statAttack2 = this.attacks[1].attackName;
-		var	statAttackSpeed2 = this.attacks[1].speed + this.speed;
-		var	statAttackDamage2 = this.attacks[1].power;
-
-		push();	
-
-		rect(0, 0, this.cardWidth*2, this.cardHeight, 5); // draw card
-		tint('Black');
-		image(IMG.icon.character, 10, this.cardWidth*.1,IMG.icon.character.width/3,IMG.icon.character.height/3);
-
-		push();
-		translate(4,this.cardHeight*.75); //drop below image
-
-		push();
-		tint('#ce3b3b')
-		image(IMG.icon.health, 0, -10,IMG.icon.health.width/5,IMG.icon.health.height/5); // render icon
-		fill('black');
-		text(statHealth, 8, 8); // health value
-		pop();
-		tint('#6b9dca')
-		translate(this.cardWidth/2,0); //drop below image
-		image(IMG.icon.armor, -4, -10,IMG.icon.armor.width/5,IMG.icon.armor.height/5); // render icon
-		fill('black');
-		text(statArmor, 8, 8); // health value
-		pop();
-
-		textSize('9')
-		translate(this.cardWidth, this.cardWidth*.075);
-		rect(0, 0, this.cardWidth *.92, this.cardHeight*.4, 2);
-		text(statAttack,5,10);
-		image(this.attacks[0].icon, 10, 16,this.attacks[0].icon.width/7,this.attacks[0].icon.height/7); // render icon	
-
-		textSize('14')
-		text(statAttackDamage,5,26);
-		tint('pink');
-		image(IMG.icon.speed, 36, 14,this.attacks[0].icon.width/7,this.attacks[0].icon.height/7); // render icon	
-		text(statAttackSpeed, 42, 32); // health value
-
-		textSize('9')
-		translate(0, this.cardHeight*.5);
-		rect(0, 0, this.cardWidth *.92, this.cardHeight*.4, 2);
-		text(statAttack2,5,10);
-		tint('black');
-		image(this.attacks[1].icon, 8, 14,this.attacks[0].icon.width/7,this.attacks[0].icon.height/7); // render icon	
-		
-		textSize('14')
-		text(statAttackDamage2,5,26);
-		tint('pink');
-		image(IMG.icon.speed, 36, 14,this.attacks[0].icon.width/7,this.attacks[0].icon.height/7); // render icon	
-		text(statAttackSpeed2, 42, 32); // health value
-
-
-
-
-		
-		pop();
-
+		push(); //card
+			rect(0, 0, cardWidth, cardHeight, 5); // draw card
+			tint('Black');
+			image(IMG.icon.character, cardWidth*0.2-cardHeight*0.2, cardHeight*.1,cardHeight*0.4,cardHeight*0.4);
+			push(); //Stats
+				translate(cardWidth*0.05,cardHeight*.5); //drop below image
+                textAlign(CENTER,CENTER);
+				push();//Health
+					tint(colors.health);
+					image(IMG.icon.health, 0, 0,cardWidth*.15,cardWidth*.15); // render icon
+					fill(colors.iconText);
+					text(this.health,  cardWidth*.075, cardWidth*.075); // health value
+				pop();//Health
+				push();//Armor
+					tint(colors.armor);
+					translate(cardWidth/5,0); //move over
+					image(IMG.icon.armor, 0,0,cardWidth*.15,cardWidth*.15); // render icon
+					fill(colors.iconText);
+					text(this.armor, cardWidth*.075, cardWidth*.075); // health value
+				pop();//Armor
+                push(); //Name
+                    translate(-cardWidth*0.025,cardHeight*.3);
+                    textAlign(LEFT,TOP);
+                    text(this.id,0,0); //TODO change from name to id
+                 pop(); //Name
+			pop();//stats
+			push(); //Attacks
+        		translate(cardWidth*0.4,cardHeight*.1);
+        		for(let i = 0; i < this.attacks.length; i++) {
+                    this.attacks[0].duelDraw(cardWidth,cardHeight,this);
+                    translate(0,cardHeight*0.45);
+				}
+			pop();//Attacks
+		pop();//card
 	}
 	
     //helpers
     getHandRect(xi,yi) {
-	    if(this.mouseIsOver) {
-	        xi -= (this.cardWidth-this.cardWidth/defaults.card.mouseIsOverScale)/2;
+        if(this.mouseIsOver) {
+            xi -= (this.cardWidth-this.cardWidth/defaults.card.mouseIsOverScale)/2;
             if (this.owner === 0 ) { //TODO fix this.onwer
                 yi -= (this.cardHeight-(this.cardHeight/defaults.card.mouseIsOverScale));
             }
@@ -218,6 +171,20 @@ class Card {
             x: xi,
             y: yi,
             w: this.cardWidth,
+            h: this.cardHeight
+        };
+    }
+    getDuelRect(xi,yi) {
+        if(this.mouseIsOver) {
+            xi -= (this.cardWidth-this.cardWidth/defaults.card.mouseIsOverScale)/2;
+            if (this.owner === 0 ) { //TODO fix this.onwer
+                yi -= (this.cardHeight-(this.cardHeight/defaults.card.mouseIsOverScale));
+            }
+        }
+        return {
+            x: xi,
+            y: yi,
+            w: this.cardWidth*2,
             h: this.cardHeight
         };
     }

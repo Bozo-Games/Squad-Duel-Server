@@ -25,5 +25,8 @@ class Attack {
             attackName:this.attackName
         };
     }
+    toString() {
+        return JSON.stringify(this.toJSON());
+    }
 }
 module.exports = Attack;

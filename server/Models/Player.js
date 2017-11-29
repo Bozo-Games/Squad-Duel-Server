@@ -13,6 +13,9 @@ class Player {
             name: this.name
         }
     }
+    toString() {
+        return JSON.stringify(this.toJSON());
+    }
     get socketID() {
         return this._socketID;
     }
