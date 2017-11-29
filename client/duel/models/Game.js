@@ -5,28 +5,37 @@ class Game {
         let handA = new Hand(json.handA);
         let playerB = new Player(json.playerB);
         let handB = new Hand(json.handB);
-        this.duel = new Duel(json.duel);
+
 		if(playerA.isMe) {
+            this.playerLetter = 'A';
 			this.player = playerA;
 			this.opp = playerB;
 			this.playerHand = handA;
 			this.oppHand = handB;
 		} else if(playerB.isMe) {
+            this.playerLetter = 'B';
             this.player = playerB;
             this.opp = playerA;
             this.playerHand = handB;
             this.oppHand = handA;
 		} else { //implies is watcher
+            this.playerLetter = 'A';    
             this.player = playerA;
             this.opp = playerB;
             this.playerHand = handA;
             this.oppHand = handB;
 		}
+        this.duel = new Duel(json.duel);
 
 		this.currentState = json.currentState === undefined ? E.GameStates.NewGame : json.currentState;
 
 	}
+    mouseMoved() {
+	    this.playerHand.mouseMoved();
+        this.oppHand.mouseMoved();
 
+	    //this.duel.mouseMoved(); //TODO add to duel class
+    }
 	mouseReleased() {
 		this.playerHand.mouseReleased();
 	}

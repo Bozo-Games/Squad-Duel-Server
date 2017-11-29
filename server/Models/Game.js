@@ -74,23 +74,28 @@ class Game {
         }
     }
     selectCard(player, card) {
+        console.log(card.id);
         ["A","B"].forEach(function (key) {
+            console.log(card.id);
             if(this.duel["card"+key] !== undefined) {
                 if(this.duel["card"+key].id === card.id) {
                     //do nothing
                 } else {
-                    this["hand"+key].cards.push(this.duel["card"+key]);
+                    this["hand"+key].cards.push(new Card(this.duel["card"+key].toJSON()));
                     this.duel["card"+key] = undefined;
                 }
             }
             for(let i = this["hand"+key].cards.length-1;  i >= 0; i--) {
+                console.log(this["hand"+key].cards[i].id  + ' =?= ' + card.id);
                 if(this["hand"+key].cards[i].id === card.id) {
+                    console.log('found '+this["hand"+key].cards.length);
                     this["hand"+key].cards.splice(i,1);
+                    console.log('found '+this["hand"+key].cards.length);
                     this.duel["card"+key] = card;
                     break;
                 }
             }
-        });
+        }.bind(this));
         return {status:E.Status.success}; //thing about this some
     }
     selectAttack(player, attack) {
@@ -109,7 +114,7 @@ class Game {
                     break;
                 }
             }
-        });
+        }.bind(this));
     }
 }
 

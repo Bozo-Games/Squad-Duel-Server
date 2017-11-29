@@ -29,6 +29,8 @@ io.on('connection', function(socket) {
         updatePlayers();
     });
     socket.on(Routes.selectCard,function (cardJSON) {
+        console.log('A magic card was selected');
+        console.log(cardJSON);
         currentGame.selectCard(new Player({socketID:socket.id}), new Card(cardJSON));
         updatePlayers();
     });
