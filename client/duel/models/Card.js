@@ -65,7 +65,6 @@ class Card {
 		let statSpeed = this.speed;
 		
 		push(); //card
-
 		if(this.mouseIsOver) {
             translate(-(this.cardWidth-this.cardWidth/defaults.card.mouseIsOverScale)/2, 0);
 			if (this.owner === 0 ) { //TODO fix this.onwer
@@ -76,6 +75,10 @@ class Card {
 		tint('Black');
 		image(IMG.icon.character, (this.cardWidth - this.cardHeight*0.2)/2 , this.cardHeight*0.05,this.cardHeight*0.2,this.cardHeight*0.2);
 
+        push(); //debug
+            textAlign(CENTER,BOTTOM);
+            text(this.id, (this.cardWidth)/2,0);
+        pop();//Debug
 		push(); //stats
             textAlign(CENTER,CENTER);
             if(this.mouseIsOver) { //TODO make relative to card width

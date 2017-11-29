@@ -1,6 +1,5 @@
 class Attack {
 	constructor(json) {
-		console.log(json);
 		json = json === undefined ? {} : json;
 		this.attackId = json.attackId === undefined ? 0 : json.attackId;
 		this.flat = json.flat === undefined ? 0 : json.flat; 
