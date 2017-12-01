@@ -1,7 +1,7 @@
 class Attack {
 	constructor(json) {
 		json = json === undefined ? {} : json;
-		this.attackId = json.attackId === undefined ? 0 : json.attackId;
+		this.id = json.id === undefined ? 0 : json.id;
 		this.flat = json.flat === undefined ? 0 : json.flat; 
 		this.crushing = json.crushing === undefined ? 0 : json.crushing; 
 		this.piercing = json.piercing === undefined ? 0 : json.piercing; 
@@ -24,10 +24,12 @@ class Attack {
 			this.icon = IMG.icon.armor;
 			this.power = this.defense;
  		}
+
+ 		this.mouseIsOver = false;
 	}
 	toJSON(){
 		return {
-			attackIdId: this.attackId,
+			id: this.id,
 			flat:this.flat,
 			crushing:this.crushing,
 			piercing:this.piercing,
@@ -58,8 +60,29 @@ class Attack {
 			text(this.attackName,cardHeight*0.1+8,4);
         pop();
 	}
+    mouseMoved(xi,yi,cardWidth,cardHeight,isInHad) {
+	    if(isInHad) {
+
+        } else {
+            const rect = this.duelRect(xi,yi,cardWidth,cardHeight);
+            this.mouseIsOver = collidePointRect(mouseX,mouseY,rect.x,rect.y,rect.w,rect.h);
+        }
+    }
+    duelRect(xi,yi,cardWidth,cardHeight){
+        return {
+            x: xi+cardWidth*0.05,
+            y: yi,
+            w: cardWidth,
+            h: cardHeight*0.4,
+        }
+    }
 	duelDraw(cardWidth,cardHeight,card) {
 		push();
+		    if(this.mouseIsOver) {
+		        fill('#aaaaaa');
+            } else {
+                fill('#ffffff');
+            }
 			rect(cardWidth*0.05,0,cardWidth*0.5,cardHeight*0.4,5);
 			push();//icons
 				translate(cardWidth*0.05,0);
@@ -82,6 +105,7 @@ class Attack {
 			pop();//icons
 			push(); //name
 				translate(cardWidth*0.1,cardHeight*0.35);
+				fill(colors.iconText);
 				text(this.attackName,0,0);
 			pop();//name
 		pop();//attack

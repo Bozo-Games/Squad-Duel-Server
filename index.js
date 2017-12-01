@@ -5,8 +5,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/client/duel/index.html');
+app.get('/', function(req, res){m
 });
 app.use( express.static('client'));
 http.listen(3000, function(){
@@ -15,6 +14,7 @@ http.listen(3000, function(){
 
 
 const Player = require('./server/Models/Player.js');
+const E = require('./client/duel/Helpers/enums.js');
 const Game = require('./server/Models/Game.js');
 const Card = require('./server/Models/Card.js');
 const Routes = require('./client/duel/Network/socketRoutes.js');
@@ -52,7 +52,9 @@ io.on('connection', function(socket) {
 
 function updatePlayers() {
     let json = currentGame.toJSON();
-    console.log(currentGame.toString());
+    if(currentGame.currentState !== E.GameStates.NewGame) {
+        console.log(json.handA.cards[0].attacks[0]);
+    }
     if(currentGame.playerA.socketID !== undefined) {
         console.log(currentGame.playerA.socketID);
         io.sockets.connected[currentGame.playerA.socketID].emit('update',json);

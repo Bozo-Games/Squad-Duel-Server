@@ -11,7 +11,7 @@ class Card {
         this.speed = json.speed === undefined ? 0 : json.speed;
         json.attacks = json.attacks === undefined ? [] : json.attacks;
         this.attacks = [];
-        for(let i = 0; i < json.attacks; i++) {
+        for(let i = 0; i < json.attacks.length; i++) {
             this.attacks.push(new Attack(json.attacks[i]));
         }
         while(this.attacks.length < defualts.card.numberOfAttacks) {

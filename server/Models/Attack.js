@@ -15,7 +15,7 @@ class Attack {
 
     toJSON(){
         return {
-            attackIdId: this.attackId,
+            id: this.id,
             flat:this.flat,
             crushing:this.crushing,
             piercing:this.piercing,

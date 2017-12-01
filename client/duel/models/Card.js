@@ -52,7 +52,20 @@ class Card {
 		};
 	}
 	//mouse events
+    mouseMoved(xi,yi,isInHand) {
+	    if(isInHand) {
 
+        } else {
+            const cardWidth = this.cardWidth * 2;
+            const cardHeight = this.cardHeight;
+            xi += cardWidth*0.4;
+            yi += cardHeight*.1;
+            for(let i = 0; i < this.attacks.length; i++) {
+                this.attacks[i].mouseMoved(xi,yi,this.cardWidth,this.cardHeight);
+                yi += cardHeight*0.45;
+            }
+        }
+    }
 	//draw
 	draw() {
 		this.handDraw();
@@ -65,57 +78,57 @@ class Card {
 		let statSpeed = this.speed;
 		
 		push(); //card
-		if(this.mouseIsOver) {
-            translate(-(this.cardWidth-this.cardWidth/defaults.card.mouseIsOverScale)/2, 0);
-			if (this.owner === 0 ) { //TODO fix this.onwer
-				translate(0,-(this.cardHeight-(this.cardHeight/defaults.card.mouseIsOverScale)));
-			}
-		}
-        rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
-		tint('Black');
-		image(IMG.icon.character, (this.cardWidth - this.cardHeight*0.2)/2 , this.cardHeight*0.05,this.cardHeight*0.2,this.cardHeight*0.2);
-
-        push(); //debug
-            textAlign(CENTER,BOTTOM);
-            text(this.id, (this.cardWidth)/2,0);
-        pop();//Debug
-		push(); //stats
-            textAlign(CENTER,CENTER);
-            if(this.mouseIsOver) { //TODO make relative to card width
-                textSize(16);
-            } else {
-                textSize(8);
+            if(this.mouseIsOver) {
+                translate(-(this.cardWidth-this.cardWidth/defaults.card.mouseIsOverScale)/2, 0);
+                if (this.owner === 0 ) { //TODO fix this.onwer
+                    translate(0,-(this.cardHeight-(this.cardHeight/defaults.card.mouseIsOverScale)));
+                }
             }
-		    translate(this.cardWidth*0.08,this.cardHeight*.25); //drop below image
-		    push(); //health
-                tint(colors.health);
-		        image(IMG.icon.health, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
-		        fill(colors.iconText);
-		        text(statHealth, this.cardWidth*0.175, this.cardWidth*0.125); // health value
-		    pop();//health
-            translate(this.cardWidth*0.25,0);
-            push(); //Armor
-                tint(colors.armor);
-                image(IMG.icon.armor, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
-                fill(colors.iconText);
-                text(statArmor, this.cardWidth*0.175, this.cardWidth*0.125); // health value
-            pop(); //Armor
-            translate(this.cardWidth*0.25,0);
-            push(); //speed
-                tint(colors.speed);
-                image(IMG.icon.speed, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
-                fill(colors.iconText);
-                text(statSpeed, this.cardWidth*0.175, this.cardWidth*0.125); // health value
-            pop(); //speed
-		pop();//stats
+            rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
+            tint('Black');
+            image(IMG.icon.character, (this.cardWidth - this.cardHeight*0.2)/2 , this.cardHeight*0.05,this.cardHeight*0.2,this.cardHeight*0.2);
 
-        push(); //attacks
-            translate(0,this.cardHeight*.25 + this.cardWidth*0.3); //drop below stats
-            for(let i = 0; i < this.attacks.length; i++) {
-                this.attacks[i].handDraw(this.cardWidth,this.cardHeight);
-                translate(0,this.cardHeight*0.1+16); //drop below last attack
-            }
-        pop(); //attacks
+            push(); //debug
+                textAlign(CENTER,BOTTOM);
+                text(this.id, (this.cardWidth)/2,0);
+            pop();//Debug
+            push(); //stats
+                textAlign(CENTER,CENTER);
+                if(this.mouseIsOver) { //TODO make relative to card width
+                    textSize(16);
+                } else {
+                    textSize(8);
+                }
+                translate(this.cardWidth*0.08,this.cardHeight*.25); //drop below image
+                push(); //health
+                    tint(colors.health);
+                    image(IMG.icon.health, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
+                    fill(colors.iconText);
+                    text(statHealth, this.cardWidth*0.175, this.cardWidth*0.125); // health value
+                pop();//health
+                translate(this.cardWidth*0.25,0);
+                push(); //Armor
+                    tint(colors.armor);
+                    image(IMG.icon.armor, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
+                    fill(colors.iconText);
+                    text(statArmor, this.cardWidth*0.175, this.cardWidth*0.125); // health value
+                pop(); //Armor
+                translate(this.cardWidth*0.25,0);
+                push(); //speed
+                    tint(colors.speed);
+                    image(IMG.icon.speed, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
+                    fill(colors.iconText);
+                    text(statSpeed, this.cardWidth*0.175, this.cardWidth*0.125); // health value
+                pop(); //speed
+            pop();//stats
+
+            push(); //attacks
+                translate(0,this.cardHeight*.25 + this.cardWidth*0.3); //drop below stats
+                for(let i = 0; i < this.attacks.length; i++) {
+                    this.attacks[i].handDraw(this.cardWidth,this.cardHeight);
+                    translate(0,this.cardHeight*0.1+16); //drop below last attack
+                }
+            pop(); //attacks
         pop(); //card
 
 	}
@@ -152,7 +165,7 @@ class Card {
 			push(); //Attacks
         		translate(cardWidth*0.4,cardHeight*.1);
         		for(let i = 0; i < this.attacks.length; i++) {
-                    this.attacks[0].duelDraw(cardWidth,cardHeight,this);
+                    this.attacks[i].duelDraw(cardWidth,cardHeight,this);
                     translate(0,cardHeight*0.45);
 				}
 			pop();//Attacks

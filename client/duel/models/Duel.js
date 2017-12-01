@@ -1,20 +1,26 @@
 class Duel {
-		constructor(json) {
+    constructor(json) {
 		console.log(json);
 		json = json === undefined ? {} : json;
         //new card(json.cardsInHand[i])
         if(game !== undefined) {
-        	this.cardSelected = json['card'+game.playerLetter] === undefined ? undefined : new Card(json['card'+game.playerLetter] );	
+        	this.cardSelected = json['card'+game.playerLetter] === undefined ? undefined : new Card(json['card'+game.playerLetter] );
+            this.oopSelectedCard
     	}
 		this.mouseHit = false;
 	}
-
-
+    mouseMoved() {
+        if (this.cardSelected !== undefined) {
+            let xi = (width - this.cardSelected.cardWidth * 2) / 2;
+            let yi =  (height - this.cardSelected.cardHeight) / 2;
+            this.cardSelected.mouseMoved(xi,yi,false);
+        }
+    }
 	draw() {
 		push();
 
-		translate(width/3, height/3);
-		if (this.cardSelected != undefined) {
+		if (this.cardSelected !== undefined) {
+            translate((width-this.cardSelected.cardWidth*2)/2, (height-this.cardSelected.cardHeight)/2);
 			this.cardSelected.duelDraw();
 		}
 		//rect(0, 0, 666, 666, 3); // draw card

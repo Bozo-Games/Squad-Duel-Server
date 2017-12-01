@@ -42,6 +42,7 @@ class Game {
     dealNewHands() {
         this.handA = new Hand(generate.hand());
         this.handB = new Hand(generate.hand());
+        this.duel = new Duel();
     }
     playerJoin(player) {
         if(this.playerA.socketID === undefined) {
@@ -81,8 +82,14 @@ class Game {
         }
     }
     selectCard(player, card) {
-        console.log(card.id);
-        ["A","B"].forEach(function (key) {
+        let key;
+        if(player.socketID === this.playerA.socketID) {
+            key = 'A';
+        } else if(player.socketID === this.playerB.socketID) {
+            key = 'B';
+        }
+        if(key !== undefined) {
+            console.log('selected key is '+key);
             if(this.duel["card"+key] !== undefined) {
                 if(this.duel["card"+key].id === card.id) {
                     //do nothing
@@ -93,14 +100,12 @@ class Game {
             }
             for(let i = this["hand"+key].cards.length-1;  i >= 0; i--) {
                 if(this["hand"+key].cards[i].id === card.id) {
-                    console.log('found '+this["hand"+key].cards.length);
                     this["hand"+key].cards.splice(i,1);
-                    console.log('found '+this["hand"+key].cards.length);
                     this.duel["card"+key] = card;
                     break;
                 }
             }
-        }.bind(this));
+        }
         return {status:E.Status.success}; //thing about this some
     }
     selectAttack(player, attack) {

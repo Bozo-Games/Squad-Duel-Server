@@ -6,25 +6,21 @@ const Generator = {
     attack: function () {
         let keys = Object.keys(attackDB);
         let key = keys[Math.floor(Math.random()*keys.length)];
-        let json = attackDB[key];
+        let json = JSON.parse(JSON.stringify(attackDB[key]));
         json.id = Generator.guid();
         return json;
     },
     card: function () {
         let keys = Object.keys(cardDB)
         let key = keys[Math.floor(Math.random()*keys.length)];
-        let json = cardDB[key];
+        let json = JSON.parse(JSON.stringify(cardDB[key]));
         json.id = Generator.guid();
         return json;
     },
     hand: function () {
         let cardsJSON = [];
         while (cardsJSON.length < defaults.hand.numberOfCards) {
-            let keys = Object.keys(cardDB);
-            let key = keys[Math.floor(Math.random()*keys.length)];
-            let json = cardDB[key];
-            json.id = Generator.guid();
-            cardsJSON.push(json)
+            cardsJSON.push(Generator.card())
         }
         return {cards:cardsJSON};
     },

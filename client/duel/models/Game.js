@@ -8,18 +8,21 @@ class Game {
 
 		if(playerA.isMe) {
             this.playerLetter = 'A';
+            this.oppLetter = 'B';
 			this.player = playerA;
 			this.opp = playerB;
 			this.playerHand = handA;
 			this.oppHand = handB;
 		} else if(playerB.isMe) {
             this.playerLetter = 'B';
+            this.oppLetter = 'A';
             this.player = playerB;
             this.opp = playerA;
             this.playerHand = handB;
             this.oppHand = handA;
 		} else { //implies is watcher
-            this.playerLetter = 'A';    
+            this.playerLetter = 'A';
+            this.oppLetter = 'B';
             this.player = playerA;
             this.opp = playerB;
             this.playerHand = handA;
@@ -34,7 +37,7 @@ class Game {
 	    this.playerHand.mouseMoved();
         this.oppHand.mouseMoved();
 
-	    //this.duel.mouseMoved(); //TODO add to duel class
+	    this.duel.mouseMoved();
     }
 	mouseReleased() {
 		this.playerHand.mouseReleased();
