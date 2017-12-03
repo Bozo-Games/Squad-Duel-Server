@@ -13,9 +13,7 @@ class Hand {
     }
     toJSON(){
         let cardsJSON = [];
-        console.log('------');
         for(let i = 0; i < this.cards.length; i++) {
-            console.log('pushing - '+i+' - '+this.cards[i].id);
             cardsJSON.push(this.cards[i].toJSON());
         }
         return {

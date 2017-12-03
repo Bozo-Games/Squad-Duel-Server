@@ -22,17 +22,12 @@ class Hand {
     //mose events
     mouseMoved() {
         this.loopCardsWithCallBack(function (card,xi,yi) {
-            let rect = card.getHandRect(xi,yi);
-            card.mouseIsOver = collidePointRect(mouseX,mouseY,rect.x,rect.y,rect.w,rect.h);
+            card.mouseMoved(xi,yi,true);
         });
     }
     mouseReleased(){
         this.loopCardsWithCallBack(function (card,xi,yi) {
-            if(card.mouseIsOver) {
-                //duel.cardSelected = card;
-                network.selectCard(card.toJSON());
-                console.log('clicky click clack');
-            }
+            card.mouseReleased(xi,yi,true);
         });
     }
     draw() {

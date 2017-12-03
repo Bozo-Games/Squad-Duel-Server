@@ -22,7 +22,7 @@ class Attack {
             defense:this.defense,
             speed:this.speed,
             power:this.power,
-            attackName:this.attackName
+            attackName:this.attackName,
         };
     }
     toString() {

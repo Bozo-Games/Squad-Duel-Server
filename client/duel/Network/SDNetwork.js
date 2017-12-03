@@ -18,9 +18,12 @@ let network = {
     selectCard: function(cardJSON) {
         socket.emit(Routes.selectCard,cardJSON);
     },
-    didSelectAttack: function (attackJSON) {
-        socket.emit('selected attack',attackJSON);
+    selectAttack: function (attackJSON) {
+        socket.emit(Routes.selectAttack,attackJSON);
     },
+	processDuel: function () {
+		socket.emit(Routes.processDuel);
+	},
     getUpdate: function () {
        socket.emit(Routes.getUpdate);
     },

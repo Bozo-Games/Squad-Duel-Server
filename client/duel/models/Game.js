@@ -41,6 +41,7 @@ class Game {
     }
 	mouseReleased() {
 		this.playerHand.mouseReleased();
+		this.duel.mouseReleased();
 	}
 	
 	draw(width,height) {

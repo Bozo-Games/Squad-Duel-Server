@@ -8,6 +8,7 @@ class Attack {
 		this.defense = json.defense === undefined ? 0 : json.defense; 
 		this.speed = json.speed === undefined ? 0 : json.speed;
 		this.power = json.power === undefined ? 0 : json.power;
+		this.isSelected = json.isSelected === undefined ? false : json.isSelected;
 
 		this.attackName = json.attackName === undefined ? 'unknown' : json.attackName;
 
@@ -60,14 +61,25 @@ class Attack {
 			text(this.attackName,cardHeight*0.1+8,4);
         pop();
 	}
-    mouseMoved(xi,yi,cardWidth,cardHeight,isInHad) {
-	    if(isInHad) {
+	mouseMoved(xi,yi,cardWidth,cardHeight,isInHad) {
+		if(isInHad) {
 
-        } else {
-            const rect = this.duelRect(xi,yi,cardWidth,cardHeight);
-            this.mouseIsOver = collidePointRect(mouseX,mouseY,rect.x,rect.y,rect.w,rect.h);
-        }
-    }
+		} else {
+			const rect = this.duelRect(xi,yi,cardWidth,cardHeight);
+			this.mouseIsOver = collidePointRect(mouseX,mouseY,rect.x,rect.y,rect.w,rect.h);
+		}
+	}
+	mouseReleased(xi,yi,cardWidth,cardHeight,isInHad) {
+		if(isInHad) {
+
+		} else {
+			const rect = this.duelRect(xi,yi,cardWidth,cardHeight)
+			this.isSelected = collidePointRect(mouseX,mouseY,rect.x,rect.y,rect.w,rect.h);
+			if(this.isSelected) {
+				network.selectAttack(this.toJSON());
+			}
+		}
+	}
     duelRect(xi,yi,cardWidth,cardHeight){
         return {
             x: xi+cardWidth*0.05,
@@ -82,6 +94,9 @@ class Attack {
 		        fill('#aaaaaa');
             } else {
                 fill('#ffffff');
+            }
+            if(this.isSelected) {
+		    	fill('#cc9912')
             }
 			rect(cardWidth*0.05,0,cardWidth*0.5,cardHeight*0.4,5);
 			push();//icons

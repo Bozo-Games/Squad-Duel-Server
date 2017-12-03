@@ -39,6 +39,11 @@ class Game {
             "handB: "+this.handB.toString()+",\n"+
             "duel: "+this.duel.toString();
     }
+	proccessDuel() {
+        let cards = this.duel.proccessDuel();
+        this.handA.cards.push(cards.A);
+        this.handB.cards.push(cards.B);
+    }
     dealNewHands() {
         this.handA = new Hand(generate.hand());
         this.handB = new Hand(generate.hand());
@@ -89,7 +94,6 @@ class Game {
             key = 'B';
         }
         if(key !== undefined) {
-            console.log('selected key is '+key);
             if(this.duel["card"+key] !== undefined) {
                 if(this.duel["card"+key].id === card.id) {
                     //do nothing
@@ -109,22 +113,27 @@ class Game {
         return {status:E.Status.success}; //thing about this some
     }
     selectAttack(player, attack) {
-        ["A","B"].forEach(function (key) {
-            if(this.duel["attack"+key] !== undefined) {
-                if(this.duel["card"+key].id === attack.id) {
-                    //do nothing
-                } else {
-                    this.duel["attack"+key] = undefined;
+	    let key;
+	    if(player.socketID === this.playerA.socketID) {
+		    key = 'A';
+	    } else if(player.socketID === this.playerB.socketID) {
+		    key = 'B';
+	    }
+	    if(key !== undefined) {
+	        if(this.duel["card"+key] !==  undefined) {
+	            let found = false;
+	            for(let i = 0; i < this.duel["card"+key].attacks.length; i++) {
+		            if(this.duel["card"+key].attacks[i].id === attack.id) {
+		                found = true;
+		                break;
+                    }
+                }
+                if(found) {
+	                console.log('setting attack - ' + attack.toJSON());
+	                this.duel["attack"+key] = attack;
                 }
             }
-            for(let i = this["hand"+key].cards.length-1;  i >= 0; i--) {
-                if(this["hand"+key].cards[i].id === card.id) {
-                    this["hand"+key].cards.splice(i,1);
-                    this.duel["card"+key] = card;
-                    break;
-                }
-            }
-        }.bind(this));
+        }
     }
 }
 

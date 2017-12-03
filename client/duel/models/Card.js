@@ -54,18 +54,36 @@ class Card {
 	//mouse events
     mouseMoved(xi,yi,isInHand) {
 	    if(isInHand) {
-
+		    let rect = this.getHandRect(xi,yi);
+		    this.mouseIsOver = collidePointRect(mouseX,mouseY,rect.x,rect.y,rect.w,rect.h);
         } else {
             const cardWidth = this.cardWidth * 2;
             const cardHeight = this.cardHeight;
             xi += cardWidth*0.4;
             yi += cardHeight*.1;
             for(let i = 0; i < this.attacks.length; i++) {
-                this.attacks[i].mouseMoved(xi,yi,this.cardWidth,this.cardHeight);
+                this.attacks[i].mouseMoved(xi,yi,this.cardWidth,this.cardHeight,false);
                 yi += cardHeight*0.45;
             }
         }
     }
+	mouseReleased(xi,yi,isInHand){
+		if(isInHand) {
+			let rect = this.getHandRect(xi,yi);
+			if(collidePointRect(mouseX,mouseY,rect.x,rect.y,rect.w,rect.h)) {
+				network.selectCard(this.toJSON());
+			}
+		} else {
+			const cardWidth = this.cardWidth * 2;
+			const cardHeight = this.cardHeight;
+			xi += cardWidth*0.4;
+			yi += cardHeight*.1;
+			for(let i = 0; i < this.attacks.length; i++) {
+				this.attacks[i].mouseReleased(xi,yi,this.cardWidth,this.cardHeight,isInHand);
+				yi += cardHeight*0.45;
+			}
+		}
+	}
 	//draw
 	draw() {
 		this.handDraw();

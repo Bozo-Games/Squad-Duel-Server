@@ -31,7 +31,28 @@ class Duel {
             "attackB:"+ab+",\n}";
     }
     proccessDuel() {
-        return {status:E.Status.success};
+	    let flatDamage = Math.floor(this.attackB.flat / (this.cardA.armor+1));
+	    let crushingDamage = Math.min(this.attackB.crushing,this.cardA.armor);
+	    this.cardA.armor -= crushingDamage;
+	    this.cardA.health -= (this.attackB.piercing + flatDamage + crushingDamage);
+
+	    flatDamage = Math.floor(this.attackA.flat / (this.cardB.armor+1));
+	    crushingDamage = Math.min(this.attackA.crushing,this.cardB.armor);
+	    this.cardB.armor -= crushingDamage;
+	    this.cardB.health -= (this.attackA.piercing + flatDamage + crushingDamage);
+
+	    console.log(this.cardA.toJSON());
+	    console.log(this.cardB.toJSON());
+    	//clean up and return results
+		let r = {
+			A:new Card(this.cardA.toJSON()),
+			B:new Card(this.cardB.toJSON())
+		};
+	    this.cardA = undefined;
+	    this.attackA = undefined;
+	    this.cardB = undefined;
+	    this.attackB = undefined;
+        return r;
     }
 
 }
