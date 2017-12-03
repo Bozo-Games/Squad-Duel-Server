@@ -10,7 +10,7 @@ class Attack {
         this.defense = json.defense === undefined ? 0 : json.defense;
         this.speed = json.speed === undefined ? 0 : json.speed;
         this.power = json.power === undefined ? 0 : json.power;
-        this.attackName = json.attackName === undefined ? 'unknown' : json.attackName;
+        this.name = json.name === undefined ? 'unknown' : json.name;
     }
 
     toJSON(){
@@ -22,7 +22,7 @@ class Attack {
             defense:this.defense,
             speed:this.speed,
             power:this.power,
-            attackName:this.attackName,
+            name:this.name,
         };
     }
     toString() {

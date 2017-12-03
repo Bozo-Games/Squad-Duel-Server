@@ -41,8 +41,12 @@ class Game {
     }
 	proccessDuel() {
         let cards = this.duel.proccessDuel();
-        this.handA.cards.push(cards.A);
-        this.handB.cards.push(cards.B);
+        if(cards.A !== undefined) {
+	        this.handA.cards.push(cards.A);
+        }
+        if(cards.B !== undefined) {
+	        this.handB.cards.push(cards.B);
+        }
     }
     dealNewHands() {
         this.handA = new Hand(generate.hand());

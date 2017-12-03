@@ -28,6 +28,7 @@ class Game {
             this.playerHand = handA;
             this.oppHand = handB;
 		}
+		this.playerHand.isVisbleToPlayer();
         this.duel = new Duel(json.duel);
 
 		this.currentState = json.currentState === undefined ? E.GameStates.NewGame : json.currentState;

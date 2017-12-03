@@ -9,7 +9,11 @@ class Card {
         this.health = json.health === undefined ? 0 : json.health;
         this.armor = json.armor === undefined ? 0 : json.armor;
         this.speed = json.speed === undefined ? 0 : json.speed;
+	    this.name = json.name === undefined ? 'Card -1' : json.name;
         json.attacks = json.attacks === undefined ? [] : json.attacks;
+
+	    this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
+
         this.attacks = [];
         for(let i = 0; i < json.attacks.length; i++) {
             this.attacks.push(new Attack(json.attacks[i]));
@@ -17,6 +21,7 @@ class Card {
         while(this.attacks.length < defualts.card.numberOfAttacks) {
             this.attacks.push(new Attack());
         }
+        console.log(json);
     }
     toJSON(){
         let attacksJSON = [];
@@ -28,21 +33,10 @@ class Card {
             health:this.health,
             armor:this.armor,
             speed:this.speed,
-            attacks:attacksJSON
+            name:this.name,
+            attacks:attacksJSON,
+            isVisibleToPlayer:this.isVisibleToPlayer
         };
-    }
-    toString(){
-        let attacksStrings = '[';
-        for(let i = 0; i < this.attacks.length; i++) {
-            attacksStrings += this.attacks[i].toString() + ',';
-        }
-        attacksStrings += ']';
-        return "{\n"+
-            "\tid: "+this.id+"\n"+
-            "\thealth:"+this.health+"\n"+
-            "\tarmor:"+this.armor+"\n"+
-            "\tspeed:"+this.speed+"\n"+
-            "\tattacks:"+attacksStrings+"\n}";
     }
 }
 module.exports = Card;

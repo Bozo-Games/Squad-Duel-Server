@@ -1,6 +1,8 @@
 "use strict";
 let socket = io();
+let gd;
 socket.on('update', function(gameData){
+    gd = gameData;
     game = new Game(gameData);
 });
 socket.on('debug msg', function(msg){

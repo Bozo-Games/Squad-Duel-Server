@@ -19,6 +19,11 @@ class Hand {
             cards:cardsJSON
         };
     }
+    isVisbleToPlayer() {
+        this.loopCardsWithCallBack(function (card,xi,yi) {
+            card.isVisibleToPlayer = true;
+        });
+    }
     //mose events
     mouseMoved() {
         this.loopCardsWithCallBack(function (card,xi,yi) {

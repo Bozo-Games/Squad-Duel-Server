@@ -2,9 +2,11 @@ class Card {
 	constructor(json) {
 		json = json === undefined ? cardList[Math.floor(Math.random() * 18)] : json;
 		this.id = json.id;
+		this.name = json.name === undefined ? 'Card -1' : json.name;
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
-		this.speed = json.speed === undefined ? 0 : json.speed; 
+		this.speed = json.speed === undefined ? 0 : json.speed;
+		this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
 //		this.power = json.power === undefined ? 0 : json.power;
         this.attacks = [];
         for(let i = 0; i < json.attacks.length; i++) {
@@ -103,6 +105,7 @@ class Card {
                 }
             }
             rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
+		if(this.isVisibleToPlayer) {
             tint('Black');
             image(IMG.icon.character, (this.cardWidth - this.cardHeight*0.2)/2 , this.cardHeight*0.05,this.cardHeight*0.2,this.cardHeight*0.2);
 
@@ -147,6 +150,7 @@ class Card {
                     translate(0,this.cardHeight*0.1+16); //drop below last attack
                 }
             pop(); //attacks
+			}
         pop(); //card
 
 	}

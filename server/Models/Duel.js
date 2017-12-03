@@ -31,23 +31,29 @@ class Duel {
             "attackB:"+ab+",\n}";
     }
     proccessDuel() {
+	    this.cardA.isVisibleToPlayer = true;
+	    this.cardB.isVisibleToPlayer = true;
+
 	    let flatDamage = Math.floor(this.attackB.flat / (this.cardA.armor+1));
 	    let crushingDamage = Math.min(this.attackB.crushing,this.cardA.armor);
+	    let a = this.cardA.armor;
 	    this.cardA.armor -= crushingDamage;
+	    crushingDamage -= a;
 	    this.cardA.health -= (this.attackB.piercing + flatDamage + crushingDamage);
 
 	    flatDamage = Math.floor(this.attackA.flat / (this.cardB.armor+1));
 	    crushingDamage = Math.min(this.attackA.crushing,this.cardB.armor);
+	    a = this.cardB.armor;
 	    this.cardB.armor -= crushingDamage;
+	    crushingDamage -= a;
 	    this.cardB.health -= (this.attackA.piercing + flatDamage + crushingDamage);
-
-	    console.log(this.cardA.toJSON());
-	    console.log(this.cardB.toJSON());
-    	//clean up and return results
-		let r = {
-			A:new Card(this.cardA.toJSON()),
-			B:new Card(this.cardB.toJSON())
-		};
+	    let r = {};
+	    if (this.cardA.health > 0 ){
+	    	r.A = this.cardA;
+	    }
+	    if(this.cardB.health > 0) {
+	    	r.B = this.cardB;
+	    }
 	    this.cardA = undefined;
 	    this.attackA = undefined;
 	    this.cardB = undefined;

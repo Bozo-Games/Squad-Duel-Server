@@ -10,7 +10,7 @@ class Attack {
 		this.power = json.power === undefined ? 0 : json.power;
 		this.isSelected = json.isSelected === undefined ? false : json.isSelected;
 
-		this.attackName = json.attackName === undefined ? 'unknown' : json.attackName;
+		this.name = json.name === undefined ? 'unknown' : json.name;
 
 		if (this.flat > this.crushing && this.flat > this.piercing) {
 			this.icon = IMG.icon.flat;
@@ -37,7 +37,7 @@ class Attack {
 			defense:this.defense,
 			speed:this.speed,
 			power:this.power,
-			attackName:this.attackName
+			name:this.name
 		};
 	}
 	handDraw(cardWidth,cardHeight) {
@@ -51,14 +51,14 @@ class Attack {
         	textAlign(LEFT,TOP);
         	let size = Math.floor(cardHeight*0.1);
 			textSize(size);
-        	while(textWidth(this.attackName) > cardWidth *.8 - cardHeight*0.1 - 12) {
+        	while(textWidth(this.name) > cardWidth *.8 - cardHeight*0.1 - 12) {
         		size --;
                 textSize(size);
         		if(size < 10) {
         			break;
 				}
 			}
-			text(this.attackName,cardHeight*0.1+8,4);
+			text(this.name,cardHeight*0.1+8,4);
         pop();
 	}
 	mouseMoved(xi,yi,cardWidth,cardHeight,isInHad) {
@@ -121,7 +121,7 @@ class Attack {
 			push(); //name
 				translate(cardWidth*0.1,cardHeight*0.35);
 				fill(colors.iconText);
-				text(this.attackName,0,0);
+				text(this.name,0,0);
 			pop();//name
 		pop();//attack
 		/*
