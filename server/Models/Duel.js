@@ -30,34 +30,97 @@ class Duel {
             "cardB:"+cb+",\n"+
             "attackB:"+ab+",\n}";
     }
+
+    resolveAttack(cardAttacker,attackAttacker,cardDefender,attackDefender) {
+        console.log("Attack is " + attackAttacker.category);
+        if (attackAttacker.category == 'flat') {
+            let s = cardDefender.health+' - ('+attackAttacker.power+' - ('+cardDefender.armor+')) = ';
+            cardDefender.health = cardDefender.health - (attackAttacker.power - (cardDefender.armor));
+            s += cardDefender.health;
+            console.log(s);
+        } else if (attackAttacker.category == 'pierce'){
+	        let s = cardDefender.health+' - '+attackAttacker.power+' = ';
+            cardDefender.health = cardDefender.health - attackAttacker.power;
+	        s += cardDefender.health;
+	        console.log(s);
+        } else if (attackAttacker.category == 'crush' ) {
+	        let s = cardDefender.armor+' - '+attackAttacker.power+' = ';
+            cardDefender.armor = cardDefender.armor - attackAttacker.power;
+            s += cardDefender.armor;
+            console.log(s);
+            if (cardDefender.armor < 0 ) {
+                let rollover = cardDefender.armor;
+                cardDefender.armor = 0;
+	            s ='health rollover ('+cardDefender.health+' + '+rollover+' = ';
+                cardDefender.health = cardDefender.health + rollover;
+                s+=cardDefender.health;
+                console.log(s);
+            }
+        }
+    }
+
     proccessDuel() {
+        console.log("new Duel Process --------------");
 	    this.cardA.isVisibleToPlayer = true;
 	    this.cardB.isVisibleToPlayer = true;
+        let aIniative = this.cardA.speed + this.attackA.speed;
+        let bIniative = this.cardB.speed + this.attackB.speed;
 
-	    let flatDamage = Math.floor(this.attackB.flat / (this.cardA.armor+1));
-	    let crushingDamage = Math.min(this.attackB.crushing,this.cardA.armor);
-	    let a = this.cardA.armor;
-	    this.cardA.armor -= crushingDamage;
-	    crushingDamage -= a;
-	    this.cardA.health -= (this.attackB.piercing + flatDamage + crushingDamage);
+        if (aIniative > bIniative){
+            console.log("-------------- A Attack B");
+            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	        if(this.cardB.health > 0) {
+		        console.log("-------------- B Attack A");
+		        this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	        } else {
+	        	console.log("B had Died");
+	        }
+        } else if (bIniative > aIniative) {
+	        console.log("-------------- B Attack A");
+            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	        console.log("-------------- A Attack B");
+	        if(this.cardA.health > 0) {
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	        } else {
+		        console.log("A had Died");
+	        }
+        } else {
+	        console.log("Tie");
+            if (Math.random() >= 0.5) {
+	            console.log("-------------- A Attack B");
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	            if(this.cardB.health > 0) {
+		            console.log("-------------- B Attack A");
+		            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	            } else {
+		            console.log("B had Died");
+	            }
+            } else {
+	            console.log("-------------- B Attack A");
+	            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	            if(this.cardA.health > 0) {
+		            console.log("-------------- A Attack B");
+		            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	            } else {
+		            console.log("A had Died");
+	            }
+            }
+        }
 
-	    flatDamage = Math.floor(this.attackA.flat / (this.cardB.armor+1));
-	    crushingDamage = Math.min(this.attackA.crushing,this.cardB.armor);
-	    a = this.cardB.armor;
-	    this.cardB.armor -= crushingDamage;
-	    crushingDamage -= a;
-	    this.cardB.health -= (this.attackA.piercing + flatDamage + crushingDamage);
-	    let r = {};
+        let r = {};
 	    if (this.cardA.health > 0 ){
+	        console.log("Card A has Survived!");
 	    	r.A = this.cardA;
 	    }
 	    if(this.cardB.health > 0) {
+		    console.log("Card B has Survived!");
 	    	r.B = this.cardB;
 	    }
 	    this.cardA = undefined;
 	    this.attackA = undefined;
 	    this.cardB = undefined;
 	    this.attackB = undefined;
+
         return r;
     }
 

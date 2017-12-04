@@ -8,37 +8,46 @@ function random(choices) {
 let tsl = (new Date()).getTime(); //time since launch
 const Generator = {
     attack: function () {
-        /*
-        let keys = Object.keys(attackDB);
-        let key = keys[Math.floor(Math.random()*keys.length)];
-        let json = JSON.parse(JSON.stringify(attackDB[key]));*/
-        let json = {
-            name: "Attack " + ((new Date()).getTime()-tsl).toString(),
-            flat: random([0,1,2,3,4]),
-	        piercing: random([0,1,2]),
-	        crushing: random([0,1,2]),
-        };
-        json.defense = 8 - (json.flat +json.piercing+json.crushing);
-        json.name = "F-"+json.flat+"P-"+json.piercing+"C-"+json.crushing+"D-"+json.defense;
+        let attackNames = Object.keys(attackDB);
+        let attackName = Math.floor(Math.random()*attackNames.length);
+        let json = JSON.parse(JSON.stringify(attackDB[attackNames[attackName]]));
+        json.name = attackNames[attackName];
         json.id = Generator.guid();
         return json;
     },
     card: function () {
-        /*
-        let keys = Object.keys(cardDB)
-        let key = keys[Math.floor(Math.random()*keys.length)];*/
+        let classNames = Object.keys(cardDB.characterClasses);
+        let className = Math.floor(Math.random()*classNames.length);
+        let classJson = cardDB.characterClasses[classNames[className]];
 
-        let json ={
-            name: "Card " + ((new Date()).getTime()-tsl).toString(),
-            health: random([5,5,5,6,6,7]),
-            armor: random([0,1,2]),
-            speed: random([0,1,2])
+        let titleNames = Object.keys(cardDB.characterTitles);
+        let titleName = Math.floor(Math.random()*titleNames.length);
+        let titleJson = cardDB.characterTitles[titleNames[titleName]];
+
+        let json = {
+            name:  titleNames[titleName]+ ' '+ classNames[className],
+            health: classJson.health + titleJson.health,
+            armor: classJson.armor + titleJson.armor,
+            speed: classJson.speed + titleJson.speed,
+            icon: Math.floor(Math.random() * 53)
+
         };
+        if (json.armor < 0) {
+            let negativeArmor = json.armor;
+            json.armor = 0;
+            json.heatlh = json.health - negativeArmor*2;
+        }
+        if (json.speed < 0) {
+            let negativeSpeed = json.speed;
+            json.speed = 0;
+            json.health = json.health - negativeSpeed*2;
+        }
         json.id = Generator.guid();
         return json;
     },
     hand: function () {
         let cardsJSON = [];
+        console.log('what we are looking for '+defaults.hand.numberOfCards);
         while (cardsJSON.length < defaults.hand.numberOfCards) {
             cardsJSON.push(Generator.card())
         }

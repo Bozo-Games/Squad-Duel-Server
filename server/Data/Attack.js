@@ -1,14 +1,18 @@
 const data = {
-    "0": {id: 0,  flat : 10,  crushing: 0,    piercing: 0,    defense: 0,     speed: 0,   attackName : "Strong Strike"},
-    "1": {id: 1,  flat : 8,   crushing: 0,    piercing: 0,    defense: 0,     speed: 1,   attackName : "Fierce Strike"},
-    "2": {id: 2,  flat : 6,   crushing: 0,    piercing: 0,    defense: 0,     speed: 2,   attackName : "Swift Strike"},
-    "3": {id: 3,  flat : 4,   crushing: 0,    piercing: 0,    defense: 0,     speed: 3,   attackName : "Lightning Strike"},
-    "4": {id: 4,  flat : 0,   crushing: 5,    piercing: 0,    defense: 0,     speed: 0,   attackName : "Strong Bash"},
-    "5": {id: 5,  flat : 0,   crushing: 4,    piercing: 0,    defense: 0,     speed: 1,   attackName : "Fierce Bash"},
-    "6": {id: 6,  flat : 0,   crushing: 3,    piercing: 0,    defense: 0,     speed: 2,   attackName : "Swift Bash"},
-    "7": {id: 7,  flat : 0,   crushing: 0,    piercing: 5,    defense: 0,     speed: 0,   attackName : "Strong Pierce"},
-    "8": {id: 8,  flat : 0,   crushing: 0,    piercing: 4,    defense: 0,     speed: 1,   attackName : "Fierce Pierce"},
-    "9": {id: 9,  flat : 0,   crushing: 0,    piercing: 3,    defense: 0,     speed: 2,   attackName : "Swift Pierce"},
-    "10":{id: 10, flat : 0,   crushing: 0,    piercing: 0,    defense: 5,     speed: 5,   attackName : "Block"}
+'Massive Strike': {category: 'flat', power:8, speed: -1},
+'Fierce Strike': {category: 'flat', power:6, speed: 1},
+'Lightning Strike': {category: 'flat', power:4, speed: 3},
+'Fierce Pierce': {category: 'pierce', power:6, speed: 0},
+'Swift Pierce': {category: 'pierce', power:4, speed: 2},
+'Fierce Crush': {category: 'crush', power:6, speed: 0},
+'Swift Crush': {category: 'crush', power:4, speed: 2},
+/*
+'Block - Strike': {category: 'block', power:10, speed: 10},
+'Block - Pierce': {category: 'block', power:5, speed: 10},
+'Block - Crush': {category: 'block', power:5, speed: 10},
+'Rejuvenate': {category: 'heal', power:10, speed: 0},
+'Circle of Healing': {category: 'heal', power:3, speed: 0},
+'Heal': {category: 'heal', power:2, speed: 0},
+*/    
 };
 module.exports = data;
