@@ -1,4 +1,6 @@
-
+// ifconfig
+// nc -v 192.168.1.5 3000
+//https://www.npmjs.com/package/javascript-state-machine
 "use strict";
 var express = require('express')
 var app = express();

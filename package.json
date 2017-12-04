@@ -4,6 +4,7 @@
   "description": "A place to test out socket io",
   "dependencies": {
     "express": "^4.15.2",
+    "javascript-state-machine": "^3.0.1",
     "socket.io": "^2.0.4"
   }
 }

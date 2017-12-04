@@ -1,6 +1,7 @@
 "use strict";
 const E = require('../../client/duel/Helpers/Enums.js');
-const generate = require('../Helpers/DataGenerator.js')
+const generate = require('../Helpers/DataGenerator.js');
+var StateMachine = require('javascript-state-machine');
 const Player = require('./Player.js');
 const Card = require('./Card.js');
 const Duel = require('./Duel.js');
