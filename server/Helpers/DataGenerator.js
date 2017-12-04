@@ -8,24 +8,13 @@ function random(choices) {
 let tsl = (new Date()).getTime(); //time since launch
 const Generator = {
     attack: function () {
-/*      let keys = Object.keys(attackDB);
-        let key = keys[Math.floor(Math.random()*keys.length)];
-        let json = JSON.parse(JSON.stringify(attackDB[key])); */
-
         let attackNames = Object.keys(attackDB);
         let attackName = Math.floor(Math.random()*attackNames.length);
-        let json = JSON.parse(JSON.stringify(attackDB[attackName]));
+        let json = JSON.parse(JSON.stringify(attackDB[attackNames[attackName]]));
        // console.log(attackDB);
-
-        let json = {
-            name: json.attackName,
-            type: json.type,
-            power: json.power,
-            speed: json.speed,
-        };
-       
-        json.name = attackJson.name;
+        json.name = attackNames[attackName];
         json.id = Generator.guid();
+        console.log(json);
         return json;
     },
     card: function () {
@@ -33,14 +22,13 @@ const Generator = {
         let classNames = Object.keys(cardDB.characterClasses);
         let className = Math.floor(Math.random()*classNames.length);
         let classJson = cardDB.characterClasses[classNames[className]];
-        console.log('class json - ' + classJson);
 
         let titleNames = Object.keys(cardDB.characterTitles);
         console.log(titleNames);
         let titleName = Math.floor(Math.random()*titleNames.length);
         let titleJson = cardDB.characterTitles[titleNames[titleName]];
 
-        let json ={
+        let json = {
             name:  titleNames[titleName]+ ' '+ classNames[className],
             health: classJson.health + titleJson.health,
             armor: classJson.armor + titleJson.armor,
@@ -48,8 +36,17 @@ const Generator = {
             icon: Math.floor(Math.random() * 53)
 
         };
+        if (json.armor < 0) {
+            let negativeArmor = json.armor;
+            json.armor = 0;
+            json.heatlh = json.health - negativeArmor*2;
+        }
+        if (json.speed < 0) {
+            let negativeSpeed = json.speed;
+            json.speed = 0;
+            json.health = json.health - negativeSpeed*2;
+        }
         json.id = Generator.guid();
-        console.log(json);
         return json;
     },
     hand: function () {

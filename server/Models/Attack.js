@@ -4,25 +4,19 @@ class Attack {
     constructor(json) {
         json = json === undefined ? generate.attack() : json;
         this.id = json.id === undefined ? -1 : json.id;
-        this.flat = json.flat === undefined ? 0 : json.flat;
-        this.crushing = json.crushing === undefined ? 0 : json.crushing;
-        this.piercing = json.piercing === undefined ? 0 : json.piercing;
-        this.defense = json.defense === undefined ? 0 : json.defense;
-        this.speed = json.speed === undefined ? 0 : json.speed;
+        this.category = json.category === undefined ? 'unknown' : json.category;
         this.power = json.power === undefined ? 0 : json.power;
+        this.speed = json.speed === undefined ? 0 : json.speed;
         this.name = json.name === undefined ? 'unknown' : json.name;
     }
 
     toJSON(){
         return {
             id: this.id,
-            flat:this.flat,
-            crushing:this.crushing,
-            piercing:this.piercing,
-            defense:this.defense,
-            speed:this.speed,
-            power:this.power,
-            name:this.name,
+            category: this.category,
+            power: this.power,
+            speed: this.speed,
+            name: this.name,
         };
     }
     toString() {

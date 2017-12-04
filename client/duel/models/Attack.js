@@ -2,28 +2,22 @@ class Attack {
 	constructor(json) {
 		json = json === undefined ? {} : json;
 		this.id = json.id === undefined ? 0 : json.id;
-		this.flat = json.flat === undefined ? 0 : json.flat; 
-		this.crushing = json.crushing === undefined ? 0 : json.crushing; 
-		this.piercing = json.piercing === undefined ? 0 : json.piercing; 
-		this.defense = json.defense === undefined ? 0 : json.defense; 
+		this.category = json.category === undefined ? 'unknown' : json.category; 
 		this.speed = json.speed === undefined ? 0 : json.speed;
 		this.power = json.power === undefined ? 0 : json.power;
 		this.isSelected = json.isSelected === undefined ? false : json.isSelected;
-
 		this.name = json.name === undefined ? 'unknown' : json.name;
 
-		if (this.flat > this.crushing && this.flat > this.piercing) {
+		if (this.category == 'flat') {
 			this.icon = IMG.icon.flat;
-			this.power = this.flat;
- 		} else if (this.crushing > this.flat && this.crushing > this.piercing)  {
+ 		} else if (this.category == 'crush' )  {
 			this.icon = IMG.icon.crushing;
-			this.power = this.crushing;
- 		} else if (this.piercing > this.flat && this.piercing > this.crushing)  {
+ 		} else if (this.category == 'pierce')  {
 			this.icon = IMG.icon.piercing;
-			this.power = this.piercing;
- 		} else {
+ 		} else if (this.category == 'block') {
 			this.icon = IMG.icon.armor;
-			this.power = this.defense;
+ 		} else {
+ 			this.icon = IMG.icon.heal;
  		}
 
  		this.mouseIsOver = false;
@@ -32,9 +26,7 @@ class Attack {
 		return {
 			id: this.id,
 			flat:this.flat,
-			crushing:this.crushing,
-			piercing:this.piercing,
-			defense:this.defense,
+			category:this.category,
 			speed:this.speed,
 			power:this.power,
 			name:this.name
@@ -107,7 +99,7 @@ class Attack {
 					image(this.icon,0,0,cardHeight*0.2,cardHeight*0.2);
 					fill(colors.iconText);
 					textAlign(CENTER,CENTER);
-					text(this.speed+card.speed,cardHeight*0.1,cardHeight*0.1);
+					text(this.power,cardHeight*0.1,cardHeight*0.1);
 				pop(); //power
 				push(); //Speed
 					translate(cardWidth*0.15+cardHeight*0.2 ,cardHeight*0.02);

@@ -30,25 +30,47 @@ class Duel {
             "cardB:"+cb+",\n"+
             "attackB:"+ab+",\n}";
     }
+
+    resolveAttack(cardAttacker,attackAttacker,cardDefender,attackDefender) {
+        if (attackAttacker.category == 'flat') {
+            cardDefender.health = cardDefender.health - (attackAttacker.power - (cardDefender.armor+attackDefender.armor));  
+        } else if (attackAttacker.category == 'pierce'){
+            cardDefender.health = cardDefender.health - attackAttacker.power;
+        } else if (attackAttacker.category == 'crush' ) {
+            cardDefender.armor = cardDefender.armor - attackAttacker.power;
+            if (cardDefender.armor < 0 ) {
+                let rollover = cardDefender.armor;
+                cardDefender.armor = 0;
+                cardDefender.health = cardDefender.health + rollover;
+            }
+        }
+    }
+
     proccessDuel() {
 	    this.cardA.isVisibleToPlayer = true;
 	    this.cardB.isVisibleToPlayer = true;
-        
+        let aIniative = this.cardA.speed + this.attackA.speed;
+        let bIniative = this.cardB.speed + this.attackB.speed;
 
-	    let flatDamage = Math.floor(this.attackB.flat / (this.cardA.armor+1));
-	    let crushingDamage = Math.min(this.attackB.crushing,this.cardA.armor);
-	    let a = this.cardA.armor;
-	    this.cardA.armor -= crushingDamage;
-	    crushingDamage -= a;
-	    this.cardA.health -= (this.attackB.piercing + flatDamage + crushingDamage);
+        if (aIniative > bIniative){
+            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
 
-	    flatDamage = Math.floor(this.attackA.flat / (this.cardB.armor+1));
-	    crushingDamage = Math.min(this.attackA.crushing,this.cardB.armor);
-	    a = this.cardB.armor;
-	    this.cardB.armor -= crushingDamage;
-	    crushingDamage -= a;
-	    this.cardB.health -= (this.attackA.piercing + flatDamage + crushingDamage);
-	    let r = {};
+        } else if (bIniative > aIniative) {
+            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+        } else {
+            let coin = random(0,1);
+            if (coin == 0) {
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+            } else {
+                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+            }
+        }
+
+        let r = {};
 	    if (this.cardA.health > 0 ){
 	    	r.A = this.cardA;
 	    }
@@ -59,6 +81,7 @@ class Duel {
 	    this.attackA = undefined;
 	    this.cardB = undefined;
 	    this.attackB = undefined;
+
         return r;
     }
 

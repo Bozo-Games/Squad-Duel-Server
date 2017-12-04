@@ -33,8 +33,9 @@ function preload() {
     IMG.icon.piercing = loadImage('duel/Icons/piercing.svg');
     IMG.icon.speed = loadImage('duel/Icons/speed.svg');
     IMG.icon.defense = loadImage('duel/Icons/armor.svg');
+    IMG.icon.heal = loadImage('duel/Icons/heal.svg');
     IMG.icon.characters = [];
-    for (let i = 0; i <= 48; i++) {    
+    for (let i = 0; i < 54; i++) {    
         IMG.icon.characters.push(loadImage('duel/Icons/Cards/'+i+'_character.svg'));
     }
 

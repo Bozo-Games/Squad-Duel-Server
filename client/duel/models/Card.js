@@ -8,7 +8,6 @@ class Card {
 		this.speed = json.speed === undefined ? 0 : json.speed;
         this.icon = json.icon === undefined ? 0 : json.icon;
 		this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
-//		this.power = json.power === undefined ? 0 : json.power;
         this.attacks = [];
         for(let i = 0; i < json.attacks.length; i++) {
             this.attacks.push(new Attack(json.attacks[i]));
