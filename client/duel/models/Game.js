@@ -31,7 +31,7 @@ class Game {
 		this.playerHand.isVisbleToPlayer();
         this.duel = new Duel(json.duel);
 
-		this.currentState = json.currentState === undefined ? E.GameStates.NewGame : json.currentState;
+		this.currentState = json.currentState === undefined ? 'new' : json.currentState;
 
 	}
     mouseMoved() {
@@ -61,12 +61,11 @@ class Game {
         this.opp.draw();
 
 		//debug drawing
-        let cs = STR.game.state[this.currentState];
         push();
         fill('#00ff00');
         textStyle(BOLD);
         textSize(17);
-        text(cs,width - 100,20);
+        text(this.currentState,width - textWidth(this.currentState) - 20,height / 2 - 10);
         pop();
 
 	}

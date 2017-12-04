@@ -13,6 +13,7 @@ class Card {
 	    this.name = json.name === undefined ? 'Card -1' : json.name;
         json.attacks = json.attacks === undefined ? [] : json.attacks;
 
+
 	    this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
 
         this.attacks = [];
@@ -38,6 +39,14 @@ class Card {
             attacks:attacksJSON,
             isVisibleToPlayer:this.isVisibleToPlayer
         };
+    }
+    getAttack(attackID) {
+	    for(let i = 0; i < this.attacks.length; i++) {
+	        if(this.attacks[i].id === attackID) {
+	            return this.attacks[i];
+            }
+	    }
+	    return undefined;
     }
 }
 module.exports = Card;

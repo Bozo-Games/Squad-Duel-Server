@@ -47,7 +47,6 @@ const Generator = {
     },
     hand: function () {
         let cardsJSON = [];
-        console.log('what we are looking for '+defaults.hand.numberOfCards);
         while (cardsJSON.length < defaults.hand.numberOfCards) {
             cardsJSON.push(Generator.card())
         }

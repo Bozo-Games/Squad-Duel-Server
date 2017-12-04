@@ -29,5 +29,12 @@ class Hand {
         cardsString += '}';
         return cardsString;
     }
+    //------------------------------------------------------------------- public methods
+    getCard(cardID) {
+	    for(let i = 0; i < this.cards.length; i++) {
+		    if(this.cards[i].id === cardID) {return this.cards[i];}
+	    }
+	    return undefined;
+    }
 }
 module.exports = Hand;

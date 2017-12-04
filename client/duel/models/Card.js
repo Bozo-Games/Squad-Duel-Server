@@ -1,3 +1,4 @@
+let allCards = [];
 class Card {
 	constructor(json) {
 		json = json === undefined ? cardList[Math.floor(Math.random() * 18)] : json;
@@ -8,6 +9,9 @@ class Card {
 		this.speed = json.speed === undefined ? 0 : json.speed;
         this.icon = json.icon === undefined ? 0 : json.icon;
 		this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
+
+
+		this.isSelected = json.isSelected === undefined ? false : json.isSelected;
         this.attacks = [];
         for(let i = 0; i < json.attacks.length; i++) {
             this.attacks.push(new Attack(json.attacks[i]));
@@ -21,7 +25,6 @@ class Card {
 		this.cardScale = defaults.card.scale;
 
         //TODO old things
-        this.isSelected = false;
         this.owner = json.owner === undefined ? 0 : json.owner; // player 0, opponent 1
         this.mouseHit = false;
 

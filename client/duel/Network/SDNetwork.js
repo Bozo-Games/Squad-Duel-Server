@@ -33,3 +33,6 @@ let network = {
         socket.emit(Routes.newGame);
     }
 };
+window.onload = function() {
+	window.onfocus = function() { network.getUpdate();};
+};

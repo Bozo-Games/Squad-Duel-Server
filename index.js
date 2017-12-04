@@ -30,11 +30,11 @@ io.on('connection', function(socket) {
         updatePlayers();
     });
     socket.on(Routes.selectCard,function (cardJSON) {
-        currentGame.selectCard(new Player({socketID:socket.id}), new Card(cardJSON));
+        currentGame.selectCard(socket.id, cardJSON.id);
         updatePlayers();
     });
     socket.on(Routes.selectAttack, function (attackJSON) {
-        currentGame.selectAttack(new Player({socketID:socket.id}), new Attack(attackJSON));
+        currentGame.selectAttack(socket.id, attackJSON.id);
         updatePlayers();
     });
 	socket.on(Routes.newGame, function () {

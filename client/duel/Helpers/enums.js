@@ -15,6 +15,10 @@ const E = {
     Status: {
         failure: 0,
         success: 1,
+    },
+    logs: {
+	    gameStateMachine: 0,
+	    serverGameClass: 1
     }
 };
 module.exports = E; //leave here so server can use
