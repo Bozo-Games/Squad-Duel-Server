@@ -7,8 +7,7 @@ const defaults = {
         opp: {
             initialXi: 25,
             initialYi: 20
-        },
-        cardsInHand: 5
+        }
     },
     card: {
         scale: 5,

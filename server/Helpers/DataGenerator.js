@@ -11,20 +11,16 @@ const Generator = {
         let attackNames = Object.keys(attackDB);
         let attackName = Math.floor(Math.random()*attackNames.length);
         let json = JSON.parse(JSON.stringify(attackDB[attackNames[attackName]]));
-       // console.log(attackDB);
         json.name = attackNames[attackName];
         json.id = Generator.guid();
-        console.log(json);
         return json;
     },
     card: function () {
-        //console.log(cardDB);
         let classNames = Object.keys(cardDB.characterClasses);
         let className = Math.floor(Math.random()*classNames.length);
         let classJson = cardDB.characterClasses[classNames[className]];
 
         let titleNames = Object.keys(cardDB.characterTitles);
-        console.log(titleNames);
         let titleName = Math.floor(Math.random()*titleNames.length);
         let titleJson = cardDB.characterTitles[titleNames[titleName]];
 
@@ -51,6 +47,7 @@ const Generator = {
     },
     hand: function () {
         let cardsJSON = [];
+        console.log('what we are looking for '+defaults.hand.numberOfCards);
         while (cardsJSON.length < defaults.hand.numberOfCards) {
             cardsJSON.push(Generator.card())
         }

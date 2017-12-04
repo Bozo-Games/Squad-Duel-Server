@@ -32,49 +32,88 @@ class Duel {
     }
 
     resolveAttack(cardAttacker,attackAttacker,cardDefender,attackDefender) {
+        console.log("Attack is " + attackAttacker.category);
         if (attackAttacker.category == 'flat') {
-            cardDefender.health = cardDefender.health - (attackAttacker.power - (cardDefender.armor+attackDefender.armor));  
+            let s = cardDefender.health+' - ('+attackAttacker.power+' - ('+cardDefender.armor+')) = ';
+            cardDefender.health = cardDefender.health - (attackAttacker.power - (cardDefender.armor));
+            s += cardDefender.health;
+            console.log(s);
         } else if (attackAttacker.category == 'pierce'){
+	        let s = cardDefender.health+' - '+attackAttacker.power+' = ';
             cardDefender.health = cardDefender.health - attackAttacker.power;
+	        s += cardDefender.health;
+	        console.log(s);
         } else if (attackAttacker.category == 'crush' ) {
+	        let s = cardDefender.armor+' - '+attackAttacker.power+' = ';
             cardDefender.armor = cardDefender.armor - attackAttacker.power;
+            s += cardDefender.armor;
+            console.log(s);
             if (cardDefender.armor < 0 ) {
                 let rollover = cardDefender.armor;
                 cardDefender.armor = 0;
+	            s ='health rollover ('+cardDefender.health+' + '+rollover+' = ';
                 cardDefender.health = cardDefender.health + rollover;
+                s+=cardDefender.health;
+                console.log(s);
             }
         }
     }
 
     proccessDuel() {
+        console.log("new Duel Process --------------");
 	    this.cardA.isVisibleToPlayer = true;
 	    this.cardB.isVisibleToPlayer = true;
         let aIniative = this.cardA.speed + this.attackA.speed;
         let bIniative = this.cardB.speed + this.attackB.speed;
 
         if (aIniative > bIniative){
+            console.log("-------------- A Attack B");
             this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
-            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-
+	        if(this.cardB.health > 0) {
+		        console.log("-------------- B Attack A");
+		        this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	        } else {
+	        	console.log("B had Died");
+	        }
         } else if (bIniative > aIniative) {
+	        console.log("-------------- B Attack A");
             this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	        console.log("-------------- A Attack B");
+	        if(this.cardA.health > 0) {
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	        } else {
+		        console.log("A had Died");
+	        }
         } else {
-            let coin = random(0,1);
-            if (coin == 0) {
+	        console.log("Tie");
+            if (Math.random() >= 0.5) {
+	            console.log("-------------- A Attack B");
                 this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
-                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	            if(this.cardB.health > 0) {
+		            console.log("-------------- B Attack A");
+		            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	            } else {
+		            console.log("B had Died");
+	            }
             } else {
-                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	            console.log("-------------- B Attack A");
+	            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	            if(this.cardA.health > 0) {
+		            console.log("-------------- A Attack B");
+		            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	            } else {
+		            console.log("A had Died");
+	            }
             }
         }
 
         let r = {};
 	    if (this.cardA.health > 0 ){
+	        console.log("Card A has Survived!");
 	    	r.A = this.cardA;
 	    }
 	    if(this.cardB.health > 0) {
+		    console.log("Card B has Survived!");
 	    	r.B = this.cardB;
 	    }
 	    this.cardA = undefined;

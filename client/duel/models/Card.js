@@ -25,6 +25,8 @@ class Card {
         this.owner = json.owner === undefined ? 0 : json.owner; // player 0, opponent 1
         this.mouseHit = false;
 
+		this.isVisibleToPlayer = true;
+
     }
 	get cardWidth() {
 	    if(this.mouseIsOver) {

@@ -22,7 +22,6 @@ class Card {
         while(this.attacks.length < defualts.card.numberOfAttacks) {
             this.attacks.push(new Attack());
         }
-        console.log(json);
     }
     toJSON(){
         let attacksJSON = [];

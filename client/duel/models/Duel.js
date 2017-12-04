@@ -1,6 +1,5 @@
 class Duel {
     constructor(json) {
-		console.log(json);
 		json = json === undefined ? {} : json;
         //new card(json.cardsInHand[i])
         if(game !== undefined) {
