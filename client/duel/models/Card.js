@@ -2,10 +2,11 @@ class Card {
 	constructor(json) {
 		json = json === undefined ? cardList[Math.floor(Math.random() * 18)] : json;
 		this.id = json.id;
-		this.name = json.name === undefined ? 'Card -1' : json.name;
+		this.name = json.name === undefined ? 'Ananymous' : json.name;
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
 		this.speed = json.speed === undefined ? 0 : json.speed;
+        this.icon = json.icon === undefined ? 0 : json.icon;
 		this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
 //		this.power = json.power === undefined ? 0 : json.power;
         this.attacks = [];
@@ -47,9 +48,11 @@ class Card {
 		return {
 		    id:this.id,
 			owner:this.owner,
+            name:this.name,
 			health:this.health,
 			armor:this.armor,
 			speed:this.speed,
+            icon:this.icon,
             attacks:attacksJSON
 		};
 	}
@@ -106,12 +109,12 @@ class Card {
             }
             rect(0, 0, this.cardWidth, this.cardHeight, 5); // draw card
 		if(this.isVisibleToPlayer) {
-            tint('Black');
-            image(IMG.icon.character, (this.cardWidth - this.cardHeight*0.2)/2 , this.cardHeight*0.05,this.cardHeight*0.2,this.cardHeight*0.2);
+           // tint('Black');
+            image(IMG.icon.characters[this.icon], (this.cardWidth - this.cardHeight*0.24)/2, this.cardHeight*0.05,this.cardHeight*0.25,this.cardHeight*0.25);
 
             push(); //debug
                 textAlign(CENTER,BOTTOM);
-                text(this.id, (this.cardWidth)/2,0);
+                text(this.name, (this.cardWidth)/2,0);
             pop();//Debug
             push(); //stats
                 textAlign(CENTER,CENTER);
@@ -120,7 +123,7 @@ class Card {
                 } else {
                     textSize(8);
                 }
-                translate(this.cardWidth*0.08,this.cardHeight*.25); //drop below image
+                translate(this.cardWidth*0.08,this.cardHeight*.32); //drop below image
                 push(); //health
                     tint(colors.health);
                     image(IMG.icon.health, this.cardWidth*0.05, 0,this.cardWidth*0.25,this.cardWidth*0.25); // render icon
@@ -144,7 +147,7 @@ class Card {
             pop();//stats
 
             push(); //attacks
-                translate(0,this.cardHeight*.25 + this.cardWidth*0.3); //drop below stats
+                translate(0,this.cardHeight*.32 + this.cardWidth*0.3); //drop below stats
                 for(let i = 0; i < this.attacks.length; i++) {
                     this.attacks[i].handDraw(this.cardWidth,this.cardHeight);
                     translate(0,this.cardHeight*0.1+16); //drop below last attack
@@ -160,8 +163,7 @@ class Card {
 
 		push(); //card
 			rect(0, 0, cardWidth, cardHeight, 5); // draw card
-			tint('Black');
-			image(IMG.icon.character, cardWidth*0.2-cardHeight*0.2, cardHeight*.1,cardHeight*0.4,cardHeight*0.4);
+			image(IMG.icon.characters[this.icon], cardWidth*0.2-cardHeight*0.2, cardHeight*.1,cardHeight*0.4,cardHeight*0.4);
 			push(); //Stats
 				translate(cardWidth*0.05,cardHeight*.5); //drop below image
                 textAlign(CENTER,CENTER);
@@ -181,7 +183,7 @@ class Card {
                 push(); //Name
                     translate(-cardWidth*0.025,cardHeight*.3);
                     textAlign(LEFT,TOP);
-                    text(this.id,0,0); //TODO change from name to id
+                    text(this.name,0,0); //TODO change from name to id
                  pop(); //Name
 			pop();//stats
 			push(); //Attacks

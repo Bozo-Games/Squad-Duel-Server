@@ -33,6 +33,7 @@ class Duel {
     proccessDuel() {
 	    this.cardA.isVisibleToPlayer = true;
 	    this.cardB.isVisibleToPlayer = true;
+        
 
 	    let flatDamage = Math.floor(this.attackB.flat / (this.cardA.armor+1));
 	    let crushingDamage = Math.min(this.attackB.crushing,this.cardA.armor);

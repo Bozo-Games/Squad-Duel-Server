@@ -8,33 +8,48 @@ function random(choices) {
 let tsl = (new Date()).getTime(); //time since launch
 const Generator = {
     attack: function () {
-        /*
-        let keys = Object.keys(attackDB);
+/*      let keys = Object.keys(attackDB);
         let key = keys[Math.floor(Math.random()*keys.length)];
-        let json = JSON.parse(JSON.stringify(attackDB[key]));*/
+        let json = JSON.parse(JSON.stringify(attackDB[key])); */
+
+        let attackNames = Object.keys(attackDB);
+        let attackName = Math.floor(Math.random()*attackNames.length);
+        let json = JSON.parse(JSON.stringify(attackDB[attackName]));
+       // console.log(attackDB);
+
         let json = {
-            name: "Attack " + ((new Date()).getTime()-tsl).toString(),
-            flat: random([0,1,2,3,4]),
-	        piercing: random([0,1,2]),
-	        crushing: random([0,1,2]),
+            name: json.attackName,
+            type: json.type,
+            power: json.power,
+            speed: json.speed,
         };
-        json.defense = 8 - (json.flat +json.piercing+json.crushing);
-        json.name = "F-"+json.flat+"P-"+json.piercing+"C-"+json.crushing+"D-"+json.defense;
+       
+        json.name = attackJson.name;
         json.id = Generator.guid();
         return json;
     },
     card: function () {
-        /*
-        let keys = Object.keys(cardDB)
-        let key = keys[Math.floor(Math.random()*keys.length)];*/
+        //console.log(cardDB);
+        let classNames = Object.keys(cardDB.characterClasses);
+        let className = Math.floor(Math.random()*classNames.length);
+        let classJson = cardDB.characterClasses[classNames[className]];
+        console.log('class json - ' + classJson);
+
+        let titleNames = Object.keys(cardDB.characterTitles);
+        console.log(titleNames);
+        let titleName = Math.floor(Math.random()*titleNames.length);
+        let titleJson = cardDB.characterTitles[titleNames[titleName]];
 
         let json ={
-            name: "Card " + ((new Date()).getTime()-tsl).toString(),
-            health: random([5,5,5,6,6,7]),
-            armor: random([0,1,2]),
-            speed: random([0,1,2])
+            name:  titleNames[titleName]+ ' '+ classNames[className],
+            health: classJson.health + titleJson.health,
+            armor: classJson.armor + titleJson.armor,
+            speed: classJson.speed + titleJson.speed,
+            icon: Math.floor(Math.random() * 53)
+
         };
         json.id = Generator.guid();
+        console.log(json);
         return json;
     },
     hand: function () {
