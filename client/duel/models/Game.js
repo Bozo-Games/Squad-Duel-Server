@@ -68,6 +68,12 @@ class Game {
         textSize(17);
         text(cs,width - 100,20);
         pop();
+		push();
+        if(this.duel.oppSelectedCard !== undefined && this.duel.playerSelectedCard === undefined) {
+	        fill('#ff0000');
+	        rect(0,0,width,height/2)
+        }
+        pop();
 
 	}
 

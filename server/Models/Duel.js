@@ -72,15 +72,23 @@ class Duel {
 	        if(this.cardB.health > 0) {
 		        console.log("-------------- B Attack A");
 		        this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+		        if(aIniative > bIniative*2) {
+			        console.log("-------------- A Attack B AGAIN");
+			        this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+		        }
 	        } else {
 	        	console.log("B had Died");
 	        }
         } else if (bIniative > aIniative) {
 	        console.log("-------------- B Attack A");
             this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-	        console.log("-------------- A Attack B");
-	        if(this.cardA.health > 0) {
+            if(this.cardA.health > 0) {
+                console.log("-------------- A Attack B");
                 this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+	            if(bIniative > aIniative*2) {
+		            console.log("-------------- B Attack A AGAIN");
+		            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+	            }
 	        } else {
 		        console.log("A had Died");
 	        }
