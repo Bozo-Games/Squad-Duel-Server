@@ -4,7 +4,7 @@ const defualts = {
         numberOfAttacks: 2
     },
     hand: {
-        numberOfCards: 5
+        numberOfCards: 4
     }
 };
 module.exports = defualts;

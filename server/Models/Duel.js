@@ -53,12 +53,23 @@ class Duel {
         let bIniative = this.cardB.speed + this.attackB.speed;
 
         if (aIniative > bIniative){
-            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
-            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-
+            if (aIniative > bIniative*2) {
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+            } else {
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+            }
         } else if (bIniative > aIniative) {
-            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+            if (bIniative > aIniative*2) {
+                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+            } else {
+                this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
+                this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
+            }
         } else {
             let coin = random(0,1);
             if (coin == 0) {

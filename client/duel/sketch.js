@@ -34,6 +34,8 @@ function preload() {
     IMG.icon.speed = loadImage('duel/Icons/speed.svg');
     IMG.icon.defense = loadImage('duel/Icons/armor.svg');
     IMG.icon.heal = loadImage('duel/Icons/heal.svg');
+    //IMG.icon.background = loadImage('duel/Icons/Images/background.jpg');
+
     IMG.icon.characters = [];
     for (let i = 0; i < 54; i++) {    
         IMG.icon.characters.push(loadImage('duel/Icons/Cards/'+i+'_character.svg'));
@@ -42,9 +44,11 @@ function preload() {
 }
 function setup() {
 	canvas = createCanvas(800, 600);
+    //background(IMG.icon.background);
 	canvas.parent('game');
-	game = new Game();//{playerHand : new hand() , oppHand : new hand({owner:1}) });
-	network.getUpdate();
+    game = new Game();//{playerHand : new hand() , oppHand : new hand({owner:1}) });
+    
+    network.getUpdate();
 	//fill('Black');
     duel = new Duel();
 

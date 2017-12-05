@@ -16,11 +16,23 @@ class Card {
 	    this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
 
         this.attacks = [];
-        for(let i = 0; i < json.attacks.length; i++) {
+
+        for (let i = 0; i < json.attacks.length; i++) {
             this.attacks.push(new Attack(json.attacks[i]));
         }
+
         while(this.attacks.length < defualts.card.numberOfAttacks) {
-            this.attacks.push(new Attack());
+            let newAttack = new Attack();
+            let match = false;
+            for (let i = 0; i < this.attacks.length; i++) {
+                if (this.attacks[i].category == newAttack.category) {
+                    match = true;
+                } 
+            }
+            if (match == false) { 
+                this.attacks.push(newAttack);  
+            }
+            
         }
         console.log(json);
     }
