@@ -22,6 +22,26 @@ class Attack {
 
  		this.mouseIsOver = false;
 	}
+	draw(cardState,drawSize) {
+		push();
+		if(cardState === 'inHandA' || cardState === 'inHandB') {
+			fill(colors.attack.hand.normal);
+			rect(drawSize.w*0.05,0,drawSize.w*0.9,drawSize.h,2);
+			fill(colors.iconText);
+			let ts = drawSize.h;
+			while(textWidth(this.name) > drawSize.w*0.8) {
+				ts--;
+				textSize(ts);
+				if(ts < 8){
+					break;
+				}
+			}
+			textAlign(CENTER,CENTER);
+			text(this.name,0,0,drawSize.w,drawSize.h);
+
+		}
+		pop();
+	}
 	toJSON(){
 		return {
 			id: this.id,

@@ -1,7 +1,10 @@
 "use strict";
 const generate = require('../Helpers/DataGenerator.js');
-const defualts = require('../Helpers/defualts.js');
+const E = require('../../client/duel/Helpers/Enums.js');
+const defualts = require('../../client/duel/Helpers/defaults.js');
 const Attack = require('./Attack.js');
+const StateMachine = require('javascript-state-machine');
+const logs = require('../Helpers/logger.js');
 class Card {
     constructor(json) {
         json = json === undefined ? generate.card() : json;
@@ -13,17 +16,62 @@ class Card {
 	    this.name = json.name === undefined ? 'Card -1' : json.name;
         json.attacks = json.attacks === undefined ? [] : json.attacks;
 
+	    this._stateMachine = new StateMachine({
+		    data: {
+			    id: json.id === undefined ? -1 : json.id //prob no needed ever but if the card stats are ever need for SM then needs to be moved down like server game model but this would be more involoved cuase of prces duel
+		    },
+		    init:'inDeck',
+		    transitions: [
+			    {name:'dealToPlayerA', from:'inDeck', to:'inHandA'},
+			    {name:'dealToPlayerB', from:'inDeck', to:'inHandB'},
 
-	    this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
+			    {name:'selectCard', from:'inHandA', to:'selectedA'},
+			    {name:'selectCard', from:'inHandB', to:'selectedB'},
+
+			    {name:'duel', from:['selectedA','selectedB'], to:'dueling'},
+
+			    {name:'kill',            from:'dueling', to:'dead'},
+			    {name:'returnToPlayerA', from:'dueling', to:'inHandA'},
+			    {name:'returnToPlayerB', from:'dueling', to:'inHandB'}
+		    ],
+		    methods: {
+			    //All state changes globaly
+			    onBeforeTransition: this.onBeforeTransition,
+			    onAfterTransition: this.onAfterTransition,
+			    onEnterState: this.onEnterState,
+			    onLeaveState: this.onLeaveState
+		    }
+	    });
 
         this.attacks = [];
         for(let i = 0; i < json.attacks.length; i++) {
             this.attacks.push(new Attack(json.attacks[i]));
         }
-        while(this.attacks.length < defualts.card.numberOfAttacks) {
+        while(this.attacks.length < defualts.server.card.numberOfAttacks) {
             this.attacks.push(new Attack());
         }
     }
+    //------------------------------------------------- state machine
+
+	//All transitions
+	onBeforeTransition(lifecycle) {
+		logs.log(E.logs.cardStateMachine, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	onAfterTransition(lifecycle) {
+		logs.log(E.logs.cardStateMachine, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	onEnterState(lifecycle) {
+		logs.log(E.logs.cardStateMachine, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	onLeaveState(lifecycle) {
+		logs.log(E.logs.cardStateMachine,"---------------------\n");
+		logs.log(E.logs.cardStateMachine, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	//----------------------------------------------------- public methods
     toJSON(){
         let attacksJSON = [];
         for(let i = 0; i < this.attacks.length; i++) {
@@ -37,7 +85,7 @@ class Card {
             icon:this.icon,
             name:this.name,
             attacks:attacksJSON,
-            isVisibleToPlayer:this.isVisibleToPlayer
+	        currentState:this._stateMachine.state
         };
     }
     getAttack(attackID) {
@@ -48,5 +96,11 @@ class Card {
 	    }
 	    return undefined;
     }
+	dealToPlayerA() {
+		this._stateMachine.dealToPlayerA();
+	}
+	dealToPlayerB() {
+		this._stateMachine.dealToPlayerB();
+	}
 }
 module.exports = Card;

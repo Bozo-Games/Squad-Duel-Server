@@ -18,7 +18,8 @@ const E = {
     },
     logs: {
 	    gameStateMachine: 0,
-	    serverGameClass: 1
+	    serverGameClass: 1,
+	    cardStateMachine: 2
     }
 };
 module.exports = E; //leave here so server can use

@@ -4,16 +4,21 @@ let logger = {
 	settings: {
 		displayGameStateMachineInfo: true,
 		displaySeverGameModelInfo: true,
+
 	},
 	prepends: {
 		GameStateMachine:'GAME STATE MACHINE: ',
+		cardStateMachine:'CARD STATE MACHINE: ',
 		SeverGameModel:  ' SERVER GAME MODEL: ',
+
 	},
 	log: function (kind,msg) {
 		if(kind === E.logs.gameStateMachine && logger.settings.displayGameStateMachineInfo) {
 			console.log(logger.prepends.GameStateMachine+msg);
 		} else if(kind === E.logs.serverGameClass) {
 			console.log(logger.prepends.SeverGameModel+msg);
+		} else if(kind === E.logs.cardStateMachine) {
+			console.log(logger.prepends.cardStateMachine+msg);
 		} else {
 			console.log('Mysterious Kind ('+ kind + '): ' + msg);
 		}

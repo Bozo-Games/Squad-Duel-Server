@@ -4,6 +4,7 @@ class Hand {
         json = json === undefined ? {cards: []} : json;
         this.cards = [];
         for(let i = 0; i < json.cards.length; i++) {
+
             this.cards.push(new Card(json.cards[i]));
         }
         this.isPlayer = json.isPlayer === undefined ? false : json.isPlayer;
@@ -19,11 +20,6 @@ class Hand {
             cards:cardsJSON
         };
     }
-    isVisbleToPlayer() {
-        this.loopCardsWithCallBack(function (card,xi,yi) {
-            card.isVisibleToPlayer = true;
-        });
-    }
     //mose events
     mouseMoved() {
         this.loopCardsWithCallBack(function (card,xi,yi) {
@@ -38,24 +34,23 @@ class Hand {
     draw() {
         this.loopCardsWithCallBack(function (card,xi,yi) {
             push();
-            translate(xi,yi);
-            card.handDraw();
+                translate(xi,yi);
+                card.draw(xi,yi);
             pop();
         });
     }
     loopCardsWithCallBack(f) {
         let xi, yi;
-        let step = width / this.cards.length;
-        if (this.owner === 0) { //TODO make owner a enum or a bool isPlayer
-            xi = defaults.hand.player.initialXi;
-            yi = defaults.hand.player.initialYi;
+        let step = defaults.drawing.hand.width() / Math.max(1,this.cards.length);
+        if (this.isPlayer) {
+            xi = defaults.drawing.hand.player.initial.x();
+            yi = defaults.drawing.hand.player.initial.y();
         } else {
-            xi = defaults.hand.opp.initialXi;
-            yi = defaults.hand.opp.initialYi;
+	        xi = defaults.drawing.hand.opp.initial.x();
+	        yi = defaults.drawing.hand.opp.initial.y();
         }
         for (let i = 0;i<this.cards.length; i++) {
             let card = this.cards[i];
-            card.owner = this.owner; //TODO change to is isPlayer I think
             f(card,xi,yi);
             xi += step;
         }

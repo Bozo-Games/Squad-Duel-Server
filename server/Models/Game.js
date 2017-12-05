@@ -3,10 +3,12 @@ const E = require('../../client/duel/Helpers/Enums.js');
 const logs = require('../Helpers/logger.js');
 const generate = require('../Helpers/DataGenerator.js');
 const StateMachine = require('javascript-state-machine');
+const defualts = require('../../client/duel/Helpers/defaults.js');
 const Player = require('./Player.js');
 const Card = require('./Card.js');
 const Duel = require('./Duel.js');
 const Hand = require('./Hand.js');
+const Deck = require('./Deck.js');
 const Attack = require('./Attack.js');
 class Game {
     constructor(json) {
@@ -117,8 +119,18 @@ class Game {
 	onEnterCardSelectingStage(lifecycle) {
 		logs.log(E.logs.gameStateMachine, "On Enter card select from ");
     	if(lifecycle.from === 'waitingFor2ndPlayer') {
-    		this.handA = new Hand(generate.hand());
-    		this.handB = new Hand(generate.hand());
+    		this.deck = new Deck();
+		    this.handA = new Hand();
+		    this.handB = new Hand();
+    		for(let i = 0; i < defualts.server.hand.numberOfCards; i++) {
+    			let card = this.deck.dealCard();
+    			card.dealToPlayerA();
+    			this.handA.cards.push(card);
+
+    			card = this.deck.dealCard();
+			    card.dealToPlayerB();
+			    this.handB.cards.push(card);
+		    }
 	    }
     	return true;
 	}

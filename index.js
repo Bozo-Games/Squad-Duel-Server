@@ -29,8 +29,8 @@ io.on('connection', function(socket) {
         currentGame.playerJoin(new Player({socketID:socket.id, name:userName}));
         updatePlayers();
     });
-    socket.on(Routes.selectCard,function (cardJSON) {
-        currentGame.selectCard(socket.id, cardJSON.id);
+    socket.on(Routes.selectCard,function (cardID) {
+        currentGame.selectCard(socket.id,cardID);
         updatePlayers();
     });
     socket.on(Routes.selectAttack, function (attackJSON) {

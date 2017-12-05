@@ -1,6 +1,6 @@
 "use strict";
 const generate = require('../Helpers/DataGenerator.js');
-const defualts = require('../Helpers/defualts.js');
+const defaults = require('../../client/duel/Helpers/defaults.js');
 const Card = require('./Card.js');
 
 class Hand {
