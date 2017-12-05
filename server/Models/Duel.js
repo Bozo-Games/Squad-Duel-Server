@@ -35,7 +35,9 @@ class Duel {
         console.log("Attack is " + attackAttacker.category);
         if (attackAttacker.category == 'flat') {
             let s = cardDefender.health+' - ('+attackAttacker.power+' - ('+cardDefender.armor+')) = ';
-            cardDefender.health = cardDefender.health - (attackAttacker.power - (cardDefender.armor));
+            if (attackAttacker.power > cardDefender.armor) {
+                cardDefender.health = cardDefender.health - (attackAttacker.power - (cardDefender.armor));
+            }
             s += cardDefender.health;
             console.log(s);
         } else if (attackAttacker.category == 'pierce'){
@@ -72,12 +74,15 @@ class Duel {
 	        if(this.cardB.health > 0) {
 		        console.log("-------------- B Attack A");
 		        this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-		        if(aIniative > bIniative*2) {
-			        console.log("-------------- A Attack B AGAIN");
+                if(aIniative > bIniative*2) {
+			        console.log("-------------- A Attack B: Bonus Attack 2x Speed");
 			        this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
-		        }
+		        } else if(aIniative > bIniative*1.5) {
+                    console.log("-------------- A Attack B: Bonus Attack 1.5x Speed");
+                    this.resolveAttack(this.cardA, this.attackA*.5, this.cardB, this.attackB);
+                }   
 	        } else {
-	        	console.log("B had Died");
+	        	console.log("B Died");
 	        }
         } else if (bIniative > aIniative) {
 	        console.log("-------------- B Attack A");
@@ -86,11 +91,14 @@ class Duel {
                 console.log("-------------- A Attack B");
                 this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
 	            if(bIniative > aIniative*2) {
-		            console.log("-------------- B Attack A AGAIN");
+		            console.log("-------------- B Attack A: Bonus Attack 2x Speed");
 		            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
-	            }
+	            } else if(bIniative > aIniative*1.5) {
+                    console.log("-------------- B Attack A: Bonus Attack 1.5x Speed");
+                    this.resolveAttack(this.cardB, this.attackB*.5, this.cardA, this.attackA);
+                }
 	        } else {
-		        console.log("A had Died");
+		        console.log("A Died");
 	        }
         } else {
 	        console.log("Tie");
@@ -101,7 +109,7 @@ class Duel {
 		            console.log("-------------- B Attack A");
 		            this.resolveAttack(this.cardB, this.attackB, this.cardA, this.attackA);
 	            } else {
-		            console.log("B had Died");
+		            console.log("B Died");
 	            }
             } else {
 	            console.log("-------------- B Attack A");
@@ -110,7 +118,7 @@ class Duel {
 		            console.log("-------------- A Attack B");
 		            this.resolveAttack(this.cardA, this.attackA, this.cardB, this.attackB);
 	            } else {
-		            console.log("A had Died");
+		            console.log("A Died");
 	            }
             }
         }
