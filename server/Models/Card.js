@@ -28,6 +28,9 @@ class Card {
 			    {name:'selectCard', from:'inHandA', to:'selectedA'},
 			    {name:'selectCard', from:'inHandB', to:'selectedB'},
 
+			    {name:'returnToHand',from:'selectedA', to:'inHandA'},
+			    {name:'returnToHand',from:'selectedB', to:'inHandB'},
+
 			    {name:'duel', from:['selectedA','selectedB'], to:'dueling'},
 
 			    {name:'kill',            from:'dueling', to:'dead'},
@@ -52,7 +55,6 @@ class Card {
         }
     }
     //------------------------------------------------- state machine
-
 	//All transitions
 	onBeforeTransition(lifecycle) {
 		logs.log(E.logs.cardStateMachine, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
@@ -101,6 +103,12 @@ class Card {
 	}
 	dealToPlayerB() {
 		this._stateMachine.dealToPlayerB();
+	}
+	selectCard() {
+    	this._stateMachine.selectCard();
+	}
+	returnToHand() {
+    	this._stateMachine.returnToHand();
 	}
 }
 module.exports = Card;

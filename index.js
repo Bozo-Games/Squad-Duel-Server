@@ -58,8 +58,8 @@ function updatePlayers() {
     }
     if(currentGame.playerB.socketID !== undefined) {
         io.sockets.connected[currentGame.playerB.socketID].emit('update',json);
-    }
+    }/*
     for(let i = 0; i < currentGame.watchers.length; i++) {
         io.sockets.connected[currentGame.watchers[i]].emit('update',json);
-    }
+    }*/
 }

@@ -1,10 +1,42 @@
 "use strict";
-const Card = require('./Card.js');
-const Attack = require('./Attack.js');
 const E = require('../../client/duel/Helpers/Enums.js');
+const logs = require('../Helpers/logger.js');
+const Card = require('./Card.js');
+const StateMachine = require('javascript-state-machine');
+const Attack = require('./Attack.js');
 class Duel {
     constructor(json) {
         json = json === undefined ? {} : json;
+
+	    this._stateMachine = new StateMachine({
+		    data: {
+		    	cardA:undefined,
+			    cardB:undefined,
+			    attackA: undefined,
+			    attackB: undefined
+		    },
+		    init:'waitingForCards',
+		    transitions: [
+			    {name:'addCard', from:'waitingForCards', to:'waitingForAttacks'},
+			    {name:'addAttack', from:'waitingForAttacks', to:'ready'},
+			    {name:'processDuel', from:'ready', to:'initiative'},
+			    {name:'nextAttack', from:'initiative', to:'A->B'},
+			    {name:'nextAttack', from:'initiative', to:'B->A'},
+			    {name:'nextAttack', from:'B->A', to:'A->B'},
+			    {name:'nextAttack', from:'A->B', to:'B->A'},
+			    {name:'nextAttack', from:'A->B', to:'displayResults'},
+			    {name:'nextAttack', from:'B->A', to:'displayResults'},
+			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'},
+		    ],
+		    methods: {
+			    //All state changes globaly
+			    onBeforeTransition: this.onBeforeTransition,
+			    onAfterTransition: this.onAfterTransition,
+			    onEnterState: this.onEnterState,
+			    onLeaveState: this.onLeaveState
+		    }
+	    });
+
         this.cardA = json.cardA === undefined ? undefined : new Card(json.cardA);
         this.cardB = json.cardB === undefined ? undefined : new card(json.cardB);
 
@@ -15,22 +47,31 @@ class Duel {
         return {
             cardA:this.cardA === undefined ? undefined : this.cardA.toJSON(),
             cardB:this.cardB === undefined ? undefined : this.cardB.toJSON(),
-
+			currentState:this._stateMachine.state,
             attackA:this.attackA === undefined ? undefined :this.attackA.toJSON(),
             attackB:this.attackB === undefined ? undefined :this.attackB.toJSON()
         };
     }
-    toString() {
-        const ca = this.cardA === undefined ? 'undefined' : this.cardA.toString();
-        const cb = this.cardB === undefined ? 'undefined' : this.cardB.toString();
-        const aa = this.attackA === undefined ? 'undefined' : this.attackA.toString();
-        const ab = this.attackB === undefined ? 'undefined' : this.attackB.toString();
-        return "{cardA: "+ca+",\n"+
-            "attackA:"+aa+",\n"+
-            "cardB:"+cb+",\n"+
-            "attackB:"+ab+",\n}";
-    }
 
+	//All transitions
+	onBeforeTransition(lifecycle) {
+		logs.log(E.logs.gameStateMachine, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	onAfterTransition(lifecycle) {
+		logs.log(E.logs.gameStateMachine, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	onEnterState(lifecycle) {
+		logs.log(E.logs.gameStateMachine, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	onLeaveState(lifecycle) {
+		logs.log(E.logs.gameStateMachine,"---------------------\n");
+		logs.log(E.logs.gameStateMachine, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	/*
     resolveAttack(cardAttacker,attackAttacker,cardDefender,attackDefender) {
         console.log("Attack is " + attackAttacker.category);
         if (attackAttacker.category == 'flat') {
@@ -123,6 +164,6 @@ class Duel {
 
         return r;
     }
-
+*/
 }
 module.exports = Duel;

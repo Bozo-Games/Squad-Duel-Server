@@ -24,7 +24,7 @@ class Attack {
 	}
 	draw(cardState,drawSize) {
 		push();
-		if(cardState === 'inHandA' || cardState === 'inHandB') {
+		if(cardState === 'inHandA' || cardState === 'inHandB' || cardState === 'selected'+game.oppLetter) {
 			fill(colors.attack.hand.normal);
 			rect(drawSize.w*0.05,0,drawSize.w*0.9,drawSize.h,2);
 			fill(colors.iconText);

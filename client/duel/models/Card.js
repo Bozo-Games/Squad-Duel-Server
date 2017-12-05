@@ -19,7 +19,7 @@ class Card {
     getRect(xi,yi) {
 		let w = 100;
 		let h = 100;
-		if(this.currentState === 'inHandA' || this.currentState === 'inHandB') {
+		if(this.currentState === 'inHandA' || this.currentState === 'inHandB' || this.currentState === 'selected'+game.oppLetter) {
 			w = defaults.drawing.card.hand.width();
 			h = defaults.drawing.card.hand.height();
 			if(this.mouseIsOver) {
@@ -38,7 +38,7 @@ class Card {
 		push(); //card
 		let cardRect = this.getRect(xi,yi);
 		translate(cardRect.x - xi,cardRect.y - yi);
-		if(this.currentState === 'inHandA' || this.currentState === 'inHandB') {
+		if(this.currentState === 'inHandA' || this.currentState === 'inHandB' || this.currentState === 'selected'+game.oppLetter) {
 			this.handDraw(cardRect);
 		}
 		pop(); //card

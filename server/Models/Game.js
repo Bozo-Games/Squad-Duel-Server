@@ -11,9 +11,7 @@ const Hand = require('./Hand.js');
 const Deck = require('./Deck.js');
 const Attack = require('./Attack.js');
 class Game {
-    constructor(json) {
-        json = json === undefined ? {} : json;
-
+    constructor() {
         this._stateMachine = new StateMachine({
 	        data: {
 		        playerA: new Player(),
@@ -56,6 +54,7 @@ class Game {
 	            onAfterPlayerLeave:this.onAfterPlayerLeave,
 
 	            onBeforeSelectCard:this.onBeforeSelectCard,
+	            onBeforeChangeCard:this.onBeforeChangeCard,
 
 	            //All state changes globaly
 	            onBeforeTransition: this.onBeforeTransition,
@@ -64,20 +63,7 @@ class Game {
 	            onLeaveState: this.onLeaveState
             }
         });
-        this.watchers = json.watchers === undefined ? [] : json.watchers; //an array of scocket IDs
-
-        this.debug = 'debug';
     }
-
-    //State life cycle methods
-	onEnterNewGame(lifecycle) {
-		return true;
-	}
-	onLeaveNewGame(lifecycle) {
-		return true;
-	}
-	//Transitions
-	//Player Join
 	onBeforePlayerJoin(lifecycle,player) {
 		if(this.playerA.socketID === undefined) {
 			logs.log(E.logs.gameStateMachine, player.socketID + " will be player A with name - "+player.name);
@@ -93,31 +79,24 @@ class Game {
 			return true;
 		}
 	}
-	onAfterPlayerJoin(lifecycle,player) {
-		return true;
-	}
-	//Player leave
 	onBeforePlayerLeave(lifecycle,player) {
 		if(this.playerA.socketID === player.socketID) {
 			this.playerA = new Player();
-			this.currentState = E.GameStates.playerBWinsByForfeit;
+			return true;
 		} else if (this.playerB.socketID === player.socketID) {
 			this.playerB = new Player();
-			this.currentState = E.GameStates.playerAWinsByForfeit;
+			return true;
 		} else {
-			for(let i = this.watchers.length-1; i >= 0; i--) {
-				if(this.watchers[i].socketID === player.socketID) {
-					this.watchers.splice(i,1);
+			for(let i = this.spectators.length-1; i >= 0; i--) {
+				if(this.spectators[i].socketID === player.socketID) {
+					this.spectators.splice(i,1);
 					break;
 				}
 			}
+			return false;
 		}
 	}
-	onAfterPlayerLeave(lifecycle,player) {
-		return true;
-	}
 	onEnterCardSelectingStage(lifecycle) {
-		logs.log(E.logs.gameStateMachine, "On Enter card select from ");
     	if(lifecycle.from === 'waitingFor2ndPlayer') {
     		this.deck = new Deck();
 		    this.handA = new Hand();
@@ -126,7 +105,6 @@ class Game {
     			let card = this.deck.dealCard();
     			card.dealToPlayerA();
     			this.handA.cards.push(card);
-
     			card = this.deck.dealCard();
 			    card.dealToPlayerB();
 			    this.handB.cards.push(card);
@@ -145,12 +123,18 @@ class Game {
 			logs.log(E.logs.gameStateMachine, playerID +' is a spectator and can not select a card');
 		} else {
 			if(this.duel['card'+letter] !== undefined) {
-				this.changeCard(playerID,oldCardID,newCardID);
-				return false;
+				let that = this;
+				return new Promise(function(resolve, reject) {
+					if(that.changeCard(playerID,that.duel['card'+letter].id,cardID)) {
+						resolve();
+					} else {
+						reject();
+					}
+				});
 			} else {
 				let card = this['hand'+letter].getCard(cardID);
 				if(card !== undefined) {
-					card.isSelected = true;
+					card.selectCard();
 					this.duel['card'+letter] = card;
 					return true;
 				} else {
@@ -160,6 +144,28 @@ class Game {
 			}
 		}
 		return true;
+	}
+	onBeforeChangeCard(lifecycle,playerID,oldCardID,newCarID) {
+		let letter;
+		if(playerID === this.playerA.socketID) {
+			letter = 'A';
+		} else if(playerID === this.playerB.socketID) {
+			letter = 'B';
+		}if(letter === undefined) {
+			logs.log(E.logs.gameStateMachine, playerID +' is a spectator and can not change card');
+		} else {
+			if(this.duel['card'+letter] !== undefined) {
+				logs.log(E.logs.gameStateMachine, 'Card ' + letter + ' is not defined and the card can\'t be changed');
+				return false;
+			} else if(this.duel['card'+letter].id !== oldCardID) {
+				logs.log(E.logs.gameStateMachine, this.duel['card'+letter].id + ' is not '+oldCardID+' and the card can\'t be changed');
+				return false;
+			} else {
+				let oldCard = this['hand'+letter].getCard(cardID);
+				oldCard.returnToHand();
+				this.selectCard(playerID,newCarID);
+			}
+		}
 	}
 	onBeforeSelectAttack(lifecycle,playerID,cattackID) {
 		let letter;
@@ -251,6 +257,7 @@ class Game {
 		if(player !== undefined) {
 			if(player.socketID !== undefined) {
 				if(this.playerIsPartOfGame(player)) {
+					console.log("here");
 					this._stateMachine.playerLeave(player);
 				} else {
 					logs.log(E.logs.serverGameClass,player.socketID + ' not part of the game and can\'t leave.');
@@ -315,7 +322,7 @@ class Game {
 			handA: this.handA === undefined ? undefined : this.handA.toJSON(),
 			handB: this.handB === undefined ? undefined : this.handB.toJSON(),
 			duel: this.duel === undefined ? undefined :  this.duel.toJSON(),
-			watchers: this.watchers,
+			spectators: this.spectators,
 			currentState: this.currentState
 		}
 	}
