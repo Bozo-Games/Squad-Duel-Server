@@ -145,4 +145,27 @@ describe('Game Model', function () {
 		assert.equal(g.currentState,'readyToDuel');
 		assert.equal(g.duel.currentState,'ready');
 	});
+	it('should get process to duel',function () {
+		let g = new Game();
+		let playerA = new Player({socketID:'abc123',name:'Player A'});
+		let playerB = new Player({socketID:'edf456',name:'Player B'});
+		assert.equal(g.playerJoin(playerA),false,'player A join');
+		assert.equal(g.playerJoin(playerB),true,'player B join');
+		assert.equal(g.selectCard('abc123',g.handA.cards[0].id),false,'player A selects card');
+		assert.equal(g.duel.cardA.id, g.handA.cards[0].id,'id card check');
+		assert.equal(g.duel.cardA.currentState, 'selected','card state check');
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
+		assert.equal(g.duel.cardB.id, g.handB.cards[0].id,'id card check');
+		assert.equal(g.duel.cardB.currentState, 'selected','card state check');
+		assert.equal(g.currentState, 'attackSelectStage', 'state check');
+		g.duel.cardA.attacks[0].id = "new-attack-id";
+		assert.equal(g.selectAttack('abc123',g.duel.cardA.attacks[0].id),false,'player A selects attack');
+		assert.equal(g.duel.attackA.id, 'new-attack-id');
+		g.duel.cardB.attacks[0].id = "new-attack-id-2";
+		assert.equal(g.selectAttack('edf456',g.duel.cardB.attacks[0].id),true,'player B selects attack');
+		assert.equal(g.duel.attackB.id, 'new-attack-id-2');
+		assert.equal(g.currentState,'readyToDuel');
+		assert.equal(g.duel.currentState,'ready');
+		logger.on = true;
+	});
 });
