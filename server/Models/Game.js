@@ -41,25 +41,20 @@ class Game {
             ],
             methods: {
                 //states
-	            onEnterNewGame: this.onEnterNewGame,
-	            onLeaveNewGame: this.onLeaveNewGame,
-
-	            onEnterCardSelectingStage: this.onEnterCardSelectingStage,
+	            onEnterCardSelectingStage: this._onEnterCardSelectingStage,
                 //transitions
-	            onBeforePlayerJoin: this.onBeforePlayerJoin,
-	            onAfterPlayerJoin: this.onAfterPlayerJoin,
+	            onBeforePlayerJoin: this._onBeforePlayerJoin,
 
-	            onBeforePlayerLeave:this.onBeforePlayerLeave,
-	            onAfterPlayerLeave:this.onAfterPlayerLeave,
+	            onBeforePlayerLeave:this._onBeforePlayerLeave,
 
-	            onBeforeSelectCard:this.onBeforeSelectCard,
-	            onBeforeChangeCard:this.onBeforeChangeCard,
+	            onBeforeSelectCard:this._onBeforeSelectCard,
+	            onBeforeChangeCard:this._onBeforeChangeCard,
 
 	            //All state changes globaly
-	            onBeforeTransition: this.onBeforeTransition,
-	            onAfterTransition: this.onAfterTransition,
-	            onEnterState: this.onEnterState,
-	            onLeaveState: this.onLeaveState
+	            onBeforeTransition: this._onBeforeTransition,
+	            onAfterTransition: this._onAfterTransition,
+	            onEnterState: this._onEnterState,
+	            onLeaveState: this._onLeaveState
             }
         });
     }
@@ -88,38 +83,33 @@ class Game {
 	//------------------------------------------------- -------------------------------------------------------- Setters
 	//----------------------------------------------------- -------------------------------- public State Machine Events
 	playerJoin(player) {
-		//checking validity of
-		if(player !== undefined) {
-			if(player.socketID !== undefined) {
-				if(!this.playerIsPartOfGame(player)) {
-					this._stateMachine.playerJoin(player);
-				} else {
-					logs.log(E.logs.serverGameClass,player.socketID + ' is already Part of the game and can\'t join until they leave.');
-					this._stateMachine.playerLeave(player);
-					this.playerJoin(player);
-				}
-			}  else {
-				logs.log(E.logs.serverGameClass,"Player tried to join with out a socket ID");
+		//checking validity of player
+		if(this._validatePlayer(player)) {
+			if(!this.playerIsPartOfGame(player)) {
+				return this._stateMachine.playerJoin(player);
+			} else {
+				logs.log(E.logs.serverGameClass,player.socketID + ' is already Part of the game and can\'t join until they leave.');
+				this._stateMachine.playerLeave(player);
+				return this.playerJoin(player);
 			}
 		} else {
-			logs.log(E.logs.serverGameClass,"Player tried to join with out being defined");
+			logs.log(E.logs.serverGameClass,player + ' is not a valid argument for playerJoin()');
+			return false;
 		}
 	}
 	playerLeave(player) {
-		if(player !== undefined) {
-			if(player.socketID !== undefined) {
-				if(this.playerIsPartOfGame(player)) {
-					console.log("here");
-					this._stateMachine.playerLeave(player);
-				} else {
-					logs.log(E.logs.serverGameClass,player.socketID + ' not part of the game and can\'t leave.');
-				}
-			}  else {
-				logs.log(E.logs.serverGameClass,"Player tried to leave with out a socket ID");
-			}
-		} else {
-			logs.log(E.logs.serverGameClass,"Player tried to leave with out being defined");
-		}
+    	if(this._validatePlayer(player)) {
+		    if(this.playerIsPartOfGame(player)) {
+			    console.log("here");
+			    return this._stateMachine.playerLeave(player);
+		    } else {
+			    logs.log(E.logs.serverGameClass,player.socketID + ' not part of the game and can\'t leave.');
+			    return false;
+		    }
+	    } else {
+		    logs.log(E.logs.serverGameClass,player + ' is not a valid argument for playerLeave()');
+		    return false;
+	    }
 	}
 	selectCard(playerID, cardID) {
 		if(playerID === undefined || cardID === undefined) {
@@ -189,23 +179,26 @@ class Game {
 			this.playerB = player;
 			return true;
 		} else {
-			logs.log(E.logs.gameStateMachine, player.socketID + " will be player spectator (not implemented)");
-
+			logs.log(E.logs.gameStateMachine, player.socketID + " will be player spectator");
+			this.spectators.push(player);
 			return true;
 		}
 	}
 	_onBeforePlayerLeave(lifecycle,player) {
 		if(this.playerA.socketID === player.socketID) {
+			logs.log(E.logs.gameStateMachine, "player A has left the game");
 			this.playerA = new Player();
 			return true;
 		} else if (this.playerB.socketID === player.socketID) {
+			logs.log(E.logs.gameStateMachine, "player B has left the game");
 			this.playerB = new Player();
 			return true;
 		} else {
 			for(let i = this.spectators.length-1; i >= 0; i--) {
 				if(this.spectators[i].socketID === player.socketID) {
+					logs.log(E.logs.gameStateMachine, "a spectator has left the game");
 					this.spectators.splice(i,1);
-					break;
+					return true;
 				}
 			}
 			return false;
@@ -308,6 +301,15 @@ class Game {
 			}
 		}
 		return true;
+	}
+	//------------------------------------------------- -------------------------------------------------------- Helpers
+	_validatePlayer(player) {
+		if(player !== undefined) {
+			if (player.socketID !== undefined) {
+				return true;
+			}
+		}
+		return false;
 	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
