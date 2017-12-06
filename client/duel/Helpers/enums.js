@@ -17,10 +17,12 @@ const E = {
         success: 1,
     },
     logs: {
-	    gameStateMachine: 0,
-	    serverGameClass: 1,
-	    cardStateMachine: 2,
-	    duelStateMachine: 2
+	    game: 0,
+	    card: 1,
+	    duel: 2,
+	    attack: 3,
+        player: 4,
+        deck: 5,
     }
 };
 module.exports = E; //leave here so server can use

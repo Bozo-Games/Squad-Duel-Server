@@ -3,6 +3,7 @@ const assert = require('assert');
 const defaults = require('../client/duel/Helpers/defaults.js');
 const logger = require('../server/Helpers/logger.js');
 const Duel = require('../server/Models/Duel.js');
+const Card = require('../server/Models/Card.js');
 describe('Duel Model', function () {
 	before(function () {
 		logger.on = false;
@@ -48,5 +49,19 @@ describe('Duel Model', function () {
 	it('should start in the state waiting for cards', function () {
 		let d = new Duel();
 		assert(d.currentSate, 'waitingForCards');
+	});
+	it('should allow a card to be added', function () {
+		let d = new Duel();
+		let ca = new Card({id:'abc123'});
+		ca.dealToPlayer();
+		let cb = new Card({id:'abc123'});
+		cb.dealToPlayer();
+		assert.equal(d.addCard(ca,'A'),false,'card A has been added');
+		assert.equal(d.addCard(cb,'B'),true,'card B has been added');
+		assert.equal(d.currentSate,'waitingForAttacks','state check');
+	});
+	it('should reject an invalid card', function () {
+		let d = new Duel();
+		assert.equal(d.addCard(undefined,'A'),false,'card A has been added');
 	});
 });

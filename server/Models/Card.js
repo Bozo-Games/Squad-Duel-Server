@@ -19,20 +19,15 @@ class Card {
 		    },
 		    init:'inDeck',
 		    transitions: [
-			    {name:'dealToPlayerA', from:'inDeck', to:'inHandA'},
-			    {name:'dealToPlayerB', from:'inDeck', to:'inHandB'},
+			    {name:'dealToPlayer', from:'inDeck', to:'inHand'},
 
-			    {name:'selectCard', from:'inHandA', to:'selectedA'},
-			    {name:'selectCard', from:'inHandB', to:'selectedB'},
+			    {name:'selectCard', from:'inHand', to:'selected'},
 
-			    {name:'returnToHand',from:'selectedA', to:'inHandA'},
-			    {name:'returnToHand',from:'selectedB', to:'inHandB'},
+			    {name:'returnToHand',from:['selected','dueling'], to:'inHand'},
 
-			    {name:'duel', from:['selectedA','selectedB'], to:'dueling'},
+			    {name:'duel', from:'selected', to:'dueling'},
 
-			    {name:'kill',            from:'dueling', to:'dead'},
-			    {name:'returnToPlayerA', from:'dueling', to:'inHandA'},
-			    {name:'returnToPlayerB', from:'dueling', to:'inHandB'}
+			    {name:'kill',            from:'dueling', to:'dead'}
 		    ],
 		    methods: {
 			    //All state changes globaly
@@ -78,11 +73,8 @@ class Card {
 	//------------------------------------------------- -------------------------------------------------------- Setters
 
 	//----------------------------------------------------- -------------------------------- public State Machine Events
-	dealToPlayerA() {
-		this._stateMachine.dealToPlayerA();
-	}
-	dealToPlayerB() {
-		this._stateMachine.dealToPlayerB();
+	dealToPlayer() {
+		this._stateMachine.dealToPlayer();
 	}
 	selectCard() {
 		this._stateMachine.selectCard();
@@ -95,9 +87,6 @@ class Card {
 	}
 	kill() {
     	this._stateMachine.kill();
-	}
-	returnToPlayer(letter) {
-    	this._stateMachine['returnToPlayer'+letter]();
 	}
 	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
@@ -127,20 +116,20 @@ class Card {
 	//------------------------------------------------- -------------------------------------------------- state machine
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
-		logs.log(E.logs.cardStateMachine, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.game,'~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ~~~~~~~~~~~~~~~~ ');
+		logs.log(E.logs.card, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onAfterTransition(lifecycle) {
-		logs.log(E.logs.cardStateMachine, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.card, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onEnterState(lifecycle) {
-		logs.log(E.logs.cardStateMachine, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.card, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onLeaveState(lifecycle) {
-		logs.log(E.logs.cardStateMachine,"---------------------\n");
-		logs.log(E.logs.cardStateMachine, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.card, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 }

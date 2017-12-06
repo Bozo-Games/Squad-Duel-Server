@@ -69,49 +69,32 @@ describe('Card Model', function () {
 	});
 	it('should move to in hand <x> state when dealt to player <x>', function () {
 		let c = new Card();
-		c.dealToPlayerA();
-		assert.equal(c.currentState,'inHandA');
-		c = new Card();
-		c.dealToPlayerB();
-		assert.equal(c.currentState,'inHandB');
+		c.dealToPlayer();
+		assert.equal(c.currentState,'inHand');
 	});
 	it('should move to select a from in hand a when card is selected', function () {
 		let c =  new Card();
-		c.dealToPlayerA();
+		c.dealToPlayer();
 		c.selectCard();
-		assert.equal(c.currentState,'selectedA');
-		c = new Card();
-		c.dealToPlayerB();
-		c.selectCard();
-		assert.equal(c.currentState,'selectedB');
+		assert.equal(c.currentState,'selected');
 	});
 	it('should move from select a to in hand a when returned to hand', function () {
 		let c =  new Card();
-		c.dealToPlayerA();
+		c.dealToPlayer();
 		c.selectCard();
 		c.returnToHand();
-		assert.equal(c.currentState,'inHandA');
-		c = new Card();
-		c.dealToPlayerB();
-		c.selectCard();
-		c.returnToHand();
-		assert.equal(c.currentState,'inHandB');
+		assert.equal(c.currentState,'inHand');
 	});
 	it('should move from selected dueling when duel is started', function () {
 		let c =  new Card();
-		c.dealToPlayerA();
-		c.selectCard();
-		c.duel();
-		assert.equal(c.currentState,'dueling');
-		c = new Card();
-		c.dealToPlayerB();
+		c.dealToPlayer();
 		c.selectCard();
 		c.duel();
 		assert.equal(c.currentState,'dueling');
 	});
 	it('should be killed on dueling is done ', function () {
 		let c =  new Card();
-		c.dealToPlayerA();
+		c.dealToPlayer();
 		c.selectCard();
 		c.duel();
 		c.kill();
@@ -119,17 +102,11 @@ describe('Card Model', function () {
 	});
 	it('should be returned to Player x on dueling is done ', function () {
 		let c =  new Card();
-		c.dealToPlayerA();
+		c.dealToPlayer();
 		c.selectCard();
 		c.duel();
-		c.returnToPlayer('A');
-		assert.equal(c.currentState,'inHandA');
-		c =  new Card();
-		c.dealToPlayerA();
-		c.selectCard();
-		c.duel();
-		c.returnToPlayer('B');
-		assert.equal(c.currentState,'inHandB');
+		c.returnToHand();
+		assert.equal(c.currentState,'inHand');
 	});
 	it('should be able to find attack by id', function () {
 		let c = new Card({

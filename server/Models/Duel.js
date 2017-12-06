@@ -28,11 +28,12 @@ class Duel {
 			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'},
 		    ],
 		    methods: {
-			    //All state changes globaly
-			    onBeforeTransition: this.onBeforeTransition,
-			    onAfterTransition: this.onAfterTransition,
-			    onEnterState: this.onEnterState,
-			    onLeaveState: this.onLeaveState
+		    	onBeforeAddCard:    this._onBeforeAddCard,
+			    //All state changes globally
+			    onBeforeTransition: this._onBeforeTransition,
+			    onAfterTransition:  this._onAfterTransition,
+			    onEnterState:       this._onEnterState,
+			    onLeaveState:       this._onLeaveState
 		    }
 	    });
     }
@@ -55,7 +56,17 @@ class Duel {
 	//------------------------------------------------- -------------------------------------------------------- Setters
 
 	//----------------------------------------------------- -------------------------------- public State Machine Events
-
+	addCard(card,letter) {
+    	if(card !== undefined) {
+    		if(card.id !== undefined && (letter === 'A' || letter === 'B')) {
+			    return this._stateMachine.addCard(card,letter);
+		    }
+	    }
+	    return false;
+	}
+	addAttack(attackID,letter) {
+    	return false;
+	}
 	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
         return {
@@ -67,22 +78,28 @@ class Duel {
         };
     }
 	//------------------------------------------------- -------------------------------------------------- state machine
+	_onBeforeAddCard(lifecycle,card,letter) {
+    	logs.log(E.logs.duel,"card " + card.id + " is selected by player "+ letter);
+		this['card'+letter] = card;
+		card.selectCard();
+		return (this.cardA !== undefined && this.cardB !== undefined);
+	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
-	onBeforeTransition(lifecycle) {
-		logs.log(E.logs.duelStateMachine, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+	_onBeforeTransition(lifecycle) {
+		logs.log(E.logs.game,'~~~~~~~~~~~~~~~~ NEW DUEL STATE CHANGE ~~~~~~~~~~~~~~~~ ');
+		logs.log(E.logs.duel, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
-	onAfterTransition(lifecycle) {
-		logs.log(E.logs.duelStateMachine, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+	_onAfterTransition(lifecycle) {
+		logs.log(E.logs.duel, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
-	onEnterState(lifecycle) {
-		logs.log(E.logs.duelStateMachine, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+	_onEnterState(lifecycle) {
+		logs.log(E.logs.duel, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
-	onLeaveState(lifecycle) {
-		logs.log(E.logs.duelStateMachine,"---------------------\n");
-		logs.log(E.logs.duelStateMachine, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+	_onLeaveState(lifecycle) {
+		logs.log(E.logs.duel, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 }
