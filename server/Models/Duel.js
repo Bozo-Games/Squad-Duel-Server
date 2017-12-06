@@ -29,6 +29,7 @@ class Duel {
 		    ],
 		    methods: {
 		    	onBeforeAddCard:    this._onBeforeAddCard,
+			    onBeforeAddAttack:  this._onBeforeAddAttack,
 			    //All state changes globally
 			    onBeforeTransition: this._onBeforeTransition,
 			    onAfterTransition:  this._onAfterTransition,
@@ -65,6 +66,12 @@ class Duel {
 	    return false;
 	}
 	addAttack(attackID,letter) {
+    	if(attackID !== undefined && (letter === 'A' || letter === 'B') ) {
+    		let attack = this['card'+letter].getAttackByID(attackID);
+    		if(attack !== undefined) {
+			    return this._stateMachine.addAttack(attack,letter);
+		    }
+	    }
     	return false;
 	}
 	//----------------------------------------------------- --------------------------------------------- public methods
@@ -84,9 +91,14 @@ class Duel {
 		card.selectCard();
 		return (this.cardA !== undefined && this.cardB !== undefined);
 	}
+	_onBeforeAddAttack(lifecycle,attack,letter) {
+		logs.log(E.logs.duel,'attack '+letter +' selected '+ attack.id);
+		this['attack'+letter] = attack;
+		return (this.attackA !== undefined && this.attackB !== undefined);
+	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
-		logs.log(E.logs.game,'~~~~~~~~~~~~~~~~ NEW DUEL STATE CHANGE ~~~~~~~~~~~~~~~~ ');
+		logs.log(E.logs.duel,'~~~~~~~~~~~~~~~~ NEW DUEL STATE CHANGE ~~~~~~~~~~~~~~~~ ');
 		logs.log(E.logs.duel, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}

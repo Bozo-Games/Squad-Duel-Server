@@ -15,7 +15,7 @@ describe('Attack Model', function () {
 	});
 	it('should have default values', function () {
 		let a = new Attack();
-		assert.equal(a.id, -1);
+		assert.equal(a.id, undefined);
 		assert.equal(a.category, 'unknown');
 		assert.equal(a.name, 'unknown');
 		assert.equal(a.power, 0);

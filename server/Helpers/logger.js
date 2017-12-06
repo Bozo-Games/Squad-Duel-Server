@@ -4,7 +4,7 @@ let logger = {
 	on: true,
 	settings: {
 		displayGameInfo: true,
-		displayCardInfo: true,
+		displayCardInfo: false,
 		displayDuelInfo: true,
 
 	},

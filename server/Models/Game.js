@@ -30,9 +30,10 @@ class Game {
 
 	            {name:'selectCard', from:'cardSelectingStage', to:'attackSelectStage'},
 
-	            {name:'selectAttack', from:'attackSelectStage', to:'resolvingDuel'},
+	            {name:'selectAttack', from:'attackSelectStage', to:'readyToDuel'},
 
-	            {name:'duelResolved', from:'resolvingDuel', to:'showingDuelResults'},
+	            {name:'processDuel', from:'readyToDuel', to:'showingDuelResults'},
+
 	            {name:'continueGame', from:'showingDuelResults', to:'cardSelectingStage'},
 
 	            {name:'declareVictor', from:'showingDuelResults', to:'endGame'},
@@ -240,9 +241,7 @@ class Game {
 		if(letter === undefined) {
 			logs.log(E.logs.game, playerID +' is a spectator and can not select an attack');
 		} else {
-			let card = this["hand"+letter].getCardByID(cardID);
-			return this.duel.selectAttack(card,letter);
-
+			return this.duel.addAttack(attackID,letter);
 		}
 		return true;
 	}
@@ -257,9 +256,9 @@ class Game {
 	}
 	_getPlayerLetter(playerID) {
 		if(playerID === this.playerA.socketID) {
-			return'A';
+			return 'A';
 		} else if(playerID === this.playerB.socketID) {
-			return = 'B';
+			return 'B';
 		}
 	}
 	//------------------------------------------------- ------------------------------------------------ All transitions

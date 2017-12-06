@@ -116,7 +116,7 @@ class Card {
 	//------------------------------------------------- -------------------------------------------------- state machine
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
-		logs.log(E.logs.game,'~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ~~~~~~~~~~~~~~~~ ');
+		logs.log(E.logs.card,'~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ~~~~~~~~~~~~~~~~ ');
 		logs.log(E.logs.card, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
