@@ -25,20 +25,20 @@ let IMG = {
 
 let duel;
 function preload() {
-    IMG.icon.armor = loadImage('duel/Icons/armor.svg');
-    IMG.icon.character = loadImage('duel/Icons/character.svg');
-    IMG.icon.crushing = loadImage('duel/Icons/crushing.svg');
-    IMG.icon.flat = loadImage('duel/Icons/flat.svg');
-    IMG.icon.health = loadImage('duel/Icons/health.svg');
-    IMG.icon.piercing = loadImage('duel/Icons/piercing.svg');
-    IMG.icon.speed = loadImage('duel/Icons/speed.svg');
-    IMG.icon.defense = loadImage('duel/Icons/armor.svg');
-    IMG.icon.heal = loadImage('duel/Icons/heal.svg');
-    //IMG.icon.background = loadImage('duel/Icons/Images/background.jpg');
+    IMG.icon.armor = loadImage('duel/Assets/Icons/armor.svg');
+    IMG.icon.character = loadImage('duel/Assets/Icons/character.svg');
+    IMG.icon.crushing = loadImage('duel/Assets/Icons/crushing.svg');
+    IMG.icon.flat = loadImage('duel/Assets/Icons/flat.svg');
+    IMG.icon.health = loadImage('duel/Assets/Icons/health.svg');
+    IMG.icon.piercing = loadImage('duel/Assets/Icons/piercing.svg');
+    IMG.icon.speed = loadImage('duel/Assets/Icons/speed.svg');
+    IMG.icon.defense = loadImage('duel/Assets/Icons/armor.svg');
+    IMG.icon.heal = loadImage('duel/Assets/Icons/heal.svg');
+    //IMG.icon.background = loadImage('duel/Assets/Icons/Images/background.jpg');
 
     IMG.icon.characters = [];
     for (let i = 0; i < 54; i++) {    
-        IMG.icon.characters.push(loadImage('duel/Icons/Cards/'+i+'_character.svg'));
+        IMG.icon.characters.push(loadImage('duel/Assets/Icons/Cards/'+i+'_character.svg'));
     }
 
 }
