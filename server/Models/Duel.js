@@ -51,7 +51,7 @@ class Duel {
 	get attackB() {
     	return this._stateMachine.attackB;
 	}
-	get currentSate() {
+	get currentState() {
     	return this._stateMachine.state;
 	}
 	//------------------------------------------------- -------------------------------------------------------- Setters

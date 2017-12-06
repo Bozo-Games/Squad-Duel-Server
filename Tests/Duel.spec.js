@@ -48,7 +48,7 @@ describe('Duel Model', function () {
 	});
 	it('should start in the state waiting for cards', function () {
 		let d = new Duel();
-		assert(d.currentSate, 'waitingForCards');
+		assert(d.currentState, 'waitingForCards');
 	});
 	it('should allow a card to be added', function () {
 		let d = new Duel();
@@ -58,7 +58,7 @@ describe('Duel Model', function () {
 		cb.dealToPlayer();
 		assert.equal(d.addCard(ca,'A'),false,'card A has been added');
 		assert.equal(d.addCard(cb,'B'),true,'card B has been added');
-		assert.equal(d.currentSate,'waitingForAttacks','state check');
+		assert.equal(d.currentState,'waitingForAttacks','state check');
 	});
 	it('should reject an invalid card', function () {
 		let d = new Duel();
