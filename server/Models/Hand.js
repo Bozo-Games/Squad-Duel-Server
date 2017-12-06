@@ -19,7 +19,7 @@ class Hand {
         };
     }
     //------------------------------------------------------------------- public methods
-    getCard(cardID) {
+    getCardByID(cardID) {
 	    for(let i = 0; i < this.cards.length; i++) {
 		    if(this.cards[i].id === cardID) {return this.cards[i];}
 	    }

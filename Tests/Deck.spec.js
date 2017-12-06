@@ -23,7 +23,7 @@ describe('Deck Model', function () {
 		d.dealCard();
 		assert.equal(d.cards.length,defaults.server.deck.numberOfCards-1);
 	});
-	it('should have card json for cards',function () {
+	it('should have cards json for cards in the deck',function () {
 		let d = new Deck();
 		let json = d.toJSON();
 		assert.equal(json.cards.length, defaults.server.deck.numberOfCards);

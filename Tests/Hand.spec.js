@@ -14,4 +14,13 @@ describe('Hand Model', function () {
 		let h = new Hand();
 		assert.ok(typeof h.toJSON === 'function');
 	});
+	it('should accept cards argument', function () {
+		let h = new Hand({cards:[{}]});
+		assert.equal(h.cards.length, 1);
+	});
+	it('should be able to find card by id', function () {
+		let h = new Hand({cards:[{id:'abc123'}]});
+		let c =  h.getCardByID('abc123');
+		assert.equal(c.id, 'abc123');
+	});
 });

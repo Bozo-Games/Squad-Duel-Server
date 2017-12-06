@@ -18,7 +18,7 @@ class Deck {
 	toJSON() {
 		let cJSON = [];
 		for(let i = 0; i < this.cards.length; i++) {
-			cJSON = this.cards[i].toJSON();
+			cJSON.push(this.cards[i].toJSON());
 		}
 		return {cards:cJSON};
 	}
