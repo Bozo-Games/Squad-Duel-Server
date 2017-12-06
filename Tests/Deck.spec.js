@@ -28,4 +28,11 @@ describe('Deck Model', function () {
 		let json = d.toJSON();
 		assert.equal(json.cards.length, defaults.server.deck.numberOfCards);
 	});
+	it('should return undefined when the deck is empty', function () {
+		let d = new Deck();
+		while(d.cards.length > 0) {
+			d.dealCard();
+		}
+		assert.equal(undefined,d.dealCard());
+	});
 });

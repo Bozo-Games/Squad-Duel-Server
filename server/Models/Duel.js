@@ -9,10 +9,10 @@ class Duel {
         json = json === undefined ? {} : json;
 	    this._stateMachine = new StateMachine({
 		    data: {
-			    cardA: json.cardA === undefined ? undefined : json.cardA,
-			    cardB: json.cardB === undefined ? undefined : json.cardB,
-			    attackA: json.cardA === undefined ? undefined : json.attackA,
-			    attackB: json.cardB === undefined ? undefined : json.attackB
+			    cardA: json.cardA === undefined ? undefined : new Card(json.cardA),
+			    cardB: json.cardB === undefined ? undefined : new Card(json.cardB),
+			    attackA: json.cardA === undefined ? undefined : new Attack(json.attackA),
+			    attackB: json.cardB === undefined ? undefined : new Attack(json.attackB)
 		    },
 		    init:'waitingForCards',
 		    transitions: [
@@ -49,6 +49,9 @@ class Duel {
 	get attackB() {
     	return this._stateMachine.attackB;
 	}
+	get currentSate() {
+    	return this._stateMachine.state;
+	}
 	//------------------------------------------------- -------------------------------------------------------- Setters
 
 	//----------------------------------------------------- -------------------------------- public State Machine Events
@@ -56,11 +59,11 @@ class Duel {
 	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
         return {
-            cardA:this.cardA === undefined ? undefined : this.cardA.toJSON(),
-            cardB:this.cardB === undefined ? undefined : this.cardB.toJSON(),
+            cardA:this._stateMachine.cardA === undefined ? undefined : this._stateMachine.cardA.toJSON(),
+            cardB:this._stateMachine.cardB === undefined ? undefined : this._stateMachine.cardB.toJSON(),
 			currentState:this._stateMachine.state,
-            attackA:this.attackA === undefined ? undefined : this.attackA.toJSON(),
-            attackB:this.attackB === undefined ? undefined : this.attackB.toJSON()
+            attackA:this._stateMachine.attackA === undefined ? undefined : this._stateMachine.attackA.toJSON(),
+            attackB:this._stateMachine.attackB === undefined ? undefined : this._stateMachine.attackB.toJSON()
         };
     }
 	//------------------------------------------------- -------------------------------------------------- state machine

@@ -1,9 +1,10 @@
 const generate = require('../Helpers/DataGenerator.js');
+const defualts = require('../../client/duel/Helpers/defaults.js');
 const Card = require('./Card.js');
 class Deck {
 	constructor() {
 		this.cards = [];
-		for(let i = 0; i < 50; i++) {
+		for(let i = 0; i < defualts.server.deck.numberOfCards; i++) {
 			this.cards.push(new Card(generate.card()));
 		}
 	}

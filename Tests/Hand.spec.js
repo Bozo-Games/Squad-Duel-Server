@@ -18,9 +18,19 @@ describe('Hand Model', function () {
 		let h = new Hand({cards:[{}]});
 		assert.equal(h.cards.length, 1);
 	});
+	it('should accept retrunt cards josn', function () {
+		let h = new Hand({cards:[{}]});
+		let json = h.toJSON();
+		assert.equal(json.cards.length, 1);
+	});
 	it('should be able to find card by id', function () {
 		let h = new Hand({cards:[{id:'abc123'}]});
 		let c =  h.getCardByID('abc123');
 		assert.equal(c.id, 'abc123');
+	});
+	it('should return undefined if cardID is not part of hand', function () {
+		let h = new Hand({cards:[{id:'abc123'}]});
+		let c =  h.getCardByID('bad');
+		assert.equal(c, undefined);
 	});
 });
