@@ -143,5 +143,6 @@ describe('Game Model', function () {
 		assert.equal(g.selectAttack('edf456',g.duel.cardB.attacks[0].id),true,'player B selects attack');
 		assert.equal(g.duel.attackB.id, 'new-attack-id-2');
 		assert.equal(g.currentState,'readyToDuel');
+		assert.equal(g.duel.currentState,'ready');
 	});
 });
