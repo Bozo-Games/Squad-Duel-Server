@@ -1,6 +1,7 @@
 
 const E = require('../../client/duel/Helpers/Enums.js');
 let logger = {
+	on: true,
 	settings: {
 		displayGameStateMachineInfo: true,
 		displaySeverGameModelInfo: true,
@@ -16,24 +17,26 @@ let logger = {
 
 	},
 	log: function (kind,msg) {
-		if(kind === E.logs.gameStateMachine) {
-			if(logger.settings.displayGameStateMachineInfo) {
-				console.log(logger.prepends.GameStateMachine + msg);
+		if(logger.on) {
+			if (kind === E.logs.gameStateMachine) {
+				if (logger.settings.displayGameStateMachineInfo) {
+					console.log(logger.prepends.GameStateMachine + msg);
+				}
+			} else if (kind === E.logs.serverGameClass) {
+				if (logger.settings.displaySeverGameModelInfo) {
+					console.log(logger.prepends.SeverGameModel + msg);
+				}
+			} else if (kind === E.logs.cardStateMachine) {
+				if (logger.settings.displayCardStateMachineInfo) {
+					console.log(logger.prepends.cardStateMachine + msg);
+				}
+			} else if (kind === E.logs.duelStateMachine) {
+				if (logger.settings.displayDuelStateMachineInfo) {
+					console.log(logger.prepends.duelStateMachine + msg);
+				}
+			} else {
+				console.log('Mysterious Kind (' + kind + '): ' + msg);
 			}
-		} else if(kind === E.logs.serverGameClass) {
-			if(logger.settings.displaySeverGameModelInfo) {
-				console.log(logger.prepends.SeverGameModel + msg);
-			}
-		} else if(kind === E.logs.cardStateMachine) {
-			if(logger.settings.displayCardStateMachineInfo) {
-				console.log(logger.prepends.cardStateMachine + msg);
-			}
-		} else if(kind === E.logs.duelStateMachine) {
-			if(logger.settings.displayDuelStateMachineInfo) {
-				console.log(logger.prepends.duelStateMachine + msg);
-			}
-		} else {
-			console.log('Mysterious Kind ('+ kind + '): ' + msg);
 		}
 	}
 };

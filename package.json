@@ -8,6 +8,11 @@
     "socket.io": "^2.0.4"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1"
+    "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
+    "nyc": "^11.3.0"
+  },
+  "scripts": {
+    "test": "find ./Tests -name '*.spec.js' | xargs nyc mocha -R spec"
   }
 }
