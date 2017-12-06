@@ -3,7 +3,7 @@ const Card = require('./Card.js');
 class Deck {
 	constructor() {
 		this.cards = [];
-		for(let i = 0; i < 100; i++) {
+		for(let i = 0; i < 50; i++) {
 			this.cards.push(new Card(generate.card()));
 		}
 	}
@@ -14,6 +14,13 @@ class Deck {
 			this.cards.splice(0,1);
 		}
 		return c;
+	}
+	toJSON() {
+		let cJSON = [];
+		for(let i = 0; i < this.cards.length; i++) {
+			cJSON = this.cards[i].toJSON();
+		}
+		return {cards:cJSON};
 	}
 }
 module.exports = Deck;

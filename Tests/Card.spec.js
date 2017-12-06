@@ -1,8 +1,8 @@
 "use strict";
 const assert = require('assert');
-const Card = require('../server/Models/Card.js');
 const defaults = require('../client/duel/Helpers/defaults.js');
 const logger = require('../server/Helpers/logger.js');
+const Card = require('../server/Models/Card.js');
 describe('Card Model', function () {
 	before(function() {
 		logger.on = false;

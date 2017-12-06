@@ -1,8 +1,6 @@
 "use strict";
-const generate = require('../Helpers/DataGenerator.js');
 const defaults = require('../../client/duel/Helpers/defaults.js');
 const Card = require('./Card.js');
-
 class Hand {
     constructor(json) {
         json = json === undefined ? {cards: []} : json;
@@ -19,15 +17,6 @@ class Hand {
         return {
             cards:cardsJSON
         };
-    }
-    toString(){
-
-        let cardsString= '{cards:[';
-        for(let i = 0; i < this.cards.length; i++) {
-            cardsString += this.cards[i].toString() +', \n';
-        }
-        cardsString += '}';
-        return cardsString;
     }
     //------------------------------------------------------------------- public methods
     getCard(cardID) {

@@ -51,6 +51,9 @@ const defaults = {
 		},
 		hand: {
 			numberOfCards: 3
+		},
+		deck: {
+			numberOfCards: 50
 		}
 	},
 };
