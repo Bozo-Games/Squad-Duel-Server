@@ -50,6 +50,8 @@ class Game {
 	            onBeforeSelectCard:this._onBeforeSelectCard,
 	            onBeforeSelectAttack:this._onBeforeSelectAttack,
 
+	            onBeforeProcessDuel:this._onBeforeProcessDuel,
+
 	            //All state changes gloably
 	            onBeforeTransition: this._onBeforeTransition,
 	            onAfterTransition: this._onAfterTransition,
@@ -133,6 +135,9 @@ class Game {
 			}
 		}
 		return false;
+	}
+	processDuel() {
+		return this._stateMachine.processDuel();
 	}
 	//----------------------------------------------------- --------------------------------------------- public methods
 	playerIsPartOfGame(player) {
@@ -244,6 +249,9 @@ class Game {
 			return this.duel.addAttack(attackID,letter);
 		}
 		return true;
+	}
+	_onBeforeProcessDuel(lifecyle) {
+		return this.duel.processDuel();
 	}
 	//------------------------------------------------- -------------------------------------------------------- Helpers
 	_validatePlayer(player) {

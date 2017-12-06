@@ -167,5 +167,6 @@ describe('Game Model', function () {
 		assert.equal(g.currentState,'readyToDuel');
 		assert.equal(g.duel.currentState,'ready');
 		logger.on = true;
+		assert.equal(g.processDuel(),true,'processing duel');
 	});
 });

@@ -12,24 +12,33 @@ class Duel {
 			    cardA: json.cardA === undefined ? undefined : new Card(json.cardA),
 			    cardB: json.cardB === undefined ? undefined : new Card(json.cardB),
 			    attackA: json.cardA === undefined ? undefined : new Attack(json.attackA),
-			    attackB: json.cardB === undefined ? undefined : new Attack(json.attackB)
+			    attackB: json.cardB === undefined ? undefined : new Attack(json.attackB),
+			    turns: [],
+			    helpers: {
+
+			    }
 		    },
 		    init:'waitingForCards',
 		    transitions: [
 			    {name:'addCard', from:'waitingForCards', to:'waitingForAttacks'},
 			    {name:'addAttack', from:'waitingForAttacks', to:'ready'},
-			    {name:'processDuel', from:'ready', to:'initiative'},
-			    {name:'nextAttack', from:'initiative', to:'A->B'},
-			    {name:'nextAttack', from:'initiative', to:'B->A'},
-			    {name:'nextAttack', from:'B->A', to:'A->B'},
-			    {name:'nextAttack', from:'A->B', to:'B->A'},
-			    {name:'nextAttack', from:'A->B', to:'displayResults'},
-			    {name:'nextAttack', from:'B->A', to:'displayResults'},
+			    {name:'handleInitiative', from:'ready', to:'initiative'},
+
+			    {name:'nextAttack', from:['initiative','attackerUpdated'], to:'newAttack'},
+			    {name:'handleCrushing',from:'newAttack',to:'crushingDone'},
+			    {name:'handlePiercing',from:'crushingDone',to:'piercingDone'},
+			    {name:'handleFlat',from:'piercingDone',to:'flatDone'},
+			    {name:'updateDefenderCard',from:'flatDone',to:'defenderUpdated'},
+			    {name:'updateAttackerCard',from:'defenderUpdated',to:'attackerUpdated'},
+
+			    {name:'finishDuel', from:'attackerUpdated', to:'displayResults'},
+
 			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'},
 		    ],
 		    methods: {
 		    	onBeforeAddCard:    this._onBeforeAddCard,
 			    onBeforeAddAttack:  this._onBeforeAddAttack,
+			    onEnterInitiative: this._onEnterInitiative,
 			    //All state changes globally
 			    onBeforeTransition: this._onBeforeTransition,
 			    onAfterTransition:  this._onAfterTransition,
@@ -74,6 +83,33 @@ class Duel {
 	    }
     	return false;
 	}
+	processDuel() {
+    	if(this.attackA !== undefined && this.attackB !== undefined) {
+    		if(this._stateMachine.handleInitiative()) {
+    			while(this._stateMachine.turns.length > 0) {
+    				let shouldBreak = true;
+				    if(this._stateMachine.nextAttack()) {
+					    if(this._stateMachine.handleCrushing()) {
+							if(this._stateMachine.handlePiercing()) {
+								if(this._stateMachine.handleFlat()) {
+									if(this._stateMachine.updateDefenderCard()) {
+										if(this._stateMachine.updateAttackerCard()) {
+											shouldBreak = false;
+										}
+									}
+								}
+							}
+					    }
+				    }
+				    if(shouldBreak) {
+				    	break;
+				    }
+			    }
+
+		    }
+	    }
+    	return false;
+	}
 	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
         return {
@@ -95,6 +131,39 @@ class Duel {
 		logs.log(E.logs.duel,'attack '+letter +' selected '+ attack.id);
 		this['attack'+letter] = attack;
 		return (this.attackA !== undefined && this.attackB !== undefined);
+	}
+	_onEnterInitiative(lifecycle) {
+    	this.turns = [];
+    	let speedA = this.cardA.speed + this.attackA.speed;
+    	let speedB = this.cardB.speed + this.attackB.speed;
+    	if(speedA == speedB) {
+		    if(Math.random() > 0.5) {
+			    speedA += 0.001;
+		    } else {
+		    	speedB += 0.001;
+		    }
+	    }
+		if(speedA > speedB) {
+		    this.turns = [
+		    	{letter:"A",powerMultiplier:1},
+			    {letter:"B",powerMultiplier:1}];
+		    if(speedA*2 > speedB) {
+			    this.turns.splice(1, 0, {letter:"A",powerMultiplier:1});
+		    } else if(speedA*1.5 > speedB) {
+		    	this.turns.push({letter:"A",powerMultiplier:0.5})
+		    }
+	    } else if(speedB > speedA) {
+			this.turns = [
+				{letter:"B",powerMultiplier:1},
+				{letter:"A",powerMultiplier:1}];
+			if(speedB*2 > speedA) {
+				this.turns.splice(1, 0, {letter:"B",powerMultiplier:1});
+			} else if(speedB*1.5 > speedA) {
+				this.turns.push({letter:"B",powerMultiplier:0.5})
+			}
+	    }
+		logs.log(E.logs.duel,'Initative calculated with speed A = '+speedA +' and speed B = ' + speedB +', turn order is'+ JSON.stringify(this.turns));
+    	return true;
 	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
