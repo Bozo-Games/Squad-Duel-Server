@@ -1,0 +1,15 @@
+digraph "fsm" {
+  "inDeck";
+  "inHand";
+  "selected";
+  "dueling";
+  "lockedIn";
+  "dead";
+  "inDeck" -> "inHand" [ label=" dealToPlayer " ];
+  "inHand" -> "selected" [ label=" selectCard " ];
+  "selected" -> "inHand" [ label=" returnToHand " ];
+  "dueling" -> "inHand" [ label=" returnToHand " ];
+  "selected" -> "lockedIn" [ label=" confirm " ];
+  "lockedIn" -> "dueling" [ label=" duel " ];
+  "dueling" -> "dead" [ label=" kill " ];
+}

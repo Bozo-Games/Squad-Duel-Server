@@ -1,0 +1,25 @@
+digraph "fsm" {
+  "waitingForCards";
+  "waitingForAttacks";
+  "ready";
+  "initiative";
+  "newAttack";
+  "attackerUpdated";
+  "crushingDone";
+  "piercingDone";
+  "flatDone";
+  "defenderUpdated";
+  "displayResults";
+  "waitingForCards" -> "waitingForAttacks" [ label=" addCard " ];
+  "waitingForAttacks" -> "ready" [ label=" addAttack " ];
+  "ready" -> "initiative" [ label=" handleInitiative " ];
+  "initiative" -> "newAttack" [ label=" nextAttack " ];
+  "attackerUpdated" -> "newAttack" [ label=" nextAttack " ];
+  "newAttack" -> "crushingDone" [ label=" handleCrushing " ];
+  "crushingDone" -> "piercingDone" [ label=" handlePiercing " ];
+  "piercingDone" -> "flatDone" [ label=" handleFlat " ];
+  "flatDone" -> "defenderUpdated" [ label=" updateDefenderCard " ];
+  "defenderUpdated" -> "attackerUpdated" [ label=" updateAttackerCard " ];
+  "attackerUpdated" -> "displayResults" [ label=" finishDuel " ];
+  "displayResults" -> "waitingForCards" [ label=" acceptResults " ];
+}

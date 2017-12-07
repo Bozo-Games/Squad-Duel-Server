@@ -85,10 +85,18 @@ describe('Card Model', function () {
 		c.returnToHand();
 		assert.equal(c.currentState,'inHand');
 	});
-	it('should move from selected dueling when duel is started', function () {
+	it('should move from selected lockedIn when confirmed', function () {
 		let c =  new Card();
 		c.dealToPlayer();
 		c.selectCard();
+		c.confirm();
+		assert.equal(c.currentState,'lockedIn');
+	});
+	it('should be dueling on duel ', function () {
+		let c =  new Card();
+		c.dealToPlayer();
+		c.selectCard();
+		c.confirm();
 		c.duel();
 		assert.equal(c.currentState,'dueling');
 	});
@@ -96,6 +104,7 @@ describe('Card Model', function () {
 		let c =  new Card();
 		c.dealToPlayer();
 		c.selectCard();
+		c.confirm();
 		c.duel();
 		c.kill();
 		assert.equal(c.currentState,'dead');
@@ -104,6 +113,7 @@ describe('Card Model', function () {
 		let c =  new Card();
 		c.dealToPlayer();
 		c.selectCard();
+		c.confirm();
 		c.duel();
 		c.returnToHand();
 		assert.equal(c.currentState,'inHand');

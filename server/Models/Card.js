@@ -25,9 +25,11 @@ class Card {
 
 			    {name:'returnToHand',from:['selected','dueling'], to:'inHand'},
 
-			    {name:'duel', from:'selected', to:'dueling'},
+			    {name:'confirm',from:'selected', to:'lockedIn'},
 
-			    {name:'kill',            from:'dueling', to:'dead'}
+			    {name:'duel', from:'lockedIn', to:'dueling'},
+
+			    {name:'kill', from:'dueling', to:'dead'}
 		    ],
 		    methods: {
 			    //All state changes globaly
@@ -81,6 +83,9 @@ class Card {
 	}
 	returnToHand() {
 		this._stateMachine.returnToHand();
+	}
+	confirm(){
+    	this._stateMachine.confirm();
 	}
 	duel() {
     	this._stateMachine.duel();

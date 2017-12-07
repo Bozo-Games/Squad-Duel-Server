@@ -1,0 +1,22 @@
+digraph "fsm" {
+  "newGame";
+  "cardSelectingStage";
+  "endGame";
+  "attackSelectStage";
+  "readyToDuel";
+  "showingDuelResults";
+  "newGame" -> "cardSelectingStage" [ label=" playerJoin " ];
+  "none" -> "endGame" [ label=" playerLeave " ];
+  "newGame" -> "endGame" [ label=" playerLeave " ];
+  "cardSelectingStage" -> "endGame" [ label=" playerLeave " ];
+  "endGame" -> "endGame" [ label=" playerLeave " ];
+  "attackSelectStage" -> "endGame" [ label=" playerLeave " ];
+  "readyToDuel" -> "endGame" [ label=" playerLeave " ];
+  "showingDuelResults" -> "endGame" [ label=" playerLeave " ];
+  "cardSelectingStage" -> "attackSelectStage" [ label=" selectCard " ];
+  "attackSelectStage" -> "readyToDuel" [ label=" selectAttack " ];
+  "readyToDuel" -> "showingDuelResults" [ label=" processDuel " ];
+  "showingDuelResults" -> "cardSelectingStage" [ label=" continueGame " ];
+  "showingDuelResults" -> "endGame" [ label=" declareVictor " ];
+  "endGame" -> "newGame" [ label=" newGame " ];
+}

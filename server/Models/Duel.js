@@ -94,7 +94,7 @@ class Duel {
 								if(this._stateMachine.handleFlat()) {
 									if(this._stateMachine.updateDefenderCard()) {
 										if(this._stateMachine.updateAttackerCard()) {
-											his._stateMachine.turns.splice(0,1);
+											this._stateMachine.turns.splice(0,1);
 											shouldBreak = false;
 										}
 									}
@@ -106,7 +106,6 @@ class Duel {
 				    	break;
 				    }
 			    }
-
 		    }
 	    }
     	return false;
