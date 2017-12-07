@@ -158,6 +158,7 @@ describe('Game Model', function () {
 		assert.equal(g.currentState,'readyToDuel');
 		assert.equal(g.duel.currentState,'ready');
 	});
+	/*
 	it('should get process to duel',function () {
 		let g = new Game();
 		let playerA = new Player({socketID:'abc123',name:'Player A'});
@@ -181,5 +182,5 @@ describe('Game Model', function () {
 		assert.equal(g.duel.currentState,'ready');
 		logger.on = true;
 		assert.equal(g.processDuel(),true,'processing duel');
-	});
+	});*/
 });

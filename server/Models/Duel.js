@@ -14,32 +14,34 @@ class Duel {
 			    attackA: json.cardA === undefined ? undefined : new Attack(json.attackA),
 			    attackB: json.cardB === undefined ? undefined : new Attack(json.attackB),
 			    turns: [],
-			    helpers: {
-
-			    }
+			    attacker: undefined,
+			    defender: undefined,
+			    attackPoerMultiplier: undefined,
 		    },
 		    init:'waitingForCards',
-		    transitions: [
-			    {name:'addCard', from:'waitingForCards', to:'waitingForAttacks'          , dot:{color:'green'}},
-			    {name:'addAttack', from:'waitingForAttacks', to:'ready'                  , dot:{color:'green'}},
-			    {name:'handleInitiative', from:'ready', to:'initiative'                  , dot:{color:'green'}},
+		    transitions: [                                                                    // For drawing  State machine
+			    {name:'addCard', from:'waitingForCards', to:'waitingForAttacks'              , dot:{color:'green'}},
+			    {name:'addAttack', from:'waitingForAttacks', to:'ready'                      , dot:{color:'green'}},
+			    {name:'handleInitiative', from:'ready', to:'initiativeDone'                  , dot:{color:'green'}},
 
-			    {name:'nextAttack', from:['initiative','attackerUpdated'], to:'newAttack', dot:{color:'blue'}},
-			    {name:'handleCrushing',from:'newAttack',to:'crushingDone'                , dot:{color:'red'}},
-			    {name:'handlePiercing',from:'crushingDone',to:'piercingDone'             , dot:{color:'red'}},
-			    {name:'handleFlat',from:'piercingDone',to:'flatDone'                     , dot:{color:'red'}},
-			    {name:'updateDefenderCard',from:'flatDone',to:'defenderUpdated'          , dot:{color:'red'}},
-			    {name:'updateAttackerCard',from:'defenderUpdated',to:'attackerUpdated'   , dot:{color:'red'}},
-
-			    {name:'finishDuel', from:'attackerUpdated', to:'displayResults'          , dot:{color:'red'}},
-
-			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'       , dot:{color:'red'}},
+			    {name:'nextAttack', from:['initiativeDone','cardsUpdated'], to:'newAttack'   , dot:{color:'blue'}},
+			    {name:'handleCrushing',from:'newAttack',to:'crushingDone'                    , dot:{color:'red'}},
+			    {name:'handlePiercing',from:'crushingDone',to:'piercingDone'                 , dot:{color:'red'}},
+			    {name:'handleFlat',from:'piercingDone',to:'flatDone'                         , dot:{color:'red'}},
+			    {name:'updateDefenderCard',from:'flatDone',to:'defenderUpdated'              , dot:{color:'red'}},
+			    {name:'updateAttackerCard',from:'defenderUpdated',to:'cardsUpdated'          , dot:{color:'red'}},
+			                                                                                 
+			    {name:'finishDuel', from:'cardsUpdated', to:'displayResults'                 , dot:{color:'red'}},
+			                                                                                 
+			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'           , dot:{color:'red'}},
 		    ],
 		    methods: {
 		    	onBeforeAddCard:    this._onBeforeAddCard,
 			    onBeforeAddAttack:  this._onBeforeAddAttack,
-			    onEnterInitiative: this._onEnterInitiative,
-			    onEnterCrushing: this._onEnterCrushing,
+			    onEnterInitiativeDone: this._onEnterInitiativeDone,
+			    onEnterNewAttack: this._onEnterNewAttack,
+			    onEnterCrushingDone: this._onEnterCrushingDone,
+			    onEnterPiercingDone: this._onEnterPiercingDone,
 			    //All state changes globally
 			    onBeforeTransition: this._onBeforeTransition,
 			    onAfterTransition:  this._onAfterTransition,
@@ -138,7 +140,7 @@ class Duel {
 		this['attack'+letter] = attack;
 		return (this.attackA !== undefined && this.attackB !== undefined);
 	}
-	_onEnterInitiative(lifecycle) {
+	_onEnterInitiativeDone(lifecycle) {
     	this.turns = [];
     	let speedA = this.cardA.speed + this.attackA.speed;
     	let speedB = this.cardB.speed + this.attackB.speed;
@@ -153,26 +155,62 @@ class Duel {
 		    this.turns = [
 		    	{letter:"A",powerMultiplier:1},
 			    {letter:"B",powerMultiplier:1}];
-		    if(speedA*2 > speedB) {
+		    if(speedA > speedB*2) {
 			    this.turns.splice(1, 0, {letter:"A",powerMultiplier:1});
-		    } else if(speedA*1.5 > speedB) {
+		    } else if(speedA > speedB*1.5) {
 		    	this.turns.push({letter:"A",powerMultiplier:0.5})
 		    }
 	    } else if(speedB > speedA) {
 			this.turns = [
 				{letter:"B",powerMultiplier:1},
 				{letter:"A",powerMultiplier:1}];
-			if(speedB*2 > speedA) {
+			if(speedB > speedA*2) {
 				this.turns.splice(1, 0, {letter:"B",powerMultiplier:1});
-			} else if(speedB*1.5 > speedA) {
+			} else if(speedB > speedA*1.5) {
 				this.turns.push({letter:"B",powerMultiplier:0.5})
 			}
 	    }
-		logs.log(E.logs.duel,'Initative calculated with speed A = '+speedA +' and speed B = ' + speedB +', turn order is'+ JSON.stringify(this.turns));
+		logs.log(E.logs.duel,'Imitative calculated with speed A = '+speedA +' and speed B = ' + speedB +', turn order is'+ JSON.stringify(this.turns));
     	return true;
 	}
-	_onEnterCrushing(lifecycle) {
-
+	_onEnterNewAttack(lifecycle) {
+    	if(lifecycle.from === 'cardsUpdated') {
+			this.turns.splice(0,1);
+	    }
+		let turn = this.turns[0];
+    	this.attackPoerMultiplier = turn.powerMultiplier;
+		this.attacker = turn.letter;
+		if(this.attacker === 'A') {this.defender = 'B';}
+		else {this.defender = 'A';}
+		return true;
+	}
+	_onEnterCrushingDone(lifecycle) {
+    	if(this['attack'+this.attacker].category === 'crush') {
+    		let dmg = this['attack'+this.attacker].power*this.attackPoerMultiplier;
+		    let armorLeft = this['card'+this.defender].armor - dmg;
+		    this['card'+this.defender].armor = Math.max(0,armorLeft);
+		    logs.log(E.logs.duel,this.attacker + ' crushes '+this.defender+'\'s armor reducing it t '+this['card'+this.defender].armor );
+		    if(armorLeft < 0) {
+			    this['card'+this.defender].health = this['card'+this.defender].health  + armorLeft;
+			    logs.log(E.logs.duel,this.attacker + ' crushing damage roles over dealing '+(-1*armorLeft)+' damage reducing card '+this.defender+'\'s health to '+this['card'+this.defender].health);
+		    }
+	    }
+		logs.log(E.logs.duel,'Attack '+this['attack'+this.attacker]+' is not in the crush category, skipping crush dmg.');
+		return true;
+	}
+	_onEnterPiercingDone(lifecycle) {
+		if(this['attack'+this.attacker].category === 'crush') {
+			let dmg = this['attack'+this.attacker].power*this.attackPoerMultiplier;
+			let armorLeft = this['card'+this.defender].armor - dmg;
+			this['card'+this.defender].armor = Math.max(0,armorLeft);
+			logs.log(E.logs.duel,this.attacker + ' crushes '+this.defender+'\'s armor reducing it t '+this['card'+this.defender].armor );
+			if(armorLeft < 0) {
+				this['card'+this.defender].health = this['card'+this.defender].health  + armorLeft;
+				logs.log(E.logs.duel,this.attacker + ' crushing damage roles over dealing '+(-1*armorLeft)+' damage reducing card '+this.defender+'\'s health to '+this['card'+this.defender].health);
+			}
+		}
+		logs.log(E.logs.duel,'Attack '+this['attack'+this.attacker]+' is not in the pierce category, skipping crush dmg.');
+		return true;
 	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {

@@ -2,9 +2,9 @@ digraph "fsm" {
   "waitingForCards";
   "waitingForAttacks";
   "ready";
-  "initiative";
+  "initiativeDone";
   "newAttack";
-  "attackerUpdated";
+  "cardsUpdated";
   "crushingDone";
   "piercingDone";
   "flatDone";
@@ -12,14 +12,14 @@ digraph "fsm" {
   "displayResults";
   "waitingForCards" -> "waitingForAttacks" [ color="green" ; label=" addCard " ];
   "waitingForAttacks" -> "ready" [ color="green" ; label=" addAttack " ];
-  "ready" -> "initiative" [ color="green" ; label=" handleInitiative " ];
-  "initiative" -> "newAttack" [ color="blue" ; label=" nextAttack " ];
-  "attackerUpdated" -> "newAttack" [ color="blue" ; label=" nextAttack " ];
+  "ready" -> "initiativeDone" [ color="green" ; label=" handleInitiative " ];
+  "initiativeDone" -> "newAttack" [ color="blue" ; label=" nextAttack " ];
+  "cardsUpdated" -> "newAttack" [ color="blue" ; label=" nextAttack " ];
   "newAttack" -> "crushingDone" [ color="red" ; label=" handleCrushing " ];
   "crushingDone" -> "piercingDone" [ color="red" ; label=" handlePiercing " ];
   "piercingDone" -> "flatDone" [ color="red" ; label=" handleFlat " ];
   "flatDone" -> "defenderUpdated" [ color="red" ; label=" updateDefenderCard " ];
-  "defenderUpdated" -> "attackerUpdated" [ color="red" ; label=" updateAttackerCard " ];
-  "attackerUpdated" -> "displayResults" [ color="red" ; label=" finishDuel " ];
+  "defenderUpdated" -> "cardsUpdated" [ color="red" ; label=" updateAttackerCard " ];
+  "cardsUpdated" -> "displayResults" [ color="red" ; label=" finishDuel " ];
   "displayResults" -> "waitingForCards" [ color="red" ; label=" acceptResults " ];
 }

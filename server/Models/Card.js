@@ -76,7 +76,15 @@ class Card {
     	return this._stateMachine.can('selectCard');
 	}
 	//------------------------------------------------- -------------------------------------------------------- Setters
-
+	set armor(newArmor) {
+    	this._stateMachine.armor = Math.max(0,newArmor);
+	}
+	set health(newHealth){
+		this._stateMachine.health = Math.max(0,newHealth);
+		if(this.health <=0) {
+			this.kill();
+		}
+	}
 	//----------------------------------------------------- -------------------------------- public State Machine Events
 	dealToPlayer() {
 		this._stateMachine.dealToPlayer();

@@ -11,7 +11,8 @@
   "devDependencies": {
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
-    "nyc": "^11.3.0"
+    "nyc": "^11.3.0",
+    "seedrandom": "^2.4.3"
   },
   "scripts": {
     "test": "find ./Tests -name '*.spec.js' | xargs nyc mocha -R spec"
