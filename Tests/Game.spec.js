@@ -73,9 +73,13 @@ describe('Game Model', function () {
 		assert.equal(g.selectCard('abc123',handA.cards[0].id),false,'player A selects card');
 		assert.equal(g.duel.cardA.id, handA.cards[0].id,'id card check');
 		assert.equal(g.duel.cardA.currentState, 'selected','card state check');
-		assert.equal(g.selectCard('edf456',handB.cards[0].id),true,'player B selects card');
+		assert.equal(g.selectCard('edf456',handB.cards[0].id),false,'player B selects card');
 		assert.equal(g.duel.cardB.id, handB.cards[0].id,'id card check');
 		assert.equal(g.duel.cardB.currentState, 'selected','card state check');
+		assert.equal(g.currentState, 'cardSelectingStage', 'state check');
+		handA.cards[0].confirm();
+		handB.cards[0].confirm();
+		assert.equal(g.selectCard('edf456',handB.cards[0].id),true,'player B selects card');
 		assert.equal(g.currentState, 'attackSelectStage', 'state check');
 	});
 	it('should not allow a player to select a card not in their hand',function () {
@@ -99,9 +103,12 @@ describe('Game Model', function () {
 		assert.equal(g.selectCard('abc123',g.handA.cards[0].id),false,'player A selects card');
 		assert.equal(g.duel.cardA.id, g.handA.cards[0].id,'id card check');
 		assert.equal(g.duel.cardA.currentState, 'selected','card state check');
-		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),false,'player B selects card');
 		assert.equal(g.duel.cardB.id, g.handB.cards[0].id,'id card check');
 		assert.equal(g.duel.cardB.currentState, 'selected','card state check');
+		g.handA.cards[0].confirm();
+		g.handB.cards[0].confirm();
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
 		assert.equal(g.currentState, 'attackSelectStage', 'state check');
 		g.duel.cardA.attacks[0].id = "new-attack-id";
 		assert.equal(g.selectAttack('abc123',g.duel.cardA.attacks[0].id),false,'player A selects attack');
@@ -116,9 +123,12 @@ describe('Game Model', function () {
 		assert.equal(g.selectCard('abc123',g.handA.cards[0].id),false,'player A selects card');
 		assert.equal(g.duel.cardA.id, g.handA.cards[0].id,'id card check');
 		assert.equal(g.duel.cardA.currentState, 'selected','card state check');
-		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),false,'player B selects card');
 		assert.equal(g.duel.cardB.id, g.handB.cards[0].id,'id card check');
 		assert.equal(g.duel.cardB.currentState, 'selected','card state check');
+		g.handA.cards[0].confirm();
+		g.handB.cards[0].confirm();
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
 		assert.equal(g.currentState, 'attackSelectStage', 'state check');
 		assert.equal(g.selectAttack('abc123','bad-id'),false,'player A selects invalid attack');
 		assert.equal(g.duel.attackA, undefined);
@@ -132,9 +142,12 @@ describe('Game Model', function () {
 		assert.equal(g.selectCard('abc123',g.handA.cards[0].id),false,'player A selects card');
 		assert.equal(g.duel.cardA.id, g.handA.cards[0].id,'id card check');
 		assert.equal(g.duel.cardA.currentState, 'selected','card state check');
-		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),false,'player B selects card');
 		assert.equal(g.duel.cardB.id, g.handB.cards[0].id,'id card check');
 		assert.equal(g.duel.cardB.currentState, 'selected','card state check');
+		g.handA.cards[0].confirm();
+		g.handB.cards[0].confirm();
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
 		assert.equal(g.currentState, 'attackSelectStage', 'state check');
 		g.duel.cardA.attacks[0].id = "new-attack-id";
 		assert.equal(g.selectAttack('abc123',g.duel.cardA.attacks[0].id),false,'player A selects attack');

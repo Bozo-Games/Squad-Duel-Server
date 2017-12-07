@@ -1,7 +1,7 @@
 {
-  "name": "proving-grounds",
+  "name": "Squad-Duel",
   "version": "0.0.1",
-  "description": "A place to test out socket io",
+  "description": "A bozo game.",
   "dependencies": {
     "express": "^4.16.2",
     "javascript-state-machine": "^3.0.1",

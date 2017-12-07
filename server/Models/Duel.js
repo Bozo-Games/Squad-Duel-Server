@@ -20,25 +20,26 @@ class Duel {
 		    },
 		    init:'waitingForCards',
 		    transitions: [
-			    {name:'addCard', from:'waitingForCards', to:'waitingForAttacks'},
-			    {name:'addAttack', from:'waitingForAttacks', to:'ready'},
-			    {name:'handleInitiative', from:'ready', to:'initiative'},
+			    {name:'addCard', from:'waitingForCards', to:'waitingForAttacks'          , dot:{color:'green'}},
+			    {name:'addAttack', from:'waitingForAttacks', to:'ready'                  , dot:{color:'green'}},
+			    {name:'handleInitiative', from:'ready', to:'initiative'                  , dot:{color:'green'}},
 
-			    {name:'nextAttack', from:['initiative','attackerUpdated'], to:'newAttack'},
-			    {name:'handleCrushing',from:'newAttack',to:'crushingDone'},
-			    {name:'handlePiercing',from:'crushingDone',to:'piercingDone'},
-			    {name:'handleFlat',from:'piercingDone',to:'flatDone'},
-			    {name:'updateDefenderCard',from:'flatDone',to:'defenderUpdated'},
-			    {name:'updateAttackerCard',from:'defenderUpdated',to:'attackerUpdated'},
+			    {name:'nextAttack', from:['initiative','attackerUpdated'], to:'newAttack', dot:{color:'blue'}},
+			    {name:'handleCrushing',from:'newAttack',to:'crushingDone'                , dot:{color:'red'}},
+			    {name:'handlePiercing',from:'crushingDone',to:'piercingDone'             , dot:{color:'red'}},
+			    {name:'handleFlat',from:'piercingDone',to:'flatDone'                     , dot:{color:'red'}},
+			    {name:'updateDefenderCard',from:'flatDone',to:'defenderUpdated'          , dot:{color:'red'}},
+			    {name:'updateAttackerCard',from:'defenderUpdated',to:'attackerUpdated'   , dot:{color:'red'}},
 
-			    {name:'finishDuel', from:'attackerUpdated', to:'displayResults'},
+			    {name:'finishDuel', from:'attackerUpdated', to:'displayResults'          , dot:{color:'red'}},
 
-			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'},
+			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'       , dot:{color:'red'}},
 		    ],
 		    methods: {
 		    	onBeforeAddCard:    this._onBeforeAddCard,
 			    onBeforeAddAttack:  this._onBeforeAddAttack,
 			    onEnterInitiative: this._onEnterInitiative,
+			    onEnterCrushing: this._onEnterCrushing,
 			    //All state changes globally
 			    onBeforeTransition: this._onBeforeTransition,
 			    onAfterTransition:  this._onAfterTransition,
@@ -124,7 +125,12 @@ class Duel {
 	_onBeforeAddCard(lifecycle,card,letter) {
     	logs.log(E.logs.duel,"card " + card.id + " is selected by player "+ letter);
 		this['card'+letter] = card;
-		card.selectCard();
+		if(card.canSelect) {
+			card.selectCard();
+		}
+		if( (this.cardA !== undefined && this.cardB !== undefined)) {
+			return this.cardA.currentState === 'lockedIn' && this.cardB.currentState === 'lockedIn';
+		}
 		return (this.cardA !== undefined && this.cardB !== undefined);
 	}
 	_onBeforeAddAttack(lifecycle,attack,letter) {
@@ -164,6 +170,9 @@ class Duel {
 	    }
 		logs.log(E.logs.duel,'Initative calculated with speed A = '+speedA +' and speed B = ' + speedB +', turn order is'+ JSON.stringify(this.turns));
     	return true;
+	}
+	_onEnterCrushing(lifecycle) {
+
 	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {

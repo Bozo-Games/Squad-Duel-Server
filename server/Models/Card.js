@@ -72,6 +72,9 @@ class Card {
 	get currentState() {
     	return this._stateMachine.state;
 	}
+	get canSelect(){
+    	return this._stateMachine.can('selectCard');
+	}
 	//------------------------------------------------- -------------------------------------------------------- Setters
 
 	//----------------------------------------------------- -------------------------------- public State Machine Events

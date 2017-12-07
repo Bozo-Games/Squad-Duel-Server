@@ -50,12 +50,26 @@ describe('Duel Model', function () {
 		let d = new Duel();
 		assert(d.currentState, 'waitingForCards');
 	});
-	it('should allow a card to be added', function () {
+	it('should allow both cards to be slected with out moving to attack stage', function () {
 		let d = new Duel();
 		let ca = new Card({id:'abc123'});
 		ca.dealToPlayer();
 		let cb = new Card({id:'abc123'});
 		cb.dealToPlayer();
+		assert.equal(d.addCard(ca,'A'),false,'card A has been added');
+		assert.equal(d.addCard(cb,'B'),false,'card B has been added');
+		assert.equal(d.currentState,'waitingForCards','state check');
+	});
+	it('should move in once cards are locked in', function () {
+		let d = new Duel();
+		let ca = new Card({id:'abc123'});
+		ca.dealToPlayer();
+		let cb = new Card({id:'abc123'});
+		cb.dealToPlayer();
+		ca.selectCard();
+		cb.selectCard();
+		ca.confirm();
+		cb.confirm();
 		assert.equal(d.addCard(ca,'A'),false,'card A has been added');
 		assert.equal(d.addCard(cb,'B'),true,'card B has been added');
 		assert.equal(d.currentState,'waitingForAttacks','state check');
@@ -63,5 +77,15 @@ describe('Duel Model', function () {
 	it('should reject an invalid card', function () {
 		let d = new Duel();
 		assert.equal(d.addCard(undefined,'A'),false,'card A has been added');
+	});
+	it('should allow a card to be added', function () {
+		let d = new Duel();
+		let ca = new Card({id:'abc123'});
+		ca.dealToPlayer();
+		let cb = new Card({id:'abc123'});
+		cb.dealToPlayer();
+		assert.equal(d.addCard(ca,'A'),false,'card A has been added');
+		assert.equal(d.addCard(cb,'B'),false,'card B has been added');
+		assert.equal(d.currentState,'waitingForCards','state check');
 	});
 });

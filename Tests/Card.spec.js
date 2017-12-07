@@ -72,6 +72,14 @@ describe('Card Model', function () {
 		c.dealToPlayer();
 		assert.equal(c.currentState,'inHand');
 	});
+	it('should respond to can select', function () {
+		let c =  new Card();
+		assert.equal(c.canSelect,false);
+		c.dealToPlayer();
+		assert.equal(c.canSelect,true);
+		c.selectCard();
+		assert.equal(c.canSelect,false);
+	});
 	it('should move to select a from in hand a when card is selected', function () {
 		let c =  new Card();
 		c.dealToPlayer();

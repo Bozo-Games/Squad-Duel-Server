@@ -232,7 +232,7 @@ class Game {
 			logs.log(E.logs.game, playerID +' is a spectator and can not select a card');
 		} else {
 			if(this.duel['card'+letter] !== undefined) {
-				if(this.duel['card'+letter].id === cardID) {
+				if(this.duel['card'+letter].id !== cardID) {
 					this.duel['card' + letter].returnToHand();
 				}
 			}
