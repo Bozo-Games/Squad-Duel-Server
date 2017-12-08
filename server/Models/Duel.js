@@ -32,7 +32,7 @@ class Duel {
 			                                                                                 
 			    {name:'finishDuel', from:'attackFinished', to:'displayResults'                 , dot:{color:'green'}},
 			                                                                                 
-			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'           , dot:{color:'blue'}},
+			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'           , dot:{color:'green'}},
 		    ],
 		    methods: {
 		    	onBeforeAddCard:    this._onBeforeAddCard,
@@ -92,25 +92,27 @@ class Duel {
 	processDuel() {
     	if(this.attackA !== undefined && this.attackB !== undefined) {
     		if(this._stateMachine.handleInitiative()) {
-    			while(this._stateMachine.turns.length > 0) {
-    				let shouldBreak = true;
-				    if(this._stateMachine.nextAttack()) {
-					    if(this._stateMachine.handleCrushing()) {
-							if(this._stateMachine.handlePiercing()) {
-								if(this._stateMachine.handleFlat()) {
-									if(this._stateMachine.updateDefenderCard()) {
-										if(this._stateMachine.updateAttackerCard()) {
-											this._stateMachine.turns.splice(0,1);
-											shouldBreak = false;
-										}
-									}
-								}
-							}
+    			if(this._stateMachine.nextAttack()) {
+				    while(this._stateMachine.turns.length > 1) {
+				    	console.log('---- here - ' + this.currentState);
+					    let shouldBreak = true;
+					    if(this._stateMachine.handleCrushing()){
+					    	if(this._stateMachine.handlePiercing()) {
+					    		if(this._stateMachine.handleFlat()) {
+					    			if(this._stateMachine.finishAttack()) {
+					    				if(!this._stateMachine.nextAttack()) {
+					    					shouldBreak = true;
+									    }
+								    }
+							    }
+						    }
+					    }
+
+					    if(shouldBreak) {
+						    break;
 					    }
 				    }
-				    if(shouldBreak) {
-				    	break;
-				    }
+				    return true;
 			    }
 		    }
 	    }
