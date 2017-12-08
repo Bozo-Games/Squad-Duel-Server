@@ -14,6 +14,7 @@ class Card {
 	_inHandDraw() {
 		push();
 		fill(colors.card.inHand.background);
+		ellipseMode(CORNER);
 		ellipse(
 			0,
 			0,

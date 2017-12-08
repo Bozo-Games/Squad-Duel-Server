@@ -1,7 +1,7 @@
 defaults.hand = {
 	offset: {
 		x: function () {
-			return defaults.card.inHand.width() / 4;
+			return defaults.card.inHand.size.width() / 4;
 		},
 		y: function () {
 			return 0;
@@ -9,7 +9,7 @@ defaults.hand = {
 	},
 	step: {
 		x: function () {
-			return defaults.card.inHand.width() + defaults.card.inHand.offset.x();
+			return defaults.card.inHand.size.width() + defaults.hand.offset.x();
 		},
 		y: function () {
 			return 0;
