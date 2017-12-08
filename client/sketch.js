@@ -1,16 +1,19 @@
 "use strict";
+let currentGame;
 function preload() {
 
 }
 function setup() {
-	createCanvas(Math.min(windowWidth,750), Math.min(windowHeight,1334));
+	createCanvas(windowWidth,windowHeight);
+	createLogInView();
 }
 function windowResized() {
-	resizeCanvas(Math.min(windowWidth,750), Math.min(windowHeight,1334));
+	resizeCanvas(windowWidth, windowHeight);
 }
 function draw() {
 	background(180);
+	if(currentGame !== undefined) {	currentGame.draw(); }
 }
 function touchEnded() {
-  	return false;//prevents HTML defualts
+  	return false;
 }

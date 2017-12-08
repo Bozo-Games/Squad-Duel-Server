@@ -1,3 +1,3 @@
-defualts.attack = {
+defaults.attack = {
 
 };

@@ -1,3 +1,3 @@
-let defualts = {
+let defaults = {
 
 };

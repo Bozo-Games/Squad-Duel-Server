@@ -19,7 +19,7 @@ describe('Card Model', function () {
 		assert.equal(a.id, -1);
 		assert.equal(a.name, 'No Name');
 		assert.equal(a.health, 0);
-		assert.equal(a.armor, 0);
+		assert.equal(a.armor, 0,'armor check');
 		assert.equal(a.speed, 1);
 		assert.equal(a.icon, 0);
 		assert.equal(a.attacks.length, defaults.card.numberOfAttacks);
