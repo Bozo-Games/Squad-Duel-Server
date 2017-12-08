@@ -452,5 +452,439 @@ describe('Duel Model', function () {
 		assert.equal(d.cardB.armor,3);
 		assert.equal(d.cardB.health,6);
 	});
+	it('should move from piercingDone to flat Done with dmg done if attack category is flat',function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:10,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{id: 'obj901', speed: 1,power:1}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+	});
+	it('should move from flat done to attack finished', function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:10,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{id: 'obj901', speed: 1,power:1}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+	});
+	it('should move to the next attack if there are still atacks in the queue', function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:10,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{id: 'obj901', speed: 1,power:1}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move from attack finished to new attack');
+		assert.equal(d._stateMachine.turns.length, 1,'turns reduced by one');
+		assert.equal(d._stateMachine.turns[0].letter,'B','correct turn');
+		assert.equal(d._stateMachine.turns[0].powerMultiplier, 1,'correct power multiplier');
+		assert.equal(d.currentState, 'newAttack', 'state check');
+	});
+	it('should not move to dispaly results when there are still attacks in the que.', function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:10,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{id: 'obj901', speed: 1,power:1}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+		assert.equal(d._stateMachine.finishDuel(), false, 'move from attack finished to new attack');
+		assert.equal(d._stateMachine.turns.length, 2,'turns reduced by one');
+		assert.equal(d._stateMachine.turns[0].letter,'A','correct turn');
+		assert.equal(d._stateMachine.turns[0].powerMultiplier, 1,'correct power multiplier');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+	});
+	it('should move to new attack when there are no attacks left in the que.', function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:12,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{category:'flat', id: 'obj901', speed: 1,power:1}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move from attack finished to new attack');
+		assert.equal(d._stateMachine.turns.length, 1,'turns reduced by one');
+		assert.equal(d._stateMachine.turns[0].letter,'B','correct turn');
+		assert.equal(d._stateMachine.turns[0].powerMultiplier, 1,'correct power multiplier');
+		assert.equal(d.currentState, 'newAttack', 'state check');
 
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'B');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'A');
+
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardA.armor,2);
+		assert.equal(d.cardA.health,12);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+
+	});
+	it('should move to dispaly results when there are no attacks left in the que.', function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:12,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{category:'flat', id: 'obj901', speed: 1,power:1}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+		assert.equal(d._stateMachine.finishDuel(), false, 'can\'t finish Duel');
+
+		assert.equal(d._stateMachine.nextAttack(), true, 'move from attack finished to new attack');
+		assert.equal(d._stateMachine.turns.length, 1,'turns reduced by one');
+		assert.equal(d._stateMachine.turns[0].letter,'B','correct turn');
+		assert.equal(d._stateMachine.turns[0].powerMultiplier, 1,'correct power multiplier');
+		assert.equal(d.currentState, 'newAttack', 'state check');
+
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'B');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'A');
+
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardA.armor,2);
+		assert.equal(d.cardA.health,12);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d._stateMachine.nextAttack(), false, 'no new attacks');
+		assert.equal(d._stateMachine.finishDuel(), true, 'can finish Duel');
+		assert.equal(d.currentState,'displayResults','state check');
+
+	});
+	it('should reset when you accep the results', function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:12,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{category:'flat', id: 'obj901', speed: 1,power:1}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+		assert.equal(d._stateMachine.finishDuel(), false, 'can\'t finish Duel');
+
+		assert.equal(d._stateMachine.nextAttack(), true, 'move from attack finished to new attack');
+		assert.equal(d._stateMachine.turns.length, 1,'turns reduced by one');
+		assert.equal(d._stateMachine.turns[0].letter,'B','correct turn');
+		assert.equal(d._stateMachine.turns[0].powerMultiplier, 1,'correct power multiplier');
+		assert.equal(d.currentState, 'newAttack', 'state check');
+
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'B');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'A');
+
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardA.armor,2);
+		assert.equal(d.cardA.health,12);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d._stateMachine.nextAttack(), false, 'no new attacks');
+		assert.equal(d._stateMachine.finishDuel(), true, 'can finish Duel');
+		assert.equal(d.currentState,'displayResults','state check');
+
+		assert.equal(d._stateMachine.acceptResults(),true,'can accept results');
+		assert.equal(d.currentState,'waitingForCards', 'state check');
+		assert.equal(d.cardA,undefined,'no Card A');
+		assert.equal(d.cardB,undefined,'no Card B');
+		assert.equal(d.attackA,undefined,'no Attack A');
+		assert.equal(d.attackB,undefined,'no Attack B');
+	});
+
+	it('dead Caards should be killed', function () {
+		//A>B
+		let d = new Duel();
+		let ca = new Card({id: 'abc123', speed: 2,health:1,armor:2, attacks: [{category:'flat',id: 'gef678', speed: 2,power:4}]});
+		ca.dealToPlayer();
+		ca.selectCard();
+		ca.confirm();
+		let cb = new Card({id: 'edf456', speed: 2,health:10,armor:2, attacks: [{category:'flat', id: 'obj901', speed: 1,power:7}]});
+		cb.dealToPlayer();
+		cb.selectCard();
+		cb.confirm();
+		assert.equal(d.addCard(ca, 'A'), false, 'card A has been added');
+		assert.equal(d.addCard(cb, 'B'), true, 'card B has been added');
+		assert.equal(d.currentState, 'waitingForAttacks', 'state check');
+		assert.equal(d.addAttack(ca.attacks[0].id, 'A'), false, 'attack A has been added');
+		assert.equal(d.addAttack(cb.attacks[0].id, 'B'), true, 'attack B has been added');
+		assert.equal(d.currentState, 'ready', 'state check');
+		assert.equal(d._stateMachine.handleInitiative(), true, 'initiative should be able to happen');
+		assert.equal(d.currentState, 'initiativeDone', 'state check');
+		assert.deepEqual(d._stateMachine.turns, [
+				{letter: "A", powerMultiplier: 1},
+				{letter: "B",powerMultiplier: 1}],
+			'turn order is correct');
+		assert.equal(d._stateMachine.nextAttack(), true, 'move to new attack');
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'A');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'B');
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardB.armor,2);
+		assert.equal(d.cardB.health,8);
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'attackFinished', 'state check');
+		assert.equal(d._stateMachine.finishDuel(), false, 'can\'t finish Duel');
+
+		assert.equal(d._stateMachine.nextAttack(), true, 'move from attack finished to new attack');
+		assert.equal(d._stateMachine.turns.length, 1,'turns reduced by one');
+		assert.equal(d._stateMachine.turns[0].letter,'B','correct turn');
+		assert.equal(d._stateMachine.turns[0].powerMultiplier, 1,'correct power multiplier');
+		assert.equal(d.currentState, 'newAttack', 'state check');
+
+		assert.equal(d._stateMachine.state,'newAttack');
+		assert.equal(d._stateMachine.attacker,'B');
+		assert.equal(d._stateMachine.attackPoerMultiplier,1);
+		assert.equal(d._stateMachine.defender,'A');
+
+		assert.equal(d._stateMachine.handleCrushing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'crushingDone', 'state check');
+		assert.equal(d._stateMachine.handlePiercing(), true, 'move to crushing Done');
+		assert.equal(d.currentState, 'piercingDone', 'state check');
+		assert.equal(d._stateMachine.handleFlat(), true, 'move to flat Done');
+		assert.equal(d.currentState, 'flatDone', 'state check');
+		assert.equal(d.cardA.armor,2);
+		assert.equal(d.cardA.health,0);
+		assert.equal(d.cardA.currentState,'dead');
+		assert.equal(d._stateMachine.finishAttack(), true, 'move to flat Done');
+		assert.equal(d._stateMachine.nextAttack(), false, 'no new attacks');
+		assert.equal(d._stateMachine.finishDuel(), true, 'can finish Duel');
+		assert.equal(d.currentState,'displayResults','state check');
+
+		assert.equal(d._stateMachine.acceptResults(),true,'can accept results');
+		assert.equal(d.currentState,'waitingForCards', 'state check');
+		assert.equal(d.cardA,undefined,'no Card A');
+		assert.equal(d.cardB,undefined,'no Card B');
+		assert.equal(d.attackA,undefined,'no Attack A');
+		assert.equal(d.attackB,undefined,'no Attack B');
+
+
+	});
 });

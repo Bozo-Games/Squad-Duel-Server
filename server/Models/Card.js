@@ -87,22 +87,22 @@ class Card {
 	}
 	//----------------------------------------------------- -------------------------------- public State Machine Events
 	dealToPlayer() {
-		this._stateMachine.dealToPlayer();
+		return this._stateMachine.dealToPlayer();
 	}
 	selectCard() {
-		this._stateMachine.selectCard();
+		return this._stateMachine.selectCard();
 	}
 	returnToHand() {
-		this._stateMachine.returnToHand();
+		return this._stateMachine.returnToHand();
 	}
 	confirm(){
-    	this._stateMachine.confirm();
+    	return this._stateMachine.confirm();
 	}
 	duel() {
-    	this._stateMachine.duel();
+    	return this._stateMachine.duel();
 	}
 	kill() {
-    	this._stateMachine.kill();
+    	return this._stateMachine.kill()
 	}
 	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
