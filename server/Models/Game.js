@@ -1,5 +1,5 @@
 "use strict";
-const E = require('../../client/duel/Helpers/Enums.js');
+const E = require('../Helpers/enums.js');
 const logs = require('../Helpers/logger.js');
 const generate = require('../Helpers/DataGenerator.js');
 const StateMachine = require('javascript-state-machine');
@@ -149,6 +149,14 @@ class Game {
     	return true;
 	}
 	//----------------------------------------------------- --------------------------------------------- public methods
+	confirmCard(playerID,cardID){
+		let letter = this._getPlayerLetter(playerID);
+		if(this.duel['card'+letter] !== undefined) {
+			if(this.duel['card'+letter].id === cardID) {
+				this.duel['card'+letter].confirm();
+			}
+		}
+	}
 	playerIsPartOfGame(player) {
 		if(player ===  undefined) {
 			return false;

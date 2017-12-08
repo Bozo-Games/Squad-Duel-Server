@@ -1,0 +1,6 @@
+function hideLogInView() {
+
+}
+function showLogInView() {
+
+}

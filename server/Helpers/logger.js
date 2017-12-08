@@ -1,5 +1,5 @@
 
-const E = require('../../client/duel/Helpers/Enums.js');
+const E = require('./enums.js');
 let logger = {
 	on: true,
 	settings: {

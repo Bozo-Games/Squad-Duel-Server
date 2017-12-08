@@ -12,4 +12,4 @@ the most awesome of games
 ## Resources
 - [p5js](https://p5js.org/reference/)
 - [state machine](https://www.npmjs.com/package/javascript-state-machine)
-
+- [Free icons](http://game-icons.net/)

@@ -1,3 +1,4 @@
+//TODO think about uses not sure if ever really used
 const E = {
     PlayerStatus: {
         Open: 0,

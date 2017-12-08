@@ -1,0 +1,3 @@
+defualts.attack = {
+
+};
