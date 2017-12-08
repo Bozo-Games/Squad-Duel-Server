@@ -6,6 +6,7 @@ class Card {
 		this.health = json.health === undefined ? 0 : json.health; 
 		this.armor = json.armor === undefined ? 0 : json.armor; 
 		this.speed = json.speed === undefined ? 0 : json.speed;
+        this.power = json.power === undefined ? 0 : json.power;
         this.icon = json.icon === undefined ? 0 : json.icon;
 		this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
         this.attacks = [];
@@ -53,6 +54,7 @@ class Card {
 			health:this.health,
 			armor:this.armor,
 			speed:this.speed,
+            power:this.power,
             icon:this.icon,
             attacks:attacksJSON
 		};

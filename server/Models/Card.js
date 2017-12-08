@@ -1,4 +1,4 @@
-"use strict";
+ "use strict";
 const generate = require('../Helpers/DataGenerator.js');
 const defualts = require('../Helpers/defualts.js');
 const Attack = require('./Attack.js');
@@ -9,6 +9,7 @@ class Card {
         this.health = json.health === undefined ? 0 : json.health;
         this.armor = json.armor === undefined ? 0 : json.armor;
         this.speed = json.speed === undefined ? 0 : json.speed;
+        this.power = json.power === undefined ? 0 : json.power ;
         this.icon = json.icon === undefined ? 0 : json.icon;
 	    this.name = json.name === undefined ? 'Card -1' : json.name;
         json.attacks = json.attacks === undefined ? [] : json.attacks;
@@ -45,11 +46,12 @@ class Card {
             health:this.health,
             armor:this.armor,
             speed:this.speed,
+            power:this.power,
             icon:this.icon,
             name:this.name,
             attacks:attacksJSON,
             isVisibleToPlayer:this.isVisibleToPlayer
-        };
+        }
     }
 }
 module.exports = Card;
