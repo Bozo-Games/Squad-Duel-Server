@@ -3,7 +3,7 @@ const E = require('../../client/duel/Helpers/Enums.js');
 const logs = require('../Helpers/logger.js');
 const generate = require('../Helpers/DataGenerator.js');
 const StateMachine = require('javascript-state-machine');
-const defualts = require('../../client/duel/Helpers/defaults.js');
+const defaults = require('../Helpers/defaults.js');
 const Player = require('./Player.js');
 const Card = require('./Card.js');
 const Duel = require('./Duel.js');
@@ -51,12 +51,14 @@ class Game {
 	            onBeforeSelectAttack:this._onBeforeSelectAttack,
 
 	            onBeforeProcessDuel:this._onBeforeProcessDuel,
+	            onBeforeContinueGame:this._onBeforeContinueGame,
 
 	            //All state changes gloably
 	            onBeforeTransition: this._onBeforeTransition,
 	            onAfterTransition: this._onAfterTransition,
 	            onEnterState: this._onEnterState,
-	            onLeaveState: this._onLeaveState
+	            onLeaveState: this._onLeaveState,
+	            onInvalidTransition:this._onInvalidTransition
             }
         });
     }
@@ -139,6 +141,13 @@ class Game {
 	processDuel() {
 		return this._stateMachine.processDuel();
 	}
+	continueGame() {
+		this.duel.acceptResults();
+		if(!this._stateMachine.continueGame()) {
+			return this._stateMachine.declareVictor();
+		}
+    	return true;
+	}
 	//----------------------------------------------------- --------------------------------------------- public methods
 	playerIsPartOfGame(player) {
 		if(player ===  undefined) {
@@ -215,7 +224,7 @@ class Game {
 			this.deck = new Deck();
 			this.handA = new Hand();
 			this.handB = new Hand();
-			for(let i = 0; i < defualts.server.hand.numberOfCards; i++) {
+			for(let i = 0; i < defaults.hand.numberOfCards; i++) {
 				let card = this.deck.dealCard();
 				card.dealToPlayer();
 				this.handA.cards.push(card);
@@ -253,6 +262,21 @@ class Game {
 	_onBeforeProcessDuel(lifecyle) {
 		return this.duel.processDuel();
 	}
+	_onBeforeContinueGame(lifecyle) {
+		let aKills = 0;
+		let bKills = 0;
+		for(let i = 0; i < this.handA.cards.length; i++) {
+			if( this.handA.cards[i].currentState === 'dead') {
+				aKills++;
+			}
+		}
+		for(let i = 0; i < this.handB.cards.length; i++) {
+			if( this.handB.cards[i].currentState === 'dead') {
+				bKills++;
+			}
+		}
+		return aKills < this.handA.cards.length && bKills < this.handB.cards.length;
+	}
 	//------------------------------------------------- -------------------------------------------------------- Helpers
 	_validatePlayer(player) {
 		if(player !== undefined) {
@@ -286,6 +310,10 @@ class Game {
 	_onLeaveState(lifecycle) {
 		logs.log(E.logs.game, "On LEAVE state       - " + lifecycle.from.substring(0, 10)+"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
+	}
+	_onInvalidTransition(transition,from,to){
+		logs.log(E.logs.duel, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
+		throw new Exception('transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
 	}
 }
 

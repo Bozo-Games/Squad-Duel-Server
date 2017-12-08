@@ -1,7 +1,7 @@
 "use strict";
 const attackDB = require('../Data/Attack.js');
 const cardDB = require('../Data/Card.js');
-const defaults = require('../../client/duel/Helpers/defaults.js');
+const defaults = require('./defaults.js');
 function random(choices) {
     return choices[Math.floor(Math.random()*choices.length)];
 }
@@ -47,7 +47,7 @@ const Generator = {
     },
     hand: function () {
         let cardsJSON = [];
-        while (cardsJSON.length < defaults.server.hand.numberOfCards) {
+        while (cardsJSON.length < defaults.hand.numberOfCards) {
             cardsJSON.push(Generator.card())
         }
         return {cards:cardsJSON};

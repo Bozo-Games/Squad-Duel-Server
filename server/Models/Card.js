@@ -1,6 +1,6 @@
 "use strict";
 const E = require('../../client/duel/Helpers/Enums.js');
-const defualts = require('../../client/duel/Helpers/defaults.js');
+const defaults = require('../Helpers/defaults.js');
 const Attack = require('./Attack.js');
 const StateMachine = require('javascript-state-machine');
 const logs = require('../Helpers/logger.js');
@@ -13,7 +13,7 @@ class Card {
 			    name: json.name === undefined ? 'No Name' : json.name,
 			    health:  json.health === undefined ? 0 : json.health,
 			    armor: json.armor === undefined ? 0 : json.armor,
-			    speed: json.speed === undefined ? 0 : json.speed,
+			    speed: json.speed === undefined ? 1 : json.speed,
 			    icon: json.icon === undefined ? 0 : json.icon,
 			    attacks: []
 		    },
@@ -43,7 +43,7 @@ class Card {
         for(let i = 0; i < json.attacks.length; i++) {
             this._stateMachine.attacks.push(new Attack(json.attacks[i]));
         }
-        while(this._stateMachine.attacks.length < defualts.server.card.numberOfAttacks) {
+        while(this._stateMachine.attacks.length < defaults.card.numberOfAttacks) {
             this._stateMachine.attacks.push(new Attack());
         }
     }

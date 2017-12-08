@@ -1,6 +1,6 @@
 "use strict";
 const assert = require('assert');
-const defaults = require('../client/duel/Helpers/defaults.js');
+const defaults = require('../server/Helpers/defaults.js');
 const logger = require('../server/Helpers/logger.js');
 const Hand = require('../server/Models/Hand.js');
 describe('Hand Model', function () {

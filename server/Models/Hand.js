@@ -1,5 +1,5 @@
 "use strict";
-const defaults = require('../../client/duel/Helpers/defaults.js');
+const defaults = require('../Helpers/defaults.js');
 const Card = require('./Card.js');
 class Hand {
     constructor(json) {

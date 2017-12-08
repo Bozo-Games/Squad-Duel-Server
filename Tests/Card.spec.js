@@ -1,6 +1,6 @@
 "use strict";
 const assert = require('assert');
-const defaults = require('../client/duel/Helpers/defaults.js');
+const defaults = require('../server/Helpers/defaults.js');
 const logger = require('../server/Helpers/logger.js');
 const Card = require('../server/Models/Card.js');
 describe('Card Model', function () {
@@ -20,9 +20,9 @@ describe('Card Model', function () {
 		assert.equal(a.name, 'No Name');
 		assert.equal(a.health, 0);
 		assert.equal(a.armor, 0);
-		assert.equal(a.speed, 0);
+		assert.equal(a.speed, 1);
 		assert.equal(a.icon, 0);
-		assert.equal(a.attacks.length, defaults.server.card.numberOfAttacks);
+		assert.equal(a.attacks.length, defaults.card.numberOfAttacks);
 	});
 	it('should accept a id in constructor', function () {
 		let c = new Card({id:'abc123'});

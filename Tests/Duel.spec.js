@@ -1,7 +1,7 @@
 "use strict";
 const assert = require('assert');
 const seedrandom = require('seedrandom');
-const defaults = require('../client/duel/Helpers/defaults.js');
+const defaults = require('../server/Helpers/defaults.js');
 const logger = require('../server/Helpers/logger.js');
 const Duel = require('../server/Models/Duel.js');
 const Card = require('../server/Models/Card.js');

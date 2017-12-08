@@ -30,7 +30,7 @@ class Duel {
 			    {name:'handleFlat',from:'piercingDone',to:'flatDone'                         , dot:{color:'green'}},
 			    {name:'finishAttack',from:'flatDone',to:'attackFinished'                     , dot:{color:'green'}},
 			                                                                                 
-			    {name:'finishDuel', from:'attackFinished', to:'displayResults'                 , dot:{color:'green'}},
+			    {name:'finishDuel', from:'attackFinished', to:'displayResults'               , dot:{color:'green'}},
 			                                                                                 
 			    {name:'acceptResults', from:'displayResults', to:'waitingForCards'           , dot:{color:'green'}},
 		    ],
@@ -49,7 +49,8 @@ class Duel {
 			    onBeforeTransition: this._onBeforeTransition,
 			    onAfterTransition:  this._onAfterTransition,
 			    onEnterState:       this._onEnterState,
-			    onLeaveState:       this._onLeaveState
+			    onLeaveState:       this._onLeaveState,
+			    onInvalidTransition:this._onInvalidTransition
 		    }
 	    });
     }
@@ -93,30 +94,26 @@ class Duel {
     	if(this.attackA !== undefined && this.attackB !== undefined) {
     		if(this._stateMachine.handleInitiative()) {
     			if(this._stateMachine.nextAttack()) {
-				    while(this._stateMachine.turns.length > 1) {
-				    	console.log('---- here - ' + this.currentState);
-					    let shouldBreak = true;
+				    while(this._stateMachine.turns.length > 0) {
 					    if(this._stateMachine.handleCrushing()){
 					    	if(this._stateMachine.handlePiercing()) {
 					    		if(this._stateMachine.handleFlat()) {
 					    			if(this._stateMachine.finishAttack()) {
 					    				if(!this._stateMachine.nextAttack()) {
-					    					shouldBreak = true;
+					    					return this._stateMachine.finishDuel();
 									    }
 								    }
 							    }
 						    }
 					    }
-
-					    if(shouldBreak) {
-						    break;
-					    }
 				    }
-				    return true;
 			    }
 		    }
 	    }
     	return false;
+	}
+	acceptResults() {
+    	return this._stateMachine.acceptResults();
 	}
 	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
@@ -240,20 +237,17 @@ class Duel {
 		return true;
 	}
 	_onBeforeNextAttack(lifeCycle) {
-    	if(lifeCycle.from != 'initiativeDone') {
-    		return this.turns.length > 1;
-	    }
-	    return true;
+    	return this.turns.length > 1;
 	}
 	_onBeforeFinishDuel(lifeCycle) {
-    	return this.turns.length <=1;
+    	return this.turns.length <= 1;
 	}
 	_onEnterWaitingForCards(lifeCycle) {
-    	if(lifeCycle.transition == 'acceptResults') {
-		    if(this.cardA.currentState == 'dueling') {
+    	if(lifeCycle.transition === 'acceptResults') {
+		    if(this.cardA.currentState === 'dueling') {
 			    this.cardA.returnToHand();
 		    }
-		    if(this.cardB.currentState == 'dueling') {
+		    if(this.cardB.currentState === 'dueling') {
 			    this.cardB.returnToHand();
 		    }
 		    this.cardA = undefined;
@@ -281,6 +275,10 @@ class Duel {
 	_onLeaveState(lifecycle) {
 		logs.log(E.logs.duel, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
+	}
+	_onInvalidTransition(transition,from,to){
+    	logs.log(E.logs.duel, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
+		throw new Exception('transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
 	}
 }
 module.exports = Duel;

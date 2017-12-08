@@ -1,6 +1,6 @@
 "use strict";
 const assert = require('assert');
-const defaults = require('../client/duel/Helpers/defaults.js');
+const defaults = require('../server/Helpers/defaults.js');
 const logger = require('../server/Helpers/logger.js');
 const Game = require('../server/Models/Game.js');
 const Player = require('../server/Models/Player.js');
@@ -59,8 +59,8 @@ describe('Game Model', function () {
 		assert.equal(g.playerJoin(playerA),false,'player A join');
 		assert.equal(g.playerJoin(playerB),true,'player B join');
 		assert.equal(g.currentState, 'cardSelectingStage', 'in card select stage');
-		assert.equal(g.handA.cards.length, defaults.server.hand.numberOfCards);
-		assert.equal(g.handB.cards.length, defaults.server.hand.numberOfCards);
+		assert.equal(g.handA.cards.length, defaults.hand.numberOfCards);
+		assert.equal(g.handB.cards.length, defaults.hand.numberOfCards);
 	});
 	it('should allow a player to select cards in their hand',function () {
 		let g = new Game();
@@ -183,7 +183,84 @@ describe('Game Model', function () {
 		assert.equal(g.duel.attackB.id, 'new-attack-id-2');
 		assert.equal(g.currentState,'readyToDuel');
 		assert.equal(g.duel.currentState,'ready');
-		
+
 		assert.equal(g.processDuel(),true,'processing duel');
+		assert.equal(g.currentState,'showingDuelResults');
 	});
+	it('should be able to continue the game',function () {
+		let g = new Game();
+		let playerA = new Player({socketID:'abc123',name:'Player A'});
+		let playerB = new Player({socketID:'edf456',name:'Player B'});
+		assert.equal(g.playerJoin(playerA),false,'player A join');
+		assert.equal(g.playerJoin(playerB),true,'player B join');
+		assert.equal(g.selectCard('abc123',g.handA.cards[0].id),false,'player A selects card');
+		assert.equal(g.duel.cardA.id, g.handA.cards[0].id,'id card check');
+		assert.equal(g.duel.cardA.currentState, 'selected','card state check');
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),false,'player B selects card');
+		assert.equal(g.duel.cardB.id, g.handB.cards[0].id,'id card check');
+		assert.equal(g.duel.cardB.currentState, 'selected','card state check');
+		g.handA.cards[0].confirm();
+		g.handB.cards[0].confirm();
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
+		assert.equal(g.currentState, 'attackSelectStage', 'state check');
+		g.duel.cardA.attacks[0].id = "new-attack-id";
+		assert.equal(g.selectAttack('abc123',g.duel.cardA.attacks[0].id),false,'player A selects attack');
+		assert.equal(g.duel.attackA.id, 'new-attack-id');
+		g.duel.cardB.attacks[0].id = "new-attack-id-2";
+		assert.equal(g.selectAttack('edf456',g.duel.cardB.attacks[0].id),true,'player B selects attack');
+		assert.equal(g.duel.attackB.id, 'new-attack-id-2');
+		assert.equal(g.currentState,'readyToDuel');
+		assert.equal(g.duel.currentState,'ready');
+		assert.equal(g.processDuel(),true,'processing duel');
+		assert.equal(g.continueGame(),true,'continue game');
+		assert.equal(g.duel.currentState,'waitingForCards');
+		assert.equal(g.handA.cards[0].currentState,'inHand');
+		assert.equal(g.handB.cards[0].currentState,'inHand');
+	});
+
+	it('should not be able to continue but instead declare the victor the game if all the cards for a player are dead',function () {
+		let g = new Game();
+		let playerA = new Player({socketID:'abc123',name:'Player A'});
+		let playerB = new Player({socketID:'edf456',name:'Player B'});
+		assert.equal(g.playerJoin(playerA),false,'player A join');
+		assert.equal(g.playerJoin(playerB),true,'player B join');
+		assert.equal(g.selectCard('abc123',g.handA.cards[0].id),false,'player A selects card');
+		assert.equal(g.duel.cardA.id, g.handA.cards[0].id,'id card check');
+		assert.equal(g.duel.cardA.currentState, 'selected','card state check');
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),false,'player B selects card');
+		assert.equal(g.duel.cardB.id, g.handB.cards[0].id,'id card check');
+		assert.equal(g.duel.cardB.currentState, 'selected','card state check');
+		g.handA.cards[0].confirm();
+		g.handB.cards[0].confirm();
+		assert.equal(g.selectCard('edf456',g.handB.cards[0].id),true,'player B selects card');
+		assert.equal(g.currentState, 'attackSelectStage', 'state check');
+		g.duel.cardA.attacks[0].id = "new-attack-id";
+		assert.equal(g.selectAttack('abc123',g.duel.cardA.attacks[0].id),false,'player A selects attack');
+		assert.equal(g.duel.attackA.id, 'new-attack-id');
+		g.duel.cardB.attacks[0].id = "new-attack-id-2";
+		assert.equal(g.selectAttack('edf456',g.duel.cardB.attacks[0].id),true,'player B selects attack');
+		assert.equal(g.duel.attackB.id, 'new-attack-id-2');
+		assert.equal(g.currentState,'readyToDuel');
+		assert.equal(g.duel.currentState,'ready');
+		assert.equal(g.processDuel(),true,'processing duel');
+		//hacky to get all cards dead
+		g.handA.cards[0].health = -10;
+		g.handA.cards[1].selectCard();
+		g.handA.cards[1].confirm();
+		g.handA.cards[1].duel();
+		g.handA.cards[1].health = -10;
+		g.handA.cards[2].selectCard();
+		g.handA.cards[2].confirm();
+		g.handA.cards[2].duel();
+		g.handA.cards[2].health = -10;
+
+		assert.equal(g.continueGame(),true,'declares vitcor');
+		assert.equal(g.currentState,'endGame');
+		assert.equal(g.duel.currentState,'waitingForCards');
+		assert.equal(g.handA.cards[0].currentState,'dead');
+		assert.equal(g.handB.cards[0].currentState,'inHand');
+	});
+
+
+
 });
