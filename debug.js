@@ -27,16 +27,16 @@ for(let ti = 0; ti < titleNames.length; ti++) {
 	for(let ci = 0; ci < classNames.length; ci++) {
 		let i = Math.floor(Math.random()*options.length);
 		let option = options[i];
-		logger.writeln(`"${titleNames[ti]} ${classNames[ci]}": {`);
+		logger.write(`\n"${titleNames[ti]} ${classNames[ci]}": {`);
 
 		if (!fs.existsSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}`)){
 			fs.mkdirSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}`);
 		}
 		for(let li = 0; li < loops.length; li++) {
 			let loop = loops[li];
-			logger.writeln(`\t${loop.name}: [`);
+			logger.write(`\n\t${loop.name}: [`);
 			for(let j = 0; j < loop.count;j++) {
-				logger.writeln(`\t\t'./Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}/${j}.png',`);
+				logger.write(`\n\t\t'./Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}/${j}.png',`);
 				if (!fs.existsSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}`)){
 					fs.mkdirSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}`);
 				}
@@ -47,9 +47,10 @@ for(let ti = 0; ti < titleNames.length; ti++) {
 						if ( err ) logger.write('ERROR: ' + err);
 					});
 			}
-			logger.writeln(`\t],`);
+			logger.write(`\n\t],`);
 		}
-		logger.writeln(`\tdead: './Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/die/11.png',`);
+		logger.write(`\n\tdead: './Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/die/11.png',`);
+		logger.write(`\n},`);
 		console.log(`${titleNames[ti]}_${classNames[ci]} done`);
 		options.splice(i,1);
 	}
