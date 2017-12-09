@@ -1,7 +1,7 @@
 "use strict";
 let currentGame;
 function preload() {
-
+	loadAssets(icons);
 }
 function setup() {
 	createCanvas(windowWidth,windowHeight);

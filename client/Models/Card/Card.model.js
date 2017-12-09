@@ -3,42 +3,72 @@ class Card {
 		json = json === undefined ? {} : json;
 		this.currentState = json.currentState;
 		this.id = json.id;
+		this.activeAnimations = [];
+		this.loadJSON(json);
 	}
 	loadJSON(json) {
 		if(this.currentState !== json.currentState) {
-			let animation = animations.card[`${this.currentState}->${json.currentState}`];
+			let animation = animations.card[`${this.currentState}->${json.currentState}`](this,function (card) {
+				card.currentState = json.currentState;
+				card.loadJSON(json);
+			});
 			if(animation !== undefined) {
-				animation(this,function () {
-					this.currentState = json.currentState;
-					this.loadJSON(json);
-				});
+				this.activeAnimations.push(animation);
 			} else {
 				this.currentState = json.currentState;
 				this.loadJSON(json);
 			}
 		} else {
+			this.name = json.name;
 			this.health = json.health;
 			this.armor = json.armor;
 			this.speed = json.speed;
 		}
 	}
 	draw() {
-		if(this.currentState === 'inHand') {
-			this._inHandDraw();
+		push();
+		let i = 0;
+		while(i < this.activeAnimations.length && i >= 0) {
+			console.log(`here ${i}/${this.activeAnimations.length}`);
+			this.activeAnimations[i].applyEffect();
+			if(this.activeAnimations[i].isDone) {
+				this.activeAnimations[i].callBack(this);
+				this.activeAnimations.splice(i,1);
+				i --;
+			} else {
+				i++;
+			}
 		}
+		if(this.currentState === 'inHand' || (this.currentState === 'selected' && !currentGame.isPlayerCard(this.id))){
+			this._inHandDraw();
+		} else if(this.currentState === 'selected') {
+			this._selectedDraw();
+		}
+		pop();
 	}
 	touchEnded(){
 		if(this.currentState === 'inHand') {
 			this._inHandTouchEnded();
 		}
 	}
+	//--------------------------------------------------------------------------------------------------------- Selected
+	_selectedDraw() {
+		push();
+
+		pop();
+	}
+	//----------------------------------------------------------------------------------------------------------- inHand
+	get _handRect() {
+		return {x:0,
+			y:0,
+			w:defaults.card.inHand.size.width(),
+			h:defaults.card.inHand.size.height()}
+	}
 	_inHandTouchEnded(){
 		pushMouse();
 		let didTap = collidePointRect(
 			mouseX,mouseY,
-			0,0,
-			defaults.card.inHand.size.width(),
-			defaults.card.inHand.size.height());
+			this._handRect.x,this._handRect.y,this._handRect.w,this._handRect.h);
 		if(didTap) {
 			network.selectCard(this.id);
 		}
@@ -48,11 +78,37 @@ class Card {
 		push();
 		fill(colors.card.inHand.background);
 		ellipseMode(CORNER);
-		ellipse(
-			0,
-			0,
-			defaults.card.inHand.size.width(),
-			defaults.card.inHand.size.height());
+		ellipse(this._handRect.x,this._handRect.y,this._handRect.w,this._handRect.h);
+		image(icons.card.character[this.name],
+			this._handRect.x+this._handRect.w*0.05,
+			this._handRect.y+this._handRect.h*0.05,
+			this._handRect.w*0.9,
+			this._handRect.h*0.9);
+		//health
+		tint(colors.card.inHand.health);
+		image(icons.card.health,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*0.4,
+			this._handRect.h*0.4);
+		textAlign(CENTER,CENTER);
+		text(this.health,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*0.4,
+			this._handRect.h*0.4);
+		//armor
+		tint(colors.card.inHand.armor);
+		image(icons.card.armor,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*0.4,
+			this._handRect.h*0.4);
+		text(this.armor,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*0.4,
+			this._handRect.h*0.4);
 		pop();
 	}
 }

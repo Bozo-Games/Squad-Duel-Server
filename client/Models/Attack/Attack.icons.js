@@ -1,5 +1,5 @@
 icons.attack = {
-	flat: undefined,
-	pierce: undefined,
-	crush: undefined
+	flat: './Assets/icons/attack/flat.svg',
+	pierce: './Assets/icons/attack/piercing.svg',
+	crush: './Assets/icons/attack/speed.svg'
 };

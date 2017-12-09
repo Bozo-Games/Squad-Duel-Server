@@ -84,4 +84,12 @@ class Game {
 			pop();
 		}
 	}
+	isPlayerCard(cardID) {
+		for(let i = 0; i < this.playerHand.cards.length; i++) {
+			if(this.playerHand.cards[i].id === cardID) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
