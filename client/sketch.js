@@ -15,5 +15,6 @@ function draw() {
 	if(currentGame !== undefined) {	currentGame.draw(); }
 }
 function touchEnded() {
+	if(currentGame !== undefined) {currentGame.touchEnded();}
   	return false;
 }

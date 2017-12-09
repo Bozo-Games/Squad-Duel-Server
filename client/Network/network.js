@@ -4,9 +4,11 @@ const network = {
 	logIn: function (userName) {
 		socket.emit('logIn',userName);
 		hideLogInView();
+	},
+	selectCard: function (cardID) {
+		socket.emit('selectCard',cardID);
 	}
 };
-
 
 socket.on('update', function(gameData){
 	gd = gameData;

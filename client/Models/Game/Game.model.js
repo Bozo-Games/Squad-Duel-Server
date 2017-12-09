@@ -52,6 +52,18 @@ class Game {
 			}
 		}
 	}
+	touchEnded() {
+		pushMouse();
+		if(this.playerHand !== undefined) {
+			pushMouse();
+			translateMouse(
+				defaults.game.playerHand.offset.x(),
+				defaults.game.playerHand.offset.y());
+			this.playerHand.touchEnded();
+			popMouse();
+		}
+		popMouse();
+	}
 	draw() {
 		if(this.player !== undefined) {this.player.draw();}
 		if(this.opp !== undefined) {this.opp.draw();}

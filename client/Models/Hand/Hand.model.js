@@ -12,6 +12,15 @@ class Hand {
 			this.cards[i].loadJSON(json.cards[i]);
 		}
 	}
+	touchEnded(){
+		pushMouse();
+		translateMouse(defaults.hand.offset.x(),defaults.hand.offset.y());
+		for(let i = 0; i < this.cards.length;i++) {
+			this.cards[i].touchEnded();
+			translateMouse(defaults.hand.step.x(),defaults.hand.step.y());
+		}
+		popMouse();
+	}
 	draw() {
 		push();
 		translate(defaults.hand.offset.x(),defaults.hand.offset.y());
