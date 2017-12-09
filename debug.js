@@ -5,7 +5,7 @@ const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
-var logger = fs.createWriteStream('log.txt', {
+var logger = fs.createWriteStream('log.js', {
 	flags: 'a' // 'a' means appending (old data will be preserved)
 });
 
@@ -27,16 +27,16 @@ for(let ti = 0; ti < titleNames.length; ti++) {
 	for(let ci = 0; ci < classNames.length; ci++) {
 		let i = Math.floor(Math.random()*options.length);
 		let option = options[i];
-		logger.write(`"${titleNames[ti]} ${classNames[ci]}": {`);
+		logger.writeln(`"${titleNames[ti]} ${classNames[ci]}": {`);
 
 		if (!fs.existsSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}`)){
 			fs.mkdirSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}`);
 		}
 		for(let li = 0; li < loops.length; li++) {
 			let loop = loops[li];
-			logger.write(`\t${loop.name}: [`);
+			logger.writeln(`\t${loop.name}: [`);
 			for(let j = 0; j < loop.count;j++) {
-				logger.write(`\t\t'./Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}/${j}.png',`);
+				logger.writeln(`\t\t'./Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}/${j}.png',`);
 				if (!fs.existsSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}`)){
 					fs.mkdirSync(`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/${loop.name}`);
 				}
@@ -47,10 +47,12 @@ for(let ti = 0; ti < titleNames.length; ti++) {
 						if ( err ) logger.write('ERROR: ' + err);
 					});
 			}
-			logger.write(`\t],`);
+			logger.writeln(`\t],`);
 		}
-		logger.write(`\tdead: './Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/die/11.png',`);
+		logger.writeln(`\tdead: './Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}/die/11.png',`);
+		console.log(`${titleNames[ti]}_${classNames[ci]} done`);
 		options.splice(i,1);
 	}
 }
 logger.end();
+console.log('done');
