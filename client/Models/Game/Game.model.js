@@ -4,13 +4,20 @@ class Game {
 		this.loadJSON(json)
 	}
 	loadJSON(json) {
+		console.log('updating game json');
 		if(this.currentState !== json.currentState) {
-			let animation = animations.game[`${this.currentState}->${json.currentState}`];
-			if(animation !== undefined) {
-				animation(function () {
-					this.currentState = json.currentState;
-					this.loadJSON(json);
+			let animation;
+			if(animations.game[`${this.currentState}->${json.currentState}`] !== undefined) {
+				animation = animations.game[`${this.currentState}->${json.currentState}`](this, function (game) {
+					game.currentState = json.currentState;
+					game.loadJSON(json);
 				});
+			}
+			if(animation !== undefined) {
+				this.activeAnimations = this.activeAnimations.concat(animation);
+			} else {
+				this.currentState = json.currentState;
+				this.loadJSON(json);
 			}
 		} else {
 			//--------------------------------------- Players

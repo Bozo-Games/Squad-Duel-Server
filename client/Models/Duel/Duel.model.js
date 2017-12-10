@@ -24,20 +24,20 @@ class Duel {
 			let oppAttackJSON = json[`card${currentGame.oppLetter}`];
 
 			if(this.playerCard === undefined && playerCardJSON !== undefined) {
-				this.playerCard = new Card(playerCardJSON);
-				this.playerCard.activeAnimations = this.activeAnimations.concat(
-					animations.duel.playerSelectsCard(this.playerCard,function () {
-
-					}));
+				let newCard = new Card(playerCardJSON);
+				newCard.activeAnimations = newCard.activeAnimations.concat(
+					animations.duel.playerSelectsCard(newCard,function () {})
+				);
+				this.playerCard = newCard;
 			} else if(playerCardJSON !== undefined) {
 				if(playerCardJSON.id !== this.playerCard.id) {
 					this.playerCard.activeAnimations = this.playerCard.activeAnimations.concat(
 						animations.duel.playerSwitchCard(this,this.playerCard,function (card) {
-							currentGame.duel.playerCard = new Card(playerCardJSON);
-							currentGame.duel.playerCard.activeAnimations = currentGame.duel.playerCard.activeAnimations.concat(
-								animations.duel.playerSelectsCard(currentGame.duel.playerCard,function () {
-
-								}));
+							let newCard = new Card(playerCardJSON);
+							newCard.activeAnimations = newCard.activeAnimations.concat(
+									animations.duel.playerSelectsCard(newCard,function () {})
+							);
+							currentGame.duel.playerCard = newCard;
 					}));
 				} else {
 					this.playerCard.loadJSON(playerCardJSON);
@@ -58,7 +58,9 @@ class Duel {
 			if(this.activeAnimations[i].isDone) {
 				this.activeAnimations[i].callBack(this);
 				this.activeAnimations.splice(i,1);
-				i --;
+				pop();
+				push();
+				i = 0;
 			} else {
 				this.activeAnimations[i].applyEffect();
 				i++;

@@ -36,7 +36,9 @@ class Card {
 			if(this.activeAnimations[i].isDone) {
 				this.activeAnimations[i].callBack(this); //here look at this we ar missing somthing about scope
 				this.activeAnimations.splice(i,1);
-				i --;
+				pop();
+				push();
+				i = 0;
 			} else {
 				this.activeAnimations[i].applyEffect();
 				i++;
