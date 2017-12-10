@@ -12,7 +12,7 @@ defaults.card = {
 	selected: {
 		size: {
 			width: function () {
-				return width/3;
+				return width/2;
 			},
 			height: function () {
 				return defaults.card.selected.size.width();

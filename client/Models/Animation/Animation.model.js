@@ -2,6 +2,13 @@ class Animation {
 	constructor(millisecondsToComplete,callBack) {
 		this.startEpoch = (new Date()).getTime();
 		this.endEpoch = this.startEpoch + millisecondsToComplete;
+		if(callBack === undefined ) {
+			callBack = function (obj) {
+				console.log('empty callback from '+obj);
+			}
+		} else if(typeof callBack !== 'function' ) {
+			console.log('broken here ' + callBack);
+		}
 		this.callBack = callBack;
 	}
 	get percentComplete() {

@@ -33,8 +33,11 @@ class Duel {
 				if(playerCardJSON.id !== this.playerCard.id) {
 					this.playerCard.activeAnimations = this.playerCard.activeAnimations.concat(
 						animations.duel.playerSwitchCard(this,this.playerCard,function (card) {
-							console.log('here - ' + playerCardJSON);
 							currentGame.duel.playerCard = new Card(playerCardJSON);
+							currentGame.duel.playerCard.activeAnimations = currentGame.duel.playerCard.activeAnimations.concat(
+								animations.duel.playerSelectsCard(currentGame.duel.playerCard,function () {
+
+								}));
 					}));
 				} else {
 					this.playerCard.loadJSON(playerCardJSON);
