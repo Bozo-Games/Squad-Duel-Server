@@ -22,6 +22,9 @@ io.on('connection', function(socket) {
         socket.emit('update',currentGame.toJSON());
     });
     socket.on('logIn', function (userName) {
+    	if(currentGame.currentState === 'endGame') {
+    		currentGame = new Game();
+	    }
         currentGame.playerJoin(new Player({socketID:socket.id, name:userName}));
         updatePlayers();
     });

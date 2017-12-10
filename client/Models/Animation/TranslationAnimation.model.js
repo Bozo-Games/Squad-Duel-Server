@@ -13,7 +13,6 @@ class TranslationAnimation extends Animation {
 		return this.startY*(1-this.percentComplete) + this.endY*this.percentComplete;
 	}
 	applyEffect(){
-		//console.log(`translating - (${this.currentX},${this.currentY})`);
 		translate(this.currentX,this.currentY);
 	}
 }

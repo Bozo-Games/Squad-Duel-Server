@@ -3,6 +3,7 @@ class Hand {
 		json = json === undefined ? {} : json;
 		this.cards = json.cards === undefined ? [] : json.cards;
 		this.cards = [];
+		json.cards = json.cards === undefined ? [] : json.cards
 		for(let i = 0; i < json.cards.length;i++) {
 			this.cards.push(new Card(json.cards[i]));
 		}

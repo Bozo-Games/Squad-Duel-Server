@@ -4,7 +4,6 @@ class Duel {
 		this.currentState = json.currentState;
 		this.activeAnimations = [];
 		this.loadJSON(json);
-		console.log(this.activeAnimations);
 	}
 	loadJSON(json){
 		if(this.currentState !== json.currentState) {
@@ -13,7 +12,7 @@ class Duel {
 				card.loadJSON(json);
 			});
 			if(animation !== undefined) {
-				this.activeAnimations.concat(animation);
+				this.activeAnimations = this.activeAnimations.concat(animation);
 			} else {
 				this.currentState = json.currentState;
 				this.loadJSON(json);
@@ -23,14 +22,19 @@ class Duel {
 			let oppCardJSON = json[`card${currentGame.playerLetter}`];
 			let playerAttackJSON = json[`card${currentGame.oppLetter}`];
 			let oppAttackJSON = json[`card${currentGame.oppLetter}`];
+
 			if(this.playerCard === undefined && playerCardJSON !== undefined) {
 				this.playerCard = new Card(playerCardJSON);
-				this.activeAnimations.concat(animations.duel.playerSelectsCard(this.playerCard,function () {}));
+				this.playerCard.activeAnimations = this.activeAnimations.concat(
+					animations.duel.playerSelectsCard(this.playerCard,function () {
+
+					}));
 			} else if(playerCardJSON !== undefined) {
 				if(playerCardJSON.id !== this.playerCard.id) {
-					this.playerCard.activeAnimations.concat(animations.duel.playerSwitchCard(this.playerCard,function () {
-						this.playerCard.loadJSON(playerCardJSON);
-						this.activeAnimations.concat(animations.duel.playerSelectsCard(this.playerCard,function () {}));
+					this.playerCard.activeAnimations = this.playerCard.activeAnimations.concat(
+						animations.duel.playerSwitchCard(this,this.playerCard,function (card) {
+							console.log('here - ' + playerCardJSON);
+							currentGame.duel.playerCard = new Card(playerCardJSON);
 					}));
 				} else {
 					this.playerCard.loadJSON(playerCardJSON);
@@ -48,7 +52,6 @@ class Duel {
 		push();
 		let i = 0;
 		while(i < this.activeAnimations.length && i >= 0) {
-			console.log('here')
 			this.activeAnimations[i].applyEffect();
 			if(this.activeAnimations[i].isDone) {
 				this.activeAnimations[i].callBack(this);

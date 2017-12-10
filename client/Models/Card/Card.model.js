@@ -17,7 +17,7 @@ class Card {
 				});
 			}
 			if(animation !== undefined) {
-				this.activeAnimations.concat(animation);
+				this.activeAnimations = this.activeAnimations.concat(animation);
 			} else {
 				this.currentState = json.currentState;
 				this.loadJSON(json);
@@ -35,7 +35,7 @@ class Card {
 		while(i < this.activeAnimations.length && i >= 0) {
 			this.activeAnimations[i].applyEffect();
 			if(this.activeAnimations[i].isDone) {
-				this.activeAnimations[i].callBack(this);
+				this.activeAnimations[i].callBack(this); //here look at this we ar missing somthing about scope
 				this.activeAnimations.splice(i,1);
 				i --;
 			} else {
@@ -55,14 +55,20 @@ class Card {
 		}
 	}
 	//--------------------------------------------------------------------------------------------------------- Selected
+	get _selectedRect() {
+		return {x:0,
+			y:0,
+			w:defaults.card.inHand.size.width(),
+			h:defaults.card.inHand.size.height()}
+	}
 	_selectedDraw() {
 		push();
 		let frame = frameCount % icons.card[this.name][this.loop].length;
 		image(icons.card[this.name][this.loop][frame],
 			0,
 			0,
-			width/3,
-			width/3);
+			this._selectedRect.w,
+			this._selectedRect.h);
 		pop();
 	}
 	//----------------------------------------------------------------------------------------------------------- inHand

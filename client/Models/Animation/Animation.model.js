@@ -3,7 +3,6 @@ class Animation {
 		this.startEpoch = (new Date()).getTime();
 		this.endEpoch = this.startEpoch + millisecondsToComplete;
 		this.callBack = callBack;
-		console.log(`${this.startEpoch} -> ${this.endEpoch}`)
 	}
 	get percentComplete() {
 		let timeSinceStart = (new Date()).getTime() - this.startEpoch;
