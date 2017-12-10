@@ -12,4 +12,9 @@ class ScaleAnimation extends Animation {
 	get currentHeight() {
 		return this.startHeight*(1-this.percentComplete) + this.endHeight*this.percentComplete;
 	}
+
+	applyEffect(){
+		//console.log(`translating - (${this.currentX},${this.currentY})`);
+		scale(this.currentWidth,this.currentHeight);
+	}
 }

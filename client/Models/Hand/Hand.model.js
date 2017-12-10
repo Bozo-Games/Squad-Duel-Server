@@ -16,7 +16,9 @@ class Hand {
 		pushMouse();
 		translateMouse(defaults.hand.offset.x(),defaults.hand.offset.y());
 		for(let i = 0; i < this.cards.length;i++) {
-			this.cards[i].touchEnded();
+			if(this.cards[i].currentState === 'inHand' || (this.cards[i].currentState === 'selected' && !currentGame.isPlayerCard(this.cards[i].id))){
+				this.cards[i].touchEnded();
+			}
 			translateMouse(defaults.hand.step.x(),defaults.hand.step.y());
 		}
 		popMouse();
@@ -25,7 +27,9 @@ class Hand {
 		push();
 		translate(defaults.hand.offset.x(),defaults.hand.offset.y());
 		for(let i = 0; i < this.cards.length;i++) {
-			this.cards[i].draw();
+			if(this.cards[i].currentState === 'inHand' || (this.cards[i].currentState === 'selected' && !currentGame.isPlayerCard(this.cards[i].id))){
+				this.cards[i].draw();
+			}
 			translate(defaults.hand.step.x(),defaults.hand.step.y());
 		}
 		pop();

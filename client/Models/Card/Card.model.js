@@ -4,16 +4,20 @@ class Card {
 		this.currentState = json.currentState;
 		this.id = json.id;
 		this.activeAnimations = [];
+		this.loop = 'idle';
 		this.loadJSON(json);
 	}
 	loadJSON(json) {
 		if(this.currentState !== json.currentState) {
-			let animation = animations.card[`${this.currentState}->${json.currentState}`](this,function (card) {
-				card.currentState = json.currentState;
-				card.loadJSON(json);
-			});
+			let animation;
+			if(animations.card[`${this.currentState}->${json.currentState}`] !== undefined) {
+				animation = animations.card[`${this.currentState}->${json.currentState}`](this, function (card) {
+					card.currentState = json.currentState;
+					card.loadJSON(json);
+				});
+			}
 			if(animation !== undefined) {
-				this.activeAnimations.push(animation);
+				this.activeAnimations.concat(animation);
 			} else {
 				this.currentState = json.currentState;
 				this.loadJSON(json);
@@ -29,7 +33,6 @@ class Card {
 		push();
 		let i = 0;
 		while(i < this.activeAnimations.length && i >= 0) {
-			console.log(`here ${i}/${this.activeAnimations.length}`);
 			this.activeAnimations[i].applyEffect();
 			if(this.activeAnimations[i].isDone) {
 				this.activeAnimations[i].callBack(this);
@@ -54,7 +57,12 @@ class Card {
 	//--------------------------------------------------------------------------------------------------------- Selected
 	_selectedDraw() {
 		push();
-
+		let frame = frameCount % icons.card[this.name][this.loop].length;
+		image(icons.card[this.name][this.loop][frame],
+			0,
+			0,
+			width/3,
+			width/3);
 		pop();
 	}
 	//----------------------------------------------------------------------------------------------------------- inHand

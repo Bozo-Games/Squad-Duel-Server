@@ -45,9 +45,9 @@ class Game {
 				this.oppHand.loadJSON(json[`hand${this.oppLetter}`]);
 			}
 			//----------------------------------------- Duel
-			if(this.duel === undefined) {
+			if(this.duel === undefined && currentGame !== undefined) {
 				this.duel = new Duel(json.duel);
-			} else {
+			} else if(this.duel !== undefined) {
 				this.duel.loadJSON(json.duel);
 			}
 		}
@@ -81,6 +81,11 @@ class Game {
 				defaults.game.oppHand.offset.x(),
 				defaults.game.oppHand.offset.y());
 			this.oppHand.draw();
+			pop();
+		}
+		if(this.duel !== undefined) {
+			push();
+			this.duel.draw();
 			pop();
 		}
 	}
