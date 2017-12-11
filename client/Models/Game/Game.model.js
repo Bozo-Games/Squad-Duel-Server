@@ -1,6 +1,7 @@
 class Game {
 	constructor(json) {
 		this.currentState = json.currentState;
+		this._iAmPrimaryPlayer = false;
 		this.loadJSON(json)
 	}
 	loadJSON(json) {
@@ -24,6 +25,7 @@ class Game {
 			let playerA = new Player(json.playerA);
 			let playerB = new Player(json.playerB);
 			if(playerA.isMe) {
+				this._iAmPrimaryPlayer = true;
 				this.playerLetter = 'A';
 				this.oppLetter = 'B';
 			} else if(playerB.isMe) {
@@ -119,5 +121,8 @@ class Game {
 	}
 	isOppCard(cardID) {
 		return !this.isPlayerCard(cardID);
+	}
+	get iAmPrimaryPlayer() {
+		return this._iAmPrimaryPlayer;
 	}
 }

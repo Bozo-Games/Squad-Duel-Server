@@ -1,5 +1,6 @@
 class Attack {
 	constructor(json) {
+		json = json === undefined ? {} : json;
 		this.loadJSON(json);
 	}
 	loadJSON(json){
@@ -12,7 +13,12 @@ class Attack {
 
 	duelDraw(bounds){
 		push();
-			fill(colors.attack.selected.background);
+			fill(colors.attack.background);
+			if(currentGame.duel.playerAttack !== undefined) {
+				if(currentGame.duel.playerAttack.id === this.id) {
+					fill(colors.attack.selected);
+				}
+			}
 			rect(bounds.x,
 				bounds.y,
 				bounds.w,

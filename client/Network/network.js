@@ -8,9 +8,14 @@ const network = {
 	selectCard: function (cardID) {
 		socket.emit('selectCard',cardID);
 	},
+	selectAttack: function (attackID) {
+		socket.emit('selectAttack',attackID);
+	},
 	lockIn:function (cardID) {
-		console.log('here');
 		socket.emit('confirmCard',cardID);
+	},
+	processDuel:function () {
+		socket.emit('processDuel');
 	}
 };
 

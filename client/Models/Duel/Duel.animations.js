@@ -32,12 +32,59 @@ animations.duel = {
 		if(duel.oppCard !== undefined) {
 			duel.oppCard.loop = 'walk';
 			duel.oppCard.activeAnimations = duel.oppCard.activeAnimations.concat(
-				new TranslationAnimation(defaults.card.selected.size.width(), -height/4, 0, 0, 1200, function (card) {
+				new TranslationAnimation(defaults.card.selected.size.width(), -height/4, 0, 0, 1200, function (deul) {
 					duel.oppCard.loop = 'idle';
+					callBack(duel);
 				})
 			);
 			return undefined;
 		}
 		return undefined;
+	},
+	"waitingForAttacks->ready": function (duel,callBack) {
+		let text3 = new FloatingText({
+			color:'#ff0000',
+			text:'3',
+			offset: {x:width/2, y: height/2},
+			halfLife:1050,
+		}); //create 1 text
+		text3.activeAnimations = text3.activeAnimations.concat(
+			new FontSizeAnimation(height,height*0.2,1000,function (text) {
+				let text2 = new FloatingText({
+					color:'#ff7700',
+					text:'2',
+					offset:{x:width/2,y:height/2},
+					halfLife:1050,
+				}); //create 2 text
+				text2.activeAnimations = text2.activeAnimations.concat(
+					new FontSizeAnimation(height,height*0.2,1000,function (text) {
+						let text1 = new FloatingText({
+							color: '#77ff00',
+							text: '1',
+							offset: {x:width/2, y: height/2},
+							halfLife: 1050,
+						}); //create 1 text
+						text1.activeAnimations = text1.activeAnimations.concat(
+							new FontSizeAnimation(height,height*0.2,1000,function (text) {
+								if(currentGame.iAmPrimaryPlayer) {
+									network.processDuel();
+								}
+								callBack(duel);
+							}) //end of text 1 animation
+						);//add scale animation to text 1
+						duel.floatingText = duel.floatingText.concat(
+							text1
+						); // add 1 floating text
+					}) //end of 1 scale Animation
+				); // end of 2 scale animation
+				duel.floatingText = duel.floatingText.concat(
+					text2
+				); // add 2 floating text
+			}) //end 3 scale animation
+		);//add 3 scale animation to floating text 3
+		duel.floatingText = duel.floatingText.concat(
+			text3
+		); //add 3 to duel floating text
+		return new Animation(3000,function (duel) {});
 	}
 };

@@ -29,36 +29,67 @@ io.on('connection', function(socket) {
         updatePlayers();
     });
     socket.on('selectCard',function (cardID) {
-        currentGame.selectCard(socket.id,cardID);
-        updatePlayers();
+	    try {
+		    currentGame.selectCard(socket.id,cardID);
+		    updatePlayers();
+	    } catch(err) {
+		    updatePlayersOnError(err);
+	    }
     });
 	socket.on('confirmCard', function (cardID) {
-		currentGame.confirmCard(socket.id,cardID);
-		updatePlayers();
+		try {
+			currentGame.confirmCard(socket.id,cardID);
+			updatePlayers();
+		} catch(err) {
+			updatePlayersOnError(err);
+		}
 	});
-    socket.on('selectAttack', function (attackJSON) {
-        currentGame.selectAttack(socket.id, attackJSON.id);
-        updatePlayers();
-    });
+	socket.on('selectAttack', function (attackID) {
+		try {
+			currentGame.selectAttack(socket.id, attackID);
+			updatePlayers();
+		} catch(err) {
+			updatePlayersOnError(err);
+		}
+	});
+	socket.on('processDuel', function () {
+		try {
+			currentGame.processDuel();
+			updatePlayers();
+		} catch(err) {
+			updatePlayersOnError(err);
+		}
+	});
 	socket.on('resetGame', function () {
-		currentGame = new Game();
-		updatePlayers();
+		try {
+			currentGame = new Game();
+			updatePlayers();
+		} catch(err) {
+			updatePlayersOnError(err);
+		}
 	});
     socket.on('disconnect', function(){
-        currentGame.playerLeave(new Player({socketID:socket.id}));
-        updatePlayers();
+    	try {
+	        currentGame.playerLeave(new Player({socketID:socket.id}));
+	        updatePlayers();
+	    } catch(err) {
+		    updatePlayersOnError(err);
+	    }
     });
 });
 
 function updatePlayers() {
-    let json = currentGame.toJSON();
-    if(currentGame.playerA.socketID !== undefined) {
-        io.sockets.connected[currentGame.playerA.socketID].emit('update',json);
-    }
-    if(currentGame.playerB.socketID !== undefined) {
-        io.sockets.connected[currentGame.playerB.socketID].emit('update',json);
-    }/*
+	let json = currentGame.toJSON();
+	if(currentGame.playerA.socketID !== undefined) {
+		io.sockets.connected[currentGame.playerA.socketID].emit('update',json);
+	}
+	if(currentGame.playerB.socketID !== undefined) {
+		io.sockets.connected[currentGame.playerB.socketID].emit('update',json);
+	}/*
     for(let i = 0; i < currentGame.watchers.length; i++) {
         io.sockets.connected[currentGame.watchers[i]].emit('update',json);
     }*/
+}
+function updatePlayersOnError(err) {
+	console.log('ERROR: '+err.message);
 }

@@ -3,7 +3,6 @@ colors.attack = {
 	crush: '#784468',
 	pierce: '#2297ab',
 	icon:'#ffffff',
-	selected: {
-		background:'#aaabc2'
-	}
+	background:'#aaabc2',
+	selected:'#c2fb72'
 };

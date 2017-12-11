@@ -7,4 +7,7 @@ class AnimationValue extends Animation {
 	get currentValue() {
 		return this.startValue*(1-this.percentComplete) + this.endValue*this.percentComplete;
 	}
+	applyEffect(){
+		//do nothing
+	}
 }

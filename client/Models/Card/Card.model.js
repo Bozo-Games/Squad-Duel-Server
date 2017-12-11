@@ -1,10 +1,10 @@
-class Card {
+class Card extends Sprite {
 	constructor(json) {
+		super();
 		json = json === undefined ? {} : json;
 		this.forceDrawCancel = false;
 		this.currentState = json.currentState;
 		this.id = json.id;
-		this.activeAnimations = [];
 		this.attacks = [];
 		this.loop = 'idle';
 		this.loadJSON(json);
@@ -30,7 +30,7 @@ class Card {
 			this.health = json.health;
 			this.armor = json.armor;
 			this.speed = json.speed;
-			if(this.attacks.length != json.attacks.length) {
+			if(this.attacks.length !== json.attacks.length) {
 				let attacks = [];
 				for(let i = 0; i < json.attacks.length; i++) {
 					attacks.push(new Attack(json.attacks[i]));
@@ -45,22 +45,10 @@ class Card {
 	}
 	draw() {
 		push();
-		let i = 0;
-		while(i < this.activeAnimations.length && i >= 0) {
-			if(this.activeAnimations[i].isDone) {
-				this.activeAnimations[i].callBack(this); //here look at this we ar missing somthing about scope
-				this.activeAnimations.splice(i,1);
-				pop();
-				if(this.forceDrawCancel) {
-					this.forceDrawCancel = false;
-					return true;
-				}
-				push();
-				i = 0;
-			} else {
-				this.activeAnimations[i].applyEffect();
-				i++;
-			}
+		let shouldExitDraw = super.applyActiveAnimations();
+		if(shouldExitDraw) {
+			pop();
+			return true;
 		}
 		if(this.shouldDrawHand){
 			this._inHandDraw();
@@ -72,16 +60,23 @@ class Card {
 			this._duelDraw();
 		} else if(this.shouldDrawOpp) {
 			this._oppDraw();
+		} else if(this.shouldDrawDueling) {
+			this._duelDraw();
 		}
+		super.drawFloatingText();
 		pop();
 	}
 	touchEnded(){
-		if(this.shouldDrawHand) {
+		if(this.shouldDrawHand){
 			this._inHandTouchEnded();
-		} else if(this.shouldDrawSelected ) {
+		} else if(this.shouldDrawSelected) {
 			this._selectedTouchEnded();
 		} else if(this.shouldDrawLockedIn) {
 			this._lockedInTouchEnded();
+		} else if(this.shouldDrawDuel){
+			this._selectAttackTouchEnded();
+		} else if(this.shouldDrawOpp) {
+
 		}
 	}
 	get shouldDrawHand() {
@@ -107,6 +102,33 @@ class Card {
 	}
 	get shouldDrawOpp() {
 		return this.currentState === 'lockedIn' && currentGame.currentState === 'attackSelectStage' && currentGame.isOppCard(this.id);
+	}
+	get shouldDrawDueling() {
+		return this.currentState === 'dueling';
+	}
+	//---------------------------------------------------------------------------------------------------- select attack
+	_selectAttackTouchEnded() {
+		console.log('here');
+		pushMouse();
+		if(this.attacks.length > 0) {
+			let didTap = collidePointRect(
+				mouseX,mouseY,
+				this._duelAttack0Bounds.x,this._duelAttack0Bounds.y,this._duelAttack0Bounds.w,this._duelAttack0Bounds.h);
+			if(didTap) {
+				network.selectAttack(this.attacks[0].id);
+			}
+		}
+		if(this.attacks.length > 1) {
+			let didTap = collidePointRect(
+				mouseX,mouseY,
+				this._duelAttack1Bounds.x,this._duelAttack1Bounds.y,this._duelAttack1Bounds.w,this._duelAttack1Bounds.h);
+			if(didTap) {
+				network.selectAttack(this.attacks[1].id);
+			}
+		}
+
+		popMouse();
+
 	}
 	//--------------------------------------------------------------------------------------------------------- opp
 	get _oppRect() {
