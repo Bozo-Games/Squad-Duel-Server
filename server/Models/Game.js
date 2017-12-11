@@ -121,7 +121,7 @@ class Game {
 			if(this.playerIsPartOfGame(new Player({socketID:playerID}))) {
 				return this._stateMachine.selectCard(playerID,cardID);
 			} else {
-				logs.log(E.logs.game,playerID+"is not part of game and can't select a card");
+				logs.log(E.logs.game,playerID+" is not part of game and can't select a card");
 			}
 		}
 		return false;
@@ -133,7 +133,7 @@ class Game {
 			if(this.playerIsPartOfGame(new Player({socketID:playerID}))) {
 				return this._stateMachine.selectAttack(playerID,attackID);
 			} else {
-				logs.log(E.logs.game,playerID+"is not part of game and can't select a card");
+				logs.log(E.logs.game,playerID+" is not part of game and can't select a card");
 			}
 		}
 		return false;
@@ -154,6 +154,7 @@ class Game {
 		if(this.duel['card'+letter] !== undefined) {
 			if(this.duel['card'+letter].id === cardID) {
 				this.duel['card'+letter].confirm();
+				this.selectCard(playerID,this.duel['card'+letter].id);
 			}
 		}
 	}

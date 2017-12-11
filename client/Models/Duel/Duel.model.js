@@ -8,19 +8,24 @@ class Duel {
 	}
 	loadJSON(json){
 		if(this.currentState !== json.currentState) {
-			let animation = animations.duel[`${this.currentState}->${json.currentState}`](this,function (card) {
-				card.currentState = json.currentState;
-				card.loadJSON(json);
-			});
-			if(animation !== undefined) {
-				this.activeAnimations = this.activeAnimations.concat(animation);
+			if(animations.duel[`${this.currentState}->${json.currentState}`] !== undefined) {
+				let animation = animations.duel[`${this.currentState}->${json.currentState}`](this, function (card) {
+					card.currentState = json.currentState;
+					card.loadJSON(json);
+				});
+				if (animation !== undefined) {
+					this.activeAnimations = this.activeAnimations.concat(animation);
+				} else {
+					this.currentState = json.currentState;
+					this.loadJSON(json);
+				}
 			} else {
 				this.currentState = json.currentState;
 				this.loadJSON(json);
 			}
 		} else {
 			let playerCardJSON = json[`card${currentGame.playerLetter}`];
-			let oppCardJSON = json[`card${currentGame.playerLetter}`];
+			let oppCardJSON = json[`card${currentGame.oppLetter}`];
 			let playerAttackJSON = json[`card${currentGame.oppLetter}`];
 			let oppAttackJSON = json[`card${currentGame.oppLetter}`];
 
@@ -36,21 +41,28 @@ class Duel {
 						animations.duel.playerSwitchCard(this,this.playerCard,function (card) {
 							let newCard = new Card(playerCardJSON);
 							newCard.activeAnimations = newCard.activeAnimations.concat(
-									animations.duel.playerSelectsCard(newCard,function () {})
+								animations.duel.playerSelectsCard(newCard,function () {})
 							);
 							currentGame.duel.playerCard.forceDrawCancel = true;
 							currentGame.duel.playerCard = newCard;
-					}));
+						}));
 				} else {
 					this.playerCard.loadJSON(playerCardJSON);
 				}
 			}
 
 			if(this.oppCard === undefined && oppCardJSON !== undefined) {
-				this.oppCard = new Card(oppCardJSON);
+				let newCard = new Card(oppCardJSON);
+				this.oppCard = newCard;
 			} else if(oppCardJSON !== undefined) {
-				this.oppCard.loadJSON(oppCardJSON);
+				if(oppCardJSON.id !== this.oppCard.id) {
+					let newCard = new Card(oppCardJSON);
+					currentGame.duel.oppCard = newCard;
+				} else {
+					this.oppCard.loadJSON(oppCardJSON);
+				}
 			}
+
 		}
 	}
 	touchEnded() {
@@ -87,14 +99,24 @@ class Duel {
 			}
 		}
 		if(this.playerCard !== undefined) {
-			push();
-			translate(
-				defaults.duel.playerCard.offset.x(),
-				defaults.duel.playerCard.offset.y());
 			if(this.playerCard.currentState !== 'inHand') {
+				push();
+				translate(
+					defaults.duel.playerCard.offset.x(),
+					defaults.duel.playerCard.offset.y());
 				this.playerCard.draw();
+				pop();
 			}
-			pop();
+		}
+		if(this.oppCard !== undefined) {
+			if(this.oppCard.currentState === 'lockedIn' && currentGame.currentState === 'attackSelectStage' ) {
+				push();
+				translate(
+					defaults.duel.oppCard.offset.x(),
+					defaults.duel.oppCard.offset.y());
+				this.oppCard.draw();
+				pop();
+			}
 		}
 		pop();
 	}

@@ -8,5 +8,15 @@ defaults.duel = {
 				return height * 0.45;
 			}
 		}
+	},
+	oppCard: {
+		offset: {
+			x: function () {
+				return width - 20 - defaults.card.selected.size.width();
+			},
+			y: function () {
+				return defaults.card.inHand.size.height()*1.8;
+			}
+		}
 	}
 };

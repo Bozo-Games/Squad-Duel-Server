@@ -148,7 +148,7 @@ class Duel {
     	this.turns = [];
     	let speedA = this.cardA.speed + this.attackA.speed;
     	let speedB = this.cardB.speed + this.attackB.speed;
-    	if(speedA == speedB) {
+    	if(speedA === speedB) {
 		    if(Math.random() > 0.5) {
 			    speedA += 0.001;
 		    } else {

@@ -62,24 +62,88 @@ class Card {
 				i++;
 			}
 		}
-		if(this.currentState === 'inHand' ||
-			(this.currentState === 'selected' && currentGame.isOppCard(this.id)) ||
-			(this.currentState === 'lockedIn' && currentGame.isOppCard(this.id))){
+		if(this.shouldDrawHand){
 			this._inHandDraw();
-		} else if(this.currentState === 'selected') {
+		} else if(this.shouldDrawSelected) {
 			this._selectedDraw();
-		} else if(this.currentState === 'lockedIn' && currentGame.duel.currentState === 'waitingForCards') {
+		} else if(this.shouldDrawLockedIn) {
 			this._lockedInDraw();
+		} else if(this.shouldDrawDuel){
+			this._duelDraw();
+		} else if(this.shouldDrawOpp) {
+			this._oppDraw();
 		}
 		pop();
 	}
 	touchEnded(){
-		if(this.currentState === 'inHand') {
+		if(this.shouldDrawHand) {
 			this._inHandTouchEnded();
-		} else if(this.currentState === 'selected' ) {
+		} else if(this.shouldDrawSelected ) {
 			this._selectedTouchEnded();
-		} else if(this.currentState === 'lockedIn' && currentGame.duel.currentState === 'waitingForCards') {
+		} else if(this.shouldDrawLockedIn) {
 			this._lockedInTouchEnded();
+		}
+	}
+	get shouldDrawHand() {
+		if(this.currentState === 'inHand') {
+			return true;
+		} else if(currentGame.currentState === 'cardSelectingStage') {
+			if(currentGame.isOppCard(this.id)) {
+				return true;
+			} else {
+
+			}
+		}
+		return false;
+	}
+	get shouldDrawSelected() {
+		return this.currentState === 'selected' && currentGame.isPlayerCard(this.id);
+	}
+	get shouldDrawLockedIn() {
+		return this.currentState === 'lockedIn' && currentGame.currentState === 'cardSelectingStage' && currentGame.isPlayerCard(this.id);
+	}
+	get shouldDrawDuel() {
+		return this.currentState === 'lockedIn' && currentGame.currentState === 'attackSelectStage' && currentGame.isPlayerCard(this.id);
+	}
+	get shouldDrawOpp() {
+		return this.currentState === 'lockedIn' && currentGame.currentState === 'attackSelectStage' && currentGame.isOppCard(this.id);
+	}
+	//--------------------------------------------------------------------------------------------------------- opp
+	get _oppRect() {
+		return this._duelRect;
+	}
+	get _oppAttack0Bounds() {
+		return {
+			x:this._oppRect.x - (1.05*this._duelAttack0Bounds.w),
+			y:this._duelAttack0Bounds.y,
+			w:this._duelAttack0Bounds.w,
+			h:this._duelAttack0Bounds.h
+		};
+	}
+	get _oppAttack1Bounds() {
+		return {
+			x:this._oppRect.x - (1.05*this._duelAttack1Bounds.w),
+			y:this._duelAttack1Bounds.y,
+			w:this._duelAttack1Bounds.w,
+			h:this._duelAttack1Bounds.h
+		};
+	}
+	_oppDraw() {
+		push();
+			translate(this._duelRect.w,0);
+			scale(-1,1);
+			this._dudeDraw();
+		pop();
+		push();
+			translate(this._duelRect.w*0.75,0);
+			this._duelStatsBoxDraw();
+		pop();
+		//Attacks
+		if(this.attacks.length > 0) {
+			this.attacks[0].duelDraw(this._oppAttack0Bounds);
+		}
+		if(this.attacks.length > 1) {
+			this.attacks[1].duelDraw(this._oppAttack1Bounds);
 		}
 	}
 	//--------------------------------------------------------------------------------------------------------- Duel
@@ -106,7 +170,7 @@ class Card {
 			h:this._selectedLockInBounds.h
 		};
 	}
-	_duelDraw() {
+	_dudeDraw() {
 		push();
 		let frame = frameCount % icons.card[this.name][this.loop].length;
 		image(icons.card[this.name][this.loop][frame],
@@ -114,15 +178,17 @@ class Card {
 			0,
 			this._duelRect.w,
 			this._duelRect.h);
-
+		pop();
+	}
+	_duelStatsBoxDraw() {
 		let iconRect = {
 			w: defaults.card.selected.icon.size.width(),
 			h: defaults.card.selected.icon.size.width(),
 		};
 		fill(colors.card.inHand.background);
 		rect(
-			-iconRect.w*0.1,
-			-iconRect.h*0.1,
+			-iconRect.w*0.2,
+			-iconRect.h*0.2,
 			iconRect.w*2.5,
 			iconRect.h*3.6,
 			4);
@@ -166,6 +232,11 @@ class Card {
 			iconRect.h*2.2,
 			iconRect.w,
 			iconRect.h);
+	}
+	_duelDraw() {
+		push();
+		this._dudeDraw();
+		this._duelStatsBoxDraw()
 		//Attacks
 		if(this.attacks.length > 0) {
 			this.attacks[0].duelDraw(this._duelAttack0Bounds);

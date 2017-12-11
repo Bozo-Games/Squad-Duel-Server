@@ -25,7 +25,7 @@ class Hand {
 		pushMouse();
 		translateMouse(defaults.hand.offset.x(),defaults.hand.offset.y());
 		for(let i = 0; i < this.cards.length;i++) {
-			if(this._shouldDrawCard(this.cards[i])){
+			if(this.cards[i].shouldDrawHand){
 				this.cards[i].touchEnded();
 			}
 			translateMouse(defaults.hand.step.x(),defaults.hand.step.y());
@@ -36,21 +36,11 @@ class Hand {
 		push();
 		translate(defaults.hand.offset.x(),defaults.hand.offset.y());
 		for(let i = 0; i < this.cards.length;i++) {
-			if(this._shouldDrawCard(this.cards[i])){
+			if(this.cards[i].shouldDrawHand){
 				this.cards[i].draw();
 			}
 			translate(defaults.hand.step.x(),defaults.hand.step.y());
 		}
 		pop();
-	}
-	_shouldDrawCard(card) {
-		if(card.currentState === 'inHand') {
-			return true;
-		} else if(card.currentState === 'selected' || card.currentState === 'lockedIn') {
-			if(currentGame.isOppCard(card.id)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

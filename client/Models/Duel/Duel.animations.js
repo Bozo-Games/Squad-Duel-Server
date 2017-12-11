@@ -28,4 +28,16 @@ animations.duel = {
 		}
 		return undefined;
 	},
+	"waitingForCards->waitingForAttacks": function (duel,callBack) {
+		if(duel.oppCard !== undefined) {
+			duel.oppCard.loop = 'walk';
+			duel.oppCard.activeAnimations = duel.oppCard.activeAnimations.concat(
+				new TranslationAnimation(defaults.card.selected.size.width(), -height/4, 0, 0, 1200, function (card) {
+					duel.oppCard.loop = 'idle';
+				})
+			);
+			return undefined;
+		}
+		return undefined;
+	}
 };
