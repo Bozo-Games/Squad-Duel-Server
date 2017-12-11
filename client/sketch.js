@@ -1,10 +1,11 @@
 "use strict";
 let currentGame;
 function preload() {
-	loadAssets(icons);
+	icons.loading = loadImage('./Assets/icons/uncertainty.svg');
 }
 function setup() {
 	createCanvas(windowWidth,windowHeight);
+	loadAssets(icons);
 	createLogInView();
 }
 function windowResized() {

@@ -96,6 +96,8 @@ class Card {
 			h: defaults.card.selected.icon.size.width(),
 		};
 		fill(colors.card.text);
+		textSize(iconRect.h*0.8);
+		textAlign(LEFT,TOP);
 		//health
 		tint(colors.card.health);
 		image(icons.card.health,
@@ -115,7 +117,7 @@ class Card {
 			iconRect.h*1.1,
 			iconRect.w,
 			iconRect.h);
-		text(this.health,
+		text(this.armor,
 			iconRect.w*1.1,
 			iconRect.h*1.1,
 			iconRect.w,
@@ -128,13 +130,30 @@ class Card {
 			iconRect.h*2.2,
 			iconRect.w,
 			iconRect.h);
-		text(this.health,
+		text(this.speed,
 			iconRect.w*1.1,
 			iconRect.h*2.2,
 			iconRect.w,
 			iconRect.h);
-
 		//Attacks
+		if(this.attacks.length > 0) {
+			let rect = {
+				x:this._selectedRect.x+this._selectedRect.w*1.05,
+				y:this._selectedRect.y+this._selectedRect.h*0.30,
+				w:this._selectedRect.w*0.9,
+				h:this._selectedRect.h*0.2
+			};
+			this.attacks[0].duelDraw(rect);
+		}
+		if(this.attacks.length > 1) {
+			let rect = {
+				x:this._selectedRect.x+this._selectedRect.w*1.05,
+				y:this._selectedRect.y+this._selectedRect.h*0.30,
+				w:this._selectedRect.w*0.9,
+				h:this._selectedRect.h*0.2
+			};
+			this.attacks[1].duelDraw(rect);
+		}
 
 		pop();
 	}
