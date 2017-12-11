@@ -1,6 +1,7 @@
 icons.card = {
 	health:'./Assets/icons/card/health.svg',
 	armor:'./Assets/icons/card/armor.svg',
+	speed:'./Assets/icons/card/speed.svg',
 	character: {
 		"Blood Knight": './Assets/icons/card/character/Blood_Knight.svg',
 		"Blood Guard": './Assets/icons/card/character/Blood_Guard.svg',

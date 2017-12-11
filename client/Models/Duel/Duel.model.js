@@ -1,6 +1,7 @@
 class Duel {
 	constructor(json) {
 		json = json === undefined ? {} : json;
+		this.forceDrawCancel = false;
 		this.currentState = json.currentState;
 		this.activeAnimations = [];
 		this.loadJSON(json);
@@ -37,6 +38,7 @@ class Duel {
 							newCard.activeAnimations = newCard.activeAnimations.concat(
 									animations.duel.playerSelectsCard(newCard,function () {})
 							);
+							currentGame.duel.playerCard.forceDrawCancel = true;
 							currentGame.duel.playerCard = newCard;
 					}));
 				} else {
@@ -59,6 +61,10 @@ class Duel {
 				this.activeAnimations[i].callBack(this);
 				this.activeAnimations.splice(i,1);
 				pop();
+				if(this.forceDrawCancel) {
+					this.forceDrawCancel = false;
+					return true;
+				}
 				push();
 				i = 0;
 			} else {
@@ -67,7 +73,9 @@ class Duel {
 			}
 		}
 		if(this.playerCard !== undefined) {
-			translate(50,height*0.4);
+			translate(
+				defaults.duel.playerCard.offset.x(),
+				defaults.duel.playerCard.offset.y());
 			if(this.playerCard.currentState !== 'inHand') {
 				this.playerCard.draw();
 			}

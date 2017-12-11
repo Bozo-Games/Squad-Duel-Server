@@ -1,9 +1,11 @@
 class Card {
 	constructor(json) {
 		json = json === undefined ? {} : json;
+		this.forceDrawCancel = false;
 		this.currentState = json.currentState;
 		this.id = json.id;
 		this.activeAnimations = [];
+		this.attacks = [];
 		this.loop = 'idle';
 		this.loadJSON(json);
 	}
@@ -14,6 +16,7 @@ class Card {
 				animation = animations.card[`${this.currentState}->${json.currentState}`](this, function (card) {
 					card.currentState = json.currentState;
 					card.loadJSON(json);
+					card.forceDrawCancel = true;
 				});
 			}
 			if(animation !== undefined) {
@@ -27,6 +30,17 @@ class Card {
 			this.health = json.health;
 			this.armor = json.armor;
 			this.speed = json.speed;
+			if(this.attacks.length != json.attacks.length) {
+				let attacks = [];
+				for(let i = 0; i < json.attacks.length; i++) {
+					attacks.push(new Attack(json.attacks[i]));
+				}
+				this.attacks = attacks;
+			} else {
+				for(let i = 0; i < json.attacks.length; i++) {
+					this.attacks[i].loadJSON(json.attacks[i]);
+				}
+			}
 		}
 	}
 	draw() {
@@ -37,6 +51,10 @@ class Card {
 				this.activeAnimations[i].callBack(this); //here look at this we ar missing somthing about scope
 				this.activeAnimations.splice(i,1);
 				pop();
+				if(this.forceDrawCancel) {
+					this.forceDrawCancel = false;
+					return true;
+				}
 				push();
 				i = 0;
 			} else {
@@ -58,10 +76,11 @@ class Card {
 	}
 	//--------------------------------------------------------------------------------------------------------- Selected
 	get _selectedRect() {
-		return {x:0,
+		return {
+			x:0,
 			y:0,
-			w:defaults.card.inHand.size.width(),
-			h:defaults.card.inHand.size.height()}
+			w:defaults.card.selected.size.width(),
+			h:defaults.card.selected.size.height()}
 	}
 	_selectedDraw() {
 		push();
@@ -71,6 +90,52 @@ class Card {
 			0,
 			this._selectedRect.w,
 			this._selectedRect.h);
+
+		let iconRect = {
+			w: defaults.card.selected.icon.size.width(),
+			h: defaults.card.selected.icon.size.width(),
+		};
+		fill(colors.card.text);
+		//health
+		tint(colors.card.health);
+		image(icons.card.health,
+			0,0,
+			iconRect.w,
+			iconRect.h);
+		text(this.health,
+			iconRect.w*1.1,
+			0,
+			iconRect.w,
+			iconRect.h);
+
+		//armor
+		tint(colors.card.armor);
+		image(icons.card.armor,
+			0,
+			iconRect.h*1.1,
+			iconRect.w,
+			iconRect.h);
+		text(this.health,
+			iconRect.w*1.1,
+			iconRect.h*1.1,
+			iconRect.w,
+			iconRect.h);
+
+		//speed
+		tint(colors.card.speed);
+		image(icons.card.speed,
+			0,
+			iconRect.h*2.2,
+			iconRect.w,
+			iconRect.h);
+		text(this.health,
+			iconRect.w*1.1,
+			iconRect.h*2.2,
+			iconRect.w,
+			iconRect.h);
+
+		//Attacks
+
 		pop();
 	}
 	//----------------------------------------------------------------------------------------------------------- inHand
@@ -95,36 +160,56 @@ class Card {
 		fill(colors.card.inHand.background);
 		ellipseMode(CORNER);
 		ellipse(this._handRect.x,this._handRect.y,this._handRect.w,this._handRect.h);
+		let iconScale = defaults.card.inHand.iconScale;
 		image(icons.card.character[this.name],
 			this._handRect.x+this._handRect.w*0.05,
 			this._handRect.y+this._handRect.h*0.05,
 			this._handRect.w*0.9,
 			this._handRect.h*0.9);
 		//health
-		tint(colors.card.inHand.health);
+		tint(colors.card.health);
 		image(icons.card.health,
 			this._handRect.x-this._handRect.w*0.05,
 			this._handRect.y-this._handRect.w*0.05,
-			this._handRect.w*0.4,
-			this._handRect.h*0.4);
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
 		textAlign(CENTER,CENTER);
 		text(this.health,
 			this._handRect.x-this._handRect.w*0.05,
 			this._handRect.y-this._handRect.w*0.05,
-			this._handRect.w*0.4,
-			this._handRect.h*0.4);
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
 		//armor
-		tint(colors.card.inHand.armor);
+		tint(colors.card.armor);
 		image(icons.card.armor,
 			this._handRect.x+this._handRect.w*0.65,
 			this._handRect.y-this._handRect.w*0.05,
-			this._handRect.w*0.4,
-			this._handRect.h*0.4);
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
 		text(this.armor,
 			this._handRect.x+this._handRect.w*0.65,
 			this._handRect.y-this._handRect.w*0.05,
-			this._handRect.w*0.4,
-			this._handRect.h*0.4);
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+
+		if(this.attacks.length > 0) {
+			let rect = {
+				x:this._handRect.x-this._handRect.w*0.05,
+				y:this._handRect.y + this._handRect.w * 0.65,
+				w:this._handRect.w*iconScale,
+				h:this._handRect.h*iconScale
+				};
+			this.attacks[0].handDraw(rect);
+		}
+		if(this.attacks.length > 1) {
+			let rect = {
+				x:this._handRect.x + this._handRect.w*0.65,
+				y:this._handRect.y + this._handRect.w * 0.65,
+				w:this._handRect.w*iconScale,
+				h:this._handRect.h*iconScale
+			};
+			this.attacks[1].handDraw(rect);
+		}
 		pop();
 	}
 }

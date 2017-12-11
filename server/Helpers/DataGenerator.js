@@ -42,6 +42,23 @@ const Generator = {
             json.speed = 0;
             json.health = json.health - negativeSpeed*2;
         }
+        json.attacks = [];
+        while(json.attacks.length < 2) {
+            let attackJSON = Generator.attack();
+            let goodToAdd = true;
+            for(let i = 0; i < json.attacks.length; i++) {
+                if(json.attacks[i].name === attackJSON.name) {
+	                goodToAdd = false;
+	                break;
+                }
+            }
+            if(goodToAdd) {
+                json.attacks.push(attackJSON);
+            }
+        }
+        for(let i =0; i < 2; i++) {
+            json.attacks.push()
+        }
         json.id = Generator.guid();
         return json;
     },
