@@ -11,45 +11,57 @@ class Attack {
 		this.category = json.category;
 	}
 
-	duelDraw(rect){
+	duelDraw(bounds){
 		push();
+			fill(colors.attack.selected.background);
+			rect(bounds.x,
+				bounds.y,
+				bounds.w,
+				bounds.h,
+				4)
 			fill(colors.attack[this.category]);
 			tint(colors.attack.icon);
+			ellipseMode(CORNER);
 			ellipse(
-				rect.x,
-				rect.y,
-				rect.h,
-				rect.h);
+				bounds.x+bounds.h*0.05,
+				bounds.y+bounds.h*0.05,
+				bounds.h*0.9,
+				bounds.h*0.9);
 			image(icons.attack[this.category],
-				rect.x + rect.h*0.1,
-				rect.h*0.1,
-				rect.h*0.8,
-				rect.h*0.8);
+				bounds.x + bounds.h*0.15,
+				bounds.y + bounds.h*0.15,
+				bounds.h*0.7,
+				bounds.h*0.7);
 			fill(colors.card.text);
-			textSize(rect.h * 0.8);
+			let ts = bounds.h*0.7;
+			textSize(ts);
+			while(textWidth(this.name) > (bounds.w - bounds.h*1.2)) {
+				ts-=1;
+				textSize(ts);
+			}
 			textAlign(LEFT,TOP);
 			text(this.name,
-				rect.x + rect.h*1.1,
-				rect.y,
-				rect.w - rect.h*0.8,
-				rect.h);
+				bounds.x + bounds.h*1.1,
+				bounds.y + bounds.h*0.1,
+				bounds.w - bounds.h*1.1,
+				bounds.h*0.9);
 		pop()
 	}
 
-	handDraw(rect) {
+	handDraw(bounds) {
 		push();
 			fill(colors.attack[this.category]);
 			tint(colors.attack.icon);
 			ellipse(
-				rect.x,
-				rect.y,
-				rect.w,
-				rect.h);
+				bounds.x,
+				bounds.y,
+				bounds.w,
+				bounds.h);
 			image(icons.attack[this.category],
-				rect.x + rect.w*0.1,
-				rect.y + rect.h*0.1,
-				rect.w*0.8,
-				rect.h*0.8);
+				bounds.x + bounds.w*0.1,
+				bounds.y + bounds.h*0.1,
+				bounds.w*0.8,
+				bounds.h*0.8);
 		pop()
 	}
 }

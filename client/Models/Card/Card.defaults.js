@@ -13,7 +13,7 @@ defaults.card = {
 	selected: {
 		size: {
 			width: function () {
-				return width/2;
+				return width/3;
 			},
 			height: function () {
 				return defaults.card.selected.size.width();
@@ -22,7 +22,7 @@ defaults.card = {
 		icon: {
 			size: {
 				width: function () {
-					return  defaults.card.selected.size.width()*0.08;
+					return  defaults.card.selected.size.width()*0.12;
 				},
 				height: function () {
 					return defaults.card.selected.icon.size.width();

@@ -5,5 +5,9 @@ colors.card = {
 	text:'#000000',
 	inHand: {
 		background:'#ccddff',
+	},
+	selected: {
+		lockIn:'#bbaa33',
+		lockedIn:'#008833',
 	}
 }

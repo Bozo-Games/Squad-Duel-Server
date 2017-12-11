@@ -61,19 +61,35 @@ class Game {
 	}
 	touchEnded() {
 		pushMouse();
+		if(this.duel !== undefined) {
+			this.duel.touchEnded();
+		}
 		if(this.playerHand !== undefined) {
-			pushMouse();
-			translateMouse(
-				defaults.game.playerHand.offset.x(),
-				defaults.game.playerHand.offset.y());
-			this.playerHand.touchEnded();
-			popMouse();
+			let isHandActive = true;
+			if(this.duel !== undefined) {
+				if(this.duel.playerCard !== undefined) {
+					isHandActive = (
+						this.duel.playerCard.currentState === 'inHand' ||
+						this.duel.playerCard.currentState === 'selected' );
+				}
+			}
+			if(isHandActive) {
+				pushMouse();
+				translateMouse(
+					defaults.game.playerHand.offset.x(),
+					defaults.game.playerHand.offset.y());
+				this.playerHand.touchEnded();
+				popMouse();
+			}
 		}
 		popMouse();
 	}
 	draw() {
-		if(this.player !== undefined) {this.player.draw();}
-		if(this.opp !== undefined) {this.opp.draw();}
+		if(this.duel !== undefined) {
+			push();
+			this.duel.draw();
+			pop();
+		}
 		if(this.playerHand !== undefined) {
 			push();
 			translate(
@@ -90,11 +106,8 @@ class Game {
 			this.oppHand.draw();
 			pop();
 		}
-		if(this.duel !== undefined) {
-			push();
-			this.duel.draw();
-			pop();
-		}
+		if(this.player !== undefined) {this.player.draw();}
+		if(this.opp !== undefined) {this.opp.draw();}
 	}
 	isPlayerCard(cardID) {
 		for(let i = 0; i < this.playerHand.cards.length; i++) {
@@ -103,5 +116,8 @@ class Game {
 			}
 		}
 		return false;
+	}
+	isOppCard(cardID) {
+		return !this.isPlayerCard(cardID);
 	}
 }

@@ -7,6 +7,10 @@ const network = {
 	},
 	selectCard: function (cardID) {
 		socket.emit('selectCard',cardID);
+	},
+	lockIn:function (cardID) {
+		console.log('here');
+		socket.emit('confirmCard',cardID);
 	}
 };
 

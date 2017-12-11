@@ -53,6 +53,20 @@ class Duel {
 			}
 		}
 	}
+	touchEnded() {
+		pushMouse();
+		if(this.playerCard !== undefined) {
+			pushMouse();
+			translateMouse(
+				defaults.duel.playerCard.offset.x(),
+				defaults.duel.playerCard.offset.y());
+			if (this.playerCard.currentState !== 'inHand') {
+				this.playerCard.touchEnded();
+			}
+			popMouse();
+		}
+		popMouse();
+	}
 	draw() {
 		push();
 		let i = 0;
@@ -73,12 +87,14 @@ class Duel {
 			}
 		}
 		if(this.playerCard !== undefined) {
+			push();
 			translate(
 				defaults.duel.playerCard.offset.x(),
 				defaults.duel.playerCard.offset.y());
 			if(this.playerCard.currentState !== 'inHand') {
 				this.playerCard.draw();
 			}
+			pop();
 		}
 		pop();
 	}

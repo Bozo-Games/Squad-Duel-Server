@@ -62,39 +62,70 @@ class Card {
 				i++;
 			}
 		}
-		if(this.currentState === 'inHand' || (this.currentState === 'selected' && !currentGame.isPlayerCard(this.id))){
+		if(this.currentState === 'inHand' ||
+			(this.currentState === 'selected' && currentGame.isOppCard(this.id)) ||
+			(this.currentState === 'lockedIn' && currentGame.isOppCard(this.id))){
 			this._inHandDraw();
 		} else if(this.currentState === 'selected') {
 			this._selectedDraw();
+		} else if(this.currentState === 'lockedIn' && currentGame.duel.currentState === 'waitingForCards') {
+			this._lockedInDraw();
 		}
 		pop();
 	}
 	touchEnded(){
 		if(this.currentState === 'inHand') {
 			this._inHandTouchEnded();
+		} else if(this.currentState === 'selected' ) {
+			this._selectedTouchEnded();
+		} else if(this.currentState === 'lockedIn' && currentGame.duel.currentState === 'waitingForCards') {
+			this._lockedInTouchEnded();
 		}
 	}
-	//--------------------------------------------------------------------------------------------------------- Selected
-	get _selectedRect() {
+	//--------------------------------------------------------------------------------------------------------- Duel
+	get _duelRect() {
 		return {
 			x:0,
 			y:0,
 			w:defaults.card.selected.size.width(),
 			h:defaults.card.selected.size.height()}
 	}
-	_selectedDraw() {
+	get _duelAttack0Bounds() {
+		return {
+			x:this._selectedLockInBounds.x,
+			y:this._duelRect.y+this._duelRect.h*0.33,
+			w:this._selectedLockInBounds.w,
+			h:this._selectedLockInBounds.h
+		};
+	}
+	get _duelAttack1Bounds() {
+		return {
+			x:this._selectedLockInBounds.x,
+			y:this._duelRect.y+this._duelRect.h*0.66,
+			w:this._selectedLockInBounds.w,
+			h:this._selectedLockInBounds.h
+		};
+	}
+	_duelDraw() {
 		push();
 		let frame = frameCount % icons.card[this.name][this.loop].length;
 		image(icons.card[this.name][this.loop][frame],
 			0,
 			0,
-			this._selectedRect.w,
-			this._selectedRect.h);
+			this._duelRect.w,
+			this._duelRect.h);
 
 		let iconRect = {
 			w: defaults.card.selected.icon.size.width(),
 			h: defaults.card.selected.icon.size.width(),
 		};
+		fill(colors.card.inHand.background);
+		rect(
+			-iconRect.w*0.1,
+			-iconRect.h*0.1,
+			iconRect.w*2.5,
+			iconRect.h*3.6,
+			4);
 		fill(colors.card.text);
 		textSize(iconRect.h*0.8);
 		textAlign(LEFT,TOP);
@@ -137,24 +168,67 @@ class Card {
 			iconRect.h);
 		//Attacks
 		if(this.attacks.length > 0) {
-			let rect = {
-				x:this._selectedRect.x+this._selectedRect.w*1.05,
-				y:this._selectedRect.y+this._selectedRect.h*0.30,
-				w:this._selectedRect.w*0.9,
-				h:this._selectedRect.h*0.2
-			};
-			this.attacks[0].duelDraw(rect);
+			this.attacks[0].duelDraw(this._duelAttack0Bounds);
 		}
 		if(this.attacks.length > 1) {
-			let rect = {
-				x:this._selectedRect.x+this._selectedRect.w*1.05,
-				y:this._selectedRect.y+this._selectedRect.h*0.30,
-				w:this._selectedRect.w*0.9,
-				h:this._selectedRect.h*0.2
-			};
-			this.attacks[1].duelDraw(rect);
+			this.attacks[1].duelDraw(this._duelAttack1Bounds);
 		}
+		pop();
+	}
+	//-------------------------------------------------------------------------------------------------------- Locked In
+	get _selectedLockedInBounds() {
+		return this._selectedLockInBounds;
+	}
+	_lockedInTouchEnded() {
+		pushMouse();
 
+		popMouse();
+	}
+	_lockedInDraw(){
+		push();
+		this._duelDraw();
+		//locked in statment
+		fill(colors.card.selected.lockedIn);
+		let bounds =this._selectedLockInBounds;
+		rect(bounds.x,bounds.y,bounds.w,bounds.h,4);
+		textAlign(CENTER,CENTER);
+		fill(colors.card.text)
+		textSize(bounds.h*0.8);
+		text(strings.card.selected.lockedIn,
+			bounds.x,bounds.y,bounds.w,bounds.h);
+		pop();
+	}
+	//--------------------------------------------------------------------------------------------------------- Selected
+	get _selectedLockInBounds() {
+		return {
+			x:this._duelRect.x+this._duelRect.w*1.05,
+			y:this._duelRect.y+this._duelRect.h*0.0,
+			w:this._duelRect.w*1.2,
+			h:this._duelRect.h*0.3
+		};
+	}
+	_selectedTouchEnded() {
+		pushMouse();
+		let didTap = collidePointRect(
+			mouseX,mouseY,
+			this._selectedLockInBounds.x,this._selectedLockInBounds.y,this._selectedLockInBounds.w,this._selectedLockInBounds.h);
+		if(didTap) {
+			network.lockIn(this.id);
+		}
+		popMouse();
+	}
+	_selectedDraw() {
+		push();
+		this._duelDraw();
+		//locked in statment
+		fill(colors.card.selected.lockIn);
+		let bounds =this._selectedLockInBounds;
+		rect(bounds.x,bounds.y,bounds.w,bounds.h,4);
+		textAlign(CENTER,CENTER);
+		fill(colors.card.text)
+		textSize(bounds.h*0.8);
+		text(strings.card.selected.lockIn,
+			bounds.x,bounds.y,bounds.w,bounds.h);
 		pop();
 	}
 	//----------------------------------------------------------------------------------------------------------- inHand
@@ -212,22 +286,22 @@ class Card {
 			this._handRect.h*iconScale);
 
 		if(this.attacks.length > 0) {
-			let rect = {
+			let bounds = {
 				x:this._handRect.x-this._handRect.w*0.05,
 				y:this._handRect.y + this._handRect.w * 0.65,
 				w:this._handRect.w*iconScale,
 				h:this._handRect.h*iconScale
 				};
-			this.attacks[0].handDraw(rect);
+			this.attacks[0].handDraw(bounds);
 		}
 		if(this.attacks.length > 1) {
-			let rect = {
+			let bounds = {
 				x:this._handRect.x + this._handRect.w*0.65,
 				y:this._handRect.y + this._handRect.w * 0.65,
 				w:this._handRect.w*iconScale,
 				h:this._handRect.h*iconScale
 			};
-			this.attacks[1].handDraw(rect);
+			this.attacks[1].handDraw(bounds);
 		}
 		pop();
 	}
