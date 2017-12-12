@@ -324,6 +324,10 @@ class Card extends Sprite {
 			0,
 			this._duelRect.w,
 			this._duelRect.h);
+		textSize(14);
+		text(this.name,
+			0,
+			this._duelRect.h*1.1);
 		pop();
 	}
 	_duelStatsBoxDraw(data) {
