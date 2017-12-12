@@ -5,13 +5,14 @@ const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
+
+let classNames = Object.keys(cardDB.characterClasses);
+let titleNames = Object.keys(cardDB.characterTitles);
 /*
 let options = [];
 for(let i = 0; i < 61; i++) {
 	options.push(i);
 }
-let classNames = Object.keys(cardDB.characterClasses);
-let titleNames = Object.keys(cardDB.characterTitles);
 
 console.log(options.length +' > '+(titleNames.length*classNames.length));
 
