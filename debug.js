@@ -22,7 +22,7 @@ for(let ti = 0; ti < titleNames.length; ti++) {
 		let i = Math.floor(Math.random()*options.length);
 		let option = options[i];
 		options.splice(i,1);
-		console.log(options.length +' / '+54);
+		console.log(`"${titleNames[ti]} ${classNames[ci]}": './client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}.svg',`);
 		fs.rename(
 			`./temp/${option}_character.svg`,
 			`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}.svg`,
