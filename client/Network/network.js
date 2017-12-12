@@ -18,6 +18,9 @@ const network = {
 	lockIn:function (cardID) {
 		socket.emit('confirmCard',cardID);
 	},
+	acceptResults: function () {
+		socket.emit('acceptResults');
+	},
 	processDuel:function () {
 		socket.emit('processDuel');
 	}

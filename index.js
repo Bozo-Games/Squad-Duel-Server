@@ -60,6 +60,14 @@ io.on('connection', function(socket) {
 			updatePlayersOnError(err);
 		}
 	});
+	socket.on('acceptResults', function () {
+		try {
+			currentGame.continueGame();
+			updatePlayers();
+		} catch(err) {
+			updatePlayersOnError(err);
+		}
+	});
 	socket.on('resetGame', function () {
 		try {
 			currentGame = new Game();

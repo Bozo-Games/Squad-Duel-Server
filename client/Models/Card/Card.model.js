@@ -87,6 +87,8 @@ class Card extends Sprite {
 			this._lockedInTouchEnded();
 		} else if(this.shouldDrawDuel){
 			this._selectAttackTouchEnded();
+		} else  if(this.shouldDrawResults) {
+			this._resultsTouchEnded();
 		}
 	}
 	get shouldDrawHand() {
@@ -161,13 +163,25 @@ class Card extends Sprite {
 		this.floatingText = this.floatingText.concat(armorLoss);
 	}
 	//---------------------------------------------------------------------------------------------------- Results Stats
+	_resultsTouchEnded() {
+		pushMouse();
+		let didTap = collidePointRect(
+			mouseX,mouseY,
+			this._duelAttack1Bounds.x,this._duelAttack1Bounds.y+20,this._duelAttack1Bounds.w,this._duelAttack1Bounds.h);
+		if(didTap) {
+			network.acceptResults();
+			popMouse();
+			return true;
+		}
+		popMouse();
+	}
 	_resultsDraw() {
 		let statXoff = this._duelRect.w*1.1;
 		push();
 		if(currentGame.isOppCard(this.id)) {
 			translate(this._duelRect.w,0);
 			scale(-1,1);
-			statXoff = -statXoff;
+			statXoff = -statXoff*0.8;
 		}
 		if(this.currentState === 'dead') {
 			image(icons.card[this.name].dead,
@@ -189,6 +203,17 @@ class Card extends Sprite {
 		translate(textWidth(" -> "),0);
 		this._duelStatsBoxDraw(this);
 		pop();
+		if(currentGame.isPlayerCard(this.id)) {
+			let bounds = this._duelAttack1Bounds;
+			bounds.y += 20;
+			fill(colors.card.selected.lockIn);
+			rect(bounds.x,bounds.y,bounds.w,bounds.h,4);
+			textAlign(CENTER,CENTER);
+			fill(colors.card.text)
+			textSize(bounds.h*0.8);
+			text("Next Duel",
+				bounds.x,bounds.y,bounds.w,bounds.h);
+		}
 	}
 	//----------------------------------------------------------------------------------------------------- dueling Draw
 	_duelingDraw() {

@@ -93,6 +93,18 @@ animations.duel = {
 		}
 		return undefined;
 	},
+	"attackFinished->waitingForCards": function (duel,callBack) {
+		return animations.duel["displayResults->waitingForCards"](duel,callBack);
+	},
+	"displayResults->waitingForCards": function (duel,callBack) {
+		duel.playerCard = undefined;
+		duel.oppCard = undefined;
+		duel.playerAttack = undefined;
+		duel.oppAttack = undefined;
+		savePlayerCardStartJSON = undefined;
+		saveOppCardStartJSON = undefined;
+		return undefined;
+	},
 	"attackFinished->newAttack": function (duel,callBack) {
 		if(currentGame.iAmPrimaryPlayer) {
 			network.processDuel();
@@ -119,34 +131,28 @@ animations.duel = {
 			xOff = -1*xOff;
 
 		}
-		console.log(duel.attacker +' will run to '+xOff+', '+yOff);
 		attackingCard.loop = 'run';
 		attackingCard.floatingText = attackingCard.floatingText.concat(attackerText);
 		attackingCard.activeAnimations = attackingCard.activeAnimations.concat(
 			new TranslationAnimation(0,0,xOff,yOff,1000,function (card) {
-				console.log('inital run domne');
 				card.loop = 'attack';
 				defendingCard.loop = 'block';
 				card.activeAnimations = card.activeAnimations.concat(
 					new TranslationAnimation(xOff,yOff,xOff,yOff,2000,function (card) {
-						console.log('attack hole done');
 						card.loop = 'run';
 						defendingCard.loop = 'idle';
 						card.activeAnimations = card.activeAnimations.concat(
 							new TranslationAnimation(0,0,defaults.card.selected.size.width(),0,200,function (card) {}),
 							new TranslationAnimation(xOff,yOff,xOff,yOff,200,function (card) {}),
 							new ScaleAnimation(1,1,-1,1,200,function (card) {
-								console.log('turn done');
 								card.activeAnimations = card.activeAnimations.concat(
 									new TranslationAnimation(defaults.card.selected.size.width(),0,defaults.card.selected.size.width(),0,2000,function (card) {}),
 									new ScaleAnimation(-1,1,-1,1,2000,function (card) {}),
 									new TranslationAnimation(-xOff,yOff,0,0,2000,function (card) {
-										console.log('run back done');
 										card.loop = 'idle';
 										card.activeAnimations = card.activeAnimations.concat(
 											new TranslationAnimation(defaults.card.selected.size.width(),0,0,0,200,function (card) {}),
 											new ScaleAnimation(-1,1,1,1,200,function (card) {
-												console.log('turn again done');
 												if(currentGame.iAmPrimaryPlayer) {
 													network.processDuel();
 												}

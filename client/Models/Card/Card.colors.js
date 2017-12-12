@@ -9,5 +9,5 @@ colors.card = {
 	selected: {
 		lockIn:'#bbaa33',
 		lockedIn:'#008833',
-	}
+	},
 }
