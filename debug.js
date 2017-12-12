@@ -5,9 +5,7 @@ const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
-var logger = fs.createWriteStream('log.js', {
-	flags: 'a' // 'a' means appending (old data will be preserved)
-});
+/*
 let options = [];
 for(let i = 0; i < 61; i++) {
 	options.push(i);
@@ -30,9 +28,13 @@ for(let ti = 0; ti < titleNames.length; ti++) {
 				if ( err ) logger.write('ERROR: ' + err);
 			});
 	}
-}
+}*/
 
-/*
+
+var logger = fs.createWriteStream('log.js', {
+	flags: 'a' // 'a' means appending (old data will be preserved)
+});
+
 let loops = [
 	{name:'idle'  ,count:16},
 	{name:'walk'  ,count:16},
@@ -77,6 +79,6 @@ for(let ti = 0; ti < titleNames.length; ti++) {
 		options.splice(i,1);
 	}
 }
-*/
 logger.end();
+
 console.log('done');
