@@ -86,5 +86,81 @@ animations.duel = {
 			text3
 		); //add 3 to duel floating text
 		return new Animation(3000,function (duel) {});
+	},
+	"ready->newAttack": function (duel,callBack) {
+		if(currentGame.iAmPrimaryPlayer) {
+			network.processDuel();
+		}
+		return undefined;
+	},
+	"attackFinished->newAttack": function (duel,callBack) {
+		if(currentGame.iAmPrimaryPlayer) {
+			network.processDuel();
+		}
+		return undefined;
+	},
+	"newAttack->attackFinished": function (duel,callBack) {
+		let attackerText = new FloatingText({
+			color:'#000000',
+			text:'!',
+			offset:{x:0,y:0},
+			halfLife:1500,
+			size: 30
+		});
+		let attackingCard = duel[duel.attacker+'Card'];
+		let defendingCard = duel[duel.defender+'Card'];
+
+		let xOff = defaults.card.selected.size.width();
+		let yOff = height/5;
+		if(duel.attacker === 'player') {
+			yOff = -1*yOff;
+			xOff = 1*xOff;
+		} else {
+			xOff = -1*xOff;
+
+		}
+		console.log(duel.attacker +' will run to '+xOff+', '+yOff);
+		attackingCard.loop = 'run';
+		attackingCard.floatingText = attackingCard.floatingText.concat(attackerText);
+		attackingCard.activeAnimations = attackingCard.activeAnimations.concat(
+			new TranslationAnimation(0,0,xOff,yOff,1000,function (card) {
+				console.log('inital run domne');
+				card.loop = 'attack';
+				defendingCard.loop = 'block';
+				card.activeAnimations = card.activeAnimations.concat(
+					new TranslationAnimation(xOff,yOff,xOff,yOff,2000,function (card) {
+						console.log('attack hole done');
+						card.loop = 'run';
+						defendingCard.loop = 'idle';
+						card.activeAnimations = card.activeAnimations.concat(
+							new TranslationAnimation(0,0,defaults.card.selected.size.width(),0,200,function (card) {}),
+							new TranslationAnimation(xOff,yOff,xOff,yOff,200,function (card) {}),
+							new ScaleAnimation(1,1,-1,1,200,function (card) {
+								console.log('turn done');
+								card.activeAnimations = card.activeAnimations.concat(
+									new TranslationAnimation(defaults.card.selected.size.width(),0,defaults.card.selected.size.width(),0,2000,function (card) {}),
+									new ScaleAnimation(-1,1,-1,1,2000,function (card) {}),
+									new TranslationAnimation(-xOff,yOff,0,0,2000,function (card) {
+										console.log('run back done');
+										card.loop = 'idle';
+										card.activeAnimations = card.activeAnimations.concat(
+											new TranslationAnimation(defaults.card.selected.size.width(),0,0,0,200,function (card) {}),
+											new ScaleAnimation(-1,1,1,1,200,function (card) {
+												console.log('turn again done');
+												if(currentGame.iAmPrimaryPlayer) {
+													network.processDuel();
+												}
+												callBack(duel);
+											})
+										);
+									})
+								)
+							})
+						);
+					})
+				)
+			})
+		);
+		return new Animation(1500,function (duel) {});
 	}
 };

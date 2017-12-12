@@ -28,10 +28,10 @@ class Attack {
 			tint(colors.attack.icon);
 			ellipseMode(CORNER);
 			ellipse(
-				bounds.x+bounds.h*0.05,
-				bounds.y+bounds.h*0.05,
-				bounds.h*0.9,
-				bounds.h*0.9);
+				bounds.x+bounds.h*0.1,
+				bounds.y+bounds.h*0.1,
+				bounds.h*0.8,
+				bounds.h*0.8);
 			image(icons.attack[this.category],
 				bounds.x + bounds.h*0.15,
 				bounds.y + bounds.h*0.15,

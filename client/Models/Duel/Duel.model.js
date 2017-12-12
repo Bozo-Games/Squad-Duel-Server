@@ -8,6 +8,9 @@ class Duel extends Sprite{
 		this.loadJSON(json);
 	}
 	loadJSON(json){
+		console.log('duel loading ' + this.currentState +' vs '+json.currentState);
+		this.attacker = json.attacker === currentGame.playerLetter ?'player': 'opp' ;
+		this.defender = json.defender === currentGame.playerLetter ? 'player':'opp';
 		if(this.currentState !== json.currentState) {
 			let animation;
 			if(animations.duel[`${this.currentState}->${json.currentState}`] !== undefined) {
@@ -109,15 +112,13 @@ class Duel extends Sprite{
 			this.playerCard.draw();
 			pop();
 		}
-		if(this.oppCard !== undefined) {
-			if(this.oppCard.currentState === 'lockedIn' && currentGame.currentState === 'attackSelectStage' ) {
-				push();
-				translate(
-					defaults.duel.oppCard.offset.x(),
-					defaults.duel.oppCard.offset.y());
-				this.oppCard.draw();
-				pop();
-			}
+		if(this.shouldDrawOpp) {
+			push();
+			translate(
+				defaults.duel.oppCard.offset.x(),
+				defaults.duel.oppCard.offset.y());
+			this.oppCard.draw();
+			pop();
 		}
 		super.drawFloatingText();
 		pop();
@@ -130,8 +131,8 @@ class Duel extends Sprite{
 	}
 	get shouldDrawOpp() {
 		if(this.oppCard !== undefined) {
-			if(this.oppCard.currentState === 'lockedIn' && currentGame.currentState === 'attackSelectStage' ) {
-				return true;
+			if(this.oppCard.currentState === 'lockedIn') {
+				return currentGame.currentState === 'attackSelectStage' || currentGame.currentState === 'readyToDuel';
 			} else if(this.oppCard.currentState === 'dueling') {
 				return true;
 			}

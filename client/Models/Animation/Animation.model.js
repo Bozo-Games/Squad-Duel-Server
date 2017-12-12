@@ -20,6 +20,6 @@ class Animation {
 		return (new Date()).getTime() > this.endEpoch;
 	}
 	applyEffect(){
-		console.log('Warning '+this.constructor.name+' has no applyEffect Method');
+		//console.log('Warning '+this.constructor.name+' has no applyEffect Method');
 	}
 }

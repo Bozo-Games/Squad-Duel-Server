@@ -304,24 +304,25 @@ class Game {
 	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
-    	logs.log(E.logs.game,'~~~~~~~~~~~~~~~~ NEW GAME STATE CHANGE ~~~~~~~~~~~~~~~~ ');
-		logs.log(E.logs.game, "On BEFORE transition - " + lifecycle.transition.substring(0, 10) +"\t | " + lifecycle.from.substring(0, 10) + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+    	logs.log(E.logs.game,`~~~~~~~~~~~~~~~~ NEW GAME STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		//logs.log(E.logs.game, "On BEFORE transition - " + lifecycle.transition.substring(0, 10) +"\t | " + lifecycle.from.substring(0, 10) + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onAfterTransition(lifecycle) {
-		logs.log(E.logs.game, "On AFTER transition  - " + lifecycle.transition.substring(0, 10) +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.game, "On AFTER transition  - " + lifecycle.transition.substring(0, 10) +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onEnterState(lifecycle) {
-		logs.log(E.logs.game, "On ENTER state       - " + lifecycle.to.substring(0, 10) +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.game, "On ENTER state       - " + lifecycle.to.substring(0, 10) +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onLeaveState(lifecycle) {
-		logs.log(E.logs.game, "On LEAVE state       - " + lifecycle.from.substring(0, 10)+"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.game,`~~~~~~~~~~~~~~~~ END GAME STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		//logs.log(E.logs.game, "On LEAVE state       - " + lifecycle.from.substring(0, 10)+"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onInvalidTransition(transition,from,to){
-		logs.log(E.logs.duel, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
+		logs.log(E.logs.game, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
 		throw new Exception('transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
 	}
 }

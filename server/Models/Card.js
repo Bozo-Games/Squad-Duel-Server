@@ -36,7 +36,8 @@ class Card {
 			    onBeforeTransition: this._onBeforeTransition,
 			    onAfterTransition: this._onAfterTransition,
 			    onEnterState: this._onEnterState,
-			    onLeaveState: this._onLeaveState
+			    onLeaveState: this._onLeaveState,
+		        onInvalidTransition:this._onInvalidTransition
 		    }
 	    });
 	    json.attacks = json.attacks === undefined ?  [] : json.attacks;
@@ -132,21 +133,26 @@ class Card {
 	//------------------------------------------------- -------------------------------------------------- state machine
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
-		logs.log(E.logs.card,'~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ~~~~~~~~~~~~~~~~ ');
-		logs.log(E.logs.card, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.card,`~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		//logs.log(E.logs.card, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onAfterTransition(lifecycle) {
-		logs.log(E.logs.card, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.card, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onEnterState(lifecycle) {
-		logs.log(E.logs.card, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.card, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onLeaveState(lifecycle) {
-		logs.log(E.logs.card, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.card,`~~~~~~~~~~~~~~~~ END CARD STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		//logs.log(E.logs.card, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
+	}
+	_onInvalidTransition(transition,from,to){
+		logs.log(E.logs.duel, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
+		throw new Exception('transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
 	}
 }
 module.exports = Card;

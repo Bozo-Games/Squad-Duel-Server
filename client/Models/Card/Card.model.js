@@ -2,6 +2,8 @@ class Card extends Sprite {
 	constructor(json) {
 		super();
 		json = json === undefined ? {} : json;
+		this.health = 0;
+		this.armor = 0;
 		this.forceDrawCancel = false;
 		this.currentState = json.currentState;
 		this.id = json.id;
@@ -27,8 +29,16 @@ class Card extends Sprite {
 			}
 		} else {
 			this.name = json.name;
-			this.health = json.health;
-			this.armor = json.armor;
+			if(this.health !== json.health && (this.currentState === 'dueling' || this.currentState === 'lockedIn')) {
+				this.addFloatingHealth(this.health,json.health);
+			} else  {
+				this.health = json.health;
+			}
+			if(this.armor !== json.armor && (this.currentState === 'dueling' || this.currentState === 'lockedIn')) {
+				this.addFloatingArmor(this.armor,json.armor);
+			} else {
+				this.armor = json.armor;
+			}
 			this.speed = json.speed;
 			if(this.attacks.length !== json.attacks.length) {
 				let attacks = [];
@@ -61,7 +71,9 @@ class Card extends Sprite {
 		} else if(this.shouldDrawOpp) {
 			this._oppDraw();
 		} else if(this.shouldDrawDueling) {
-			this._duelDraw();
+			this._duelingDraw();
+		} else if(this.shouldDrawResults) {
+			this._resultsDraw();
 		}
 		super.drawFloatingText();
 		pop();
@@ -75,8 +87,6 @@ class Card extends Sprite {
 			this._lockedInTouchEnded();
 		} else if(this.shouldDrawDuel){
 			this._selectAttackTouchEnded();
-		} else if(this.shouldDrawOpp) {
-
 		}
 	}
 	get shouldDrawHand() {
@@ -104,11 +114,96 @@ class Card extends Sprite {
 		return this.currentState === 'lockedIn' && currentGame.currentState === 'attackSelectStage' && currentGame.isOppCard(this.id);
 	}
 	get shouldDrawDueling() {
-		return this.currentState === 'dueling';
+		return (this.currentState === 'dueling' || this.currentState === 'lockedIn') && currentGame.currentState !== 'showingDuelResults';
+	}
+	get shouldDrawResults() {
+		return (this.currentState === 'dueling' || this.currentState === 'lockedIn') && currentGame.currentState === 'showingDuelResults';
+	}
+	//------------------------------------------------------------------------------------------------add floating heath
+	addFloatingHealth(oldHealthVale,newHealthValue) {
+		let heathLoss = new FloatingText({
+			text: `${newHealthValue - oldHealthVale}`,
+			color:colors.card.health,
+			size:20,
+			halfLife: 1200
+		});
+		let card = this;
+		heathLoss.activeAnimations = heathLoss.activeAnimations.concat(
+			new TranslationAnimation(
+				this._duelRect.w/2,
+				0,
+				this._duelRect.w/2+(Math.random()-Math.random())*this._duelRect.w/2,
+				-this._duelRect.h/2,
+				1000,function (text) {
+				card.health = newHealthValue;
+			})
+		);
+		this.floatingText = this.floatingText.concat(heathLoss);
+	}
+	addFloatingArmor(oldArmorVale,newArmorValue) {
+		let armorLoss = new FloatingText({
+			text: `${newArmorValue - oldArmorVale}`,
+			color:colors.card.armor,
+			size:20,
+			halfLife: 1200
+		});
+		let card = this;
+		armorLoss.activeAnimations = armorLoss.activeAnimations.concat(
+			new TranslationAnimation(
+				this._duelRect.w,
+				this._duelRect.h/2,
+				this._duelRect.w/2+(Math.random()-Math.random())*this._duelRect.w/2,
+				-this._duelRect.h/2,
+				1000,function (text) {
+					card.armor = newArmorValue;
+				})
+		);
+		this.floatingText = this.floatingText.concat(armorLoss);
+	}
+	//---------------------------------------------------------------------------------------------------- Results Stats
+	_resultsDraw() {
+		let statXoff = this._duelRect.w*1.1;
+		push();
+		if(currentGame.isOppCard(this.id)) {
+			translate(this._duelRect.w,0);
+			scale(-1,1);
+			statXoff = -statXoff;
+		}
+		if(this.currentState === 'dead') {
+			image(icons.card[this.name].dead,
+				0,
+				0,
+				this._duelRect.w,
+				this._duelRect.h);
+		} else {
+			this._dudeDraw();
+		}
+		pop();
+		//current State
+		push();
+		translate(statXoff,(this._duelRect.h-defaults.card.selected.icon.size.height()*3.6) /2);
+		this._duelStatsBoxDraw(savePlayerCardStartJSON);
+		translate(defaults.card.selected.icon.size.width()*2.7,0);
+		fill(colors.card.text);
+		text("->",0,defaults.card.selected.icon.size.height()*3.6/2);
+		translate(textWidth(" -> "),0);
+		this._duelStatsBoxDraw(this);
+		pop();
+	}
+	//----------------------------------------------------------------------------------------------------- dueling Draw
+	_duelingDraw() {
+		if(currentGame.isPlayerCard(this.id)) {
+			this._dudeDraw();
+		} else  {
+			push();
+				translate(this._duelRect.w,0);
+				scale(-1,1);
+				this._dudeDraw();
+			pop();
+		}
 	}
 	//---------------------------------------------------------------------------------------------------- select attack
 	_selectAttackTouchEnded() {
-		console.log('here');
 		pushMouse();
 		if(this.attacks.length > 0) {
 			let didTap = collidePointRect(
@@ -116,6 +211,8 @@ class Card extends Sprite {
 				this._duelAttack0Bounds.x,this._duelAttack0Bounds.y,this._duelAttack0Bounds.w,this._duelAttack0Bounds.h);
 			if(didTap) {
 				network.selectAttack(this.attacks[0].id);
+				popMouse();
+				return true;
 			}
 		}
 		if(this.attacks.length > 1) {
@@ -124,6 +221,8 @@ class Card extends Sprite {
 				this._duelAttack1Bounds.x,this._duelAttack1Bounds.y,this._duelAttack1Bounds.w,this._duelAttack1Bounds.h);
 			if(didTap) {
 				network.selectAttack(this.attacks[1].id);
+				popMouse();
+				return true;
 			}
 		}
 
@@ -158,7 +257,7 @@ class Card extends Sprite {
 		pop();
 		push();
 			translate(this._duelRect.w*0.75,0);
-			this._duelStatsBoxDraw();
+			this._duelStatsBoxDraw(this);
 		pop();
 		//Attacks
 		if(this.attacks.length > 0) {
@@ -202,7 +301,7 @@ class Card extends Sprite {
 			this._duelRect.h);
 		pop();
 	}
-	_duelStatsBoxDraw() {
+	_duelStatsBoxDraw(data) {
 		let iconRect = {
 			w: defaults.card.selected.icon.size.width(),
 			h: defaults.card.selected.icon.size.width(),
@@ -223,7 +322,7 @@ class Card extends Sprite {
 			0,0,
 			iconRect.w,
 			iconRect.h);
-		text(this.health,
+		text(data.health,
 			iconRect.w*1.1,
 			0,
 			iconRect.w,
@@ -236,7 +335,7 @@ class Card extends Sprite {
 			iconRect.h*1.1,
 			iconRect.w,
 			iconRect.h);
-		text(this.armor,
+		text(data.armor,
 			iconRect.w*1.1,
 			iconRect.h*1.1,
 			iconRect.w,
@@ -249,7 +348,7 @@ class Card extends Sprite {
 			iconRect.h*2.2,
 			iconRect.w,
 			iconRect.h);
-		text(this.speed,
+		text(data.speed,
 			iconRect.w*1.1,
 			iconRect.h*2.2,
 			iconRect.w,
@@ -258,7 +357,7 @@ class Card extends Sprite {
 	_duelDraw() {
 		push();
 		this._dudeDraw();
-		this._duelStatsBoxDraw()
+		this._duelStatsBoxDraw(this);
 		//Attacks
 		if(this.attacks.length > 0) {
 			this.attacks[0].duelDraw(this._duelAttack0Bounds);

@@ -39,9 +39,4 @@ class Sprite {
 		}
 		pop();
 	}
-	draw() {
-		push();
-
-		pop();
-	}
 }

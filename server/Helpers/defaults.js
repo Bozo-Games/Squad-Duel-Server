@@ -6,7 +6,7 @@ const defaults = {
 		numberOfCards: 3
 	},
 	deck: {
-		numberOfCards: 50
+		numberOfCards: 10
 	}
 };
 module.exports = defaults;

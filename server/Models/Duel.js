@@ -16,7 +16,7 @@ class Duel {
 			    turns: [],
 			    attacker: undefined,
 			    defender: undefined,
-			    attackPoerMultiplier: undefined,
+			    attackPowerMultiplier: undefined,
 		    },
 		    init:'waitingForCards',
 		    transitions: [                                                                    // For drawing  State machine
@@ -92,21 +92,52 @@ class Duel {
 	}
 	processDuel() {
     	if(this.attackA !== undefined && this.attackB !== undefined) {
-    		if(this._stateMachine.handleInitiative()) {
-    			if(this._stateMachine.nextAttack()) {
-				    while(this._stateMachine.turns.length > 0) {
-					    if(this._stateMachine.handleCrushing()){
-					    	if(this._stateMachine.handlePiercing()) {
-					    		if(this._stateMachine.handleFlat()) {
-					    			if(this._stateMachine.finishAttack()) {
-					    				if(!this._stateMachine.nextAttack()) {
-					    					return this._stateMachine.finishDuel();
-									    }
-								    }
-							    }
-						    }
+		    if(this._stateMachine.can('nextAttack'))  {
+			    if(this._stateMachine.nextAttack()) {
+				    return false;
+			    } else {
+				    if(this._stateMachine.can('finishDuel')) {
+					    if (this._stateMachine.finishDuel()) {
+						    logs.log(E.logs.duel, 'Duel Finished');
+						    return true; //move on to display results
+						    //this.processDuel(); //auto step to finished attack
 					    }
 				    }
+				    return false;
+			    }
+		    } else {
+			    if(this._stateMachine.can('handleInitiative')) {
+				    if(this._stateMachine.handleInitiative()) {
+				    	this.processDuel(); //auto step to next attack
+				    } else {return false;}
+			    } else if(this._stateMachine.can('handleCrushing')) {
+				    if(this._stateMachine.handleCrushing()) {
+					    this.processDuel(); //auto step to next stage of duel
+				    } else {return false;}
+			    } else if(this._stateMachine.can('handlePiercing')) {
+				    if(this._stateMachine.handlePiercing()) {
+					    this.processDuel(); //auto step to next stage of duel
+				    } else {return false;}
+			    } else if(this._stateMachine.can('handleFlat')) {
+				    if(this._stateMachine.handleFlat()) {
+					    this.processDuel(); //auto step to next stage of duel
+				    } else {return false;}
+			    } else if(this._stateMachine.can('finishAttack')) {
+				    if(this._stateMachine.finishAttack()) {
+					    logs.log(E.logs.duel,'Attack Finished @'+this.currentState);
+					    return false;
+					    //this.processDuel(); //auto step to finished attack
+				    } else {return false;}
+			    }  else if(this._stateMachine.can('finishDuel')) {
+				    if(this._stateMachine.finishDuel()) {
+				    	logs.log(E.logs.duel,'Duel Finished');
+					    return true; //move on to display results
+					    //this.processDuel(); //auto step to finished attack
+				    } else {
+				    	this.processDuel();
+				    }
+			    } else {
+			    	logs.log(E.logs.duel,'Error processing duel @' + this.currentState);
 			    }
 		    }
 	    }
@@ -122,7 +153,9 @@ class Duel {
             cardB:this._stateMachine.cardB === undefined ? undefined : this._stateMachine.cardB.toJSON(),
 			currentState:this._stateMachine.state,
             attackA:this._stateMachine.attackA === undefined ? undefined : this._stateMachine.attackA.toJSON(),
-            attackB:this._stateMachine.attackB === undefined ? undefined : this._stateMachine.attackB.toJSON()
+            attackB:this._stateMachine.attackB === undefined ? undefined : this._stateMachine.attackB.toJSON(),
+	        attacker: this._stateMachine.attacker,
+	        defender: this._stateMachine.defender,
         };
     }
 	//------------------------------------------------- -------------------------------------------------- state machine
@@ -183,7 +216,7 @@ class Duel {
 	    }
 	    if(this.turns.length > 0) {
 		    let turn = this.turns[0];
-		    this.attackPoerMultiplier = turn.powerMultiplier;
+		    this.attackPowerMultiplier = turn.powerMultiplier;
 		    this.attacker = turn.letter;
 		    if (this.attacker === 'A') {
 			    this.defender = 'B';
@@ -198,7 +231,7 @@ class Duel {
 	}
 	_onEnterCrushingDone(lifecycle) {
     	if(this['attack'+this.attacker].category === 'crush') {
-    		let dmg = this['attack'+this.attacker].power*this.attackPoerMultiplier;
+    		let dmg = this['attack'+this.attacker].power*this.attackPowerMultiplier;
 		    let armorLeft = this['card'+this.defender].armor - dmg;
 		    this['card'+this.defender].armor = Math.max(0,armorLeft);
 		    logs.log(E.logs.duel,this.attacker + ' crushes '+this.defender+'\'s armor reducing it t '+this['card'+this.defender].armor );
@@ -213,7 +246,7 @@ class Duel {
 	}
 	_onEnterPiercingDone(lifecycle) {
 		if(this['attack'+this.attacker].category === 'pierce') {
-			let dmg = this['attack'+this.attacker].power*this.attackPoerMultiplier;
+			let dmg = this['attack'+this.attacker].power*this.attackPowerMultiplier;
 			this['card'+this.defender].health = Math.max(0,this['card'+this.defender].health  - dmg);
 			logs.log(E.logs.duel,this.attacker + ' pierces '+this.defender+' for '+(dmg)+' reducing card '+this.defender+'\'s health to '+this['card'+this.defender].health);
 			return true;
@@ -223,7 +256,7 @@ class Duel {
 	}
 	_onEnterFlatDone(lifecycle) {
     	if(this['attack'+this.attacker].category === 'flat') {
-    		let dmg = this['card'+this.defender].armor - this['attack'+this.attacker].power*this.attackPoerMultiplier;
+    		let dmg = this['card'+this.defender].armor - this['attack'+this.attacker].power*this.attackPowerMultiplier;
 			if(dmg < 0) {
 				dmg = -1*dmg;
 				this['card'+this.defender].health = Math.max(0,this['card'+this.defender].health  - dmg);
@@ -260,20 +293,21 @@ class Duel {
 	}
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
-		logs.log(E.logs.duel,'~~~~~~~~~~~~~~~~ NEW DUEL STATE CHANGE ~~~~~~~~~~~~~~~~ ');
-		logs.log(E.logs.duel, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.duel,`~~~~~~~~~~~~~~~~ NEW DUEL STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		//logs.log(E.logs.duel, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onAfterTransition(lifecycle) {
-		logs.log(E.logs.duel, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.duel, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onEnterState(lifecycle) {
-		logs.log(E.logs.duel, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.duel, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onLeaveState(lifecycle) {
-		logs.log(E.logs.duel, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		logs.log(E.logs.duel,`~~~~~~~~~~~~~~~~ END DUEL STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		//logs.log(E.logs.duel, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onInvalidTransition(transition,from,to){
