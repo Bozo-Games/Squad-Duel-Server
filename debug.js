@@ -9,18 +9,20 @@ var logger = fs.createWriteStream('log.js', {
 	flags: 'a' // 'a' means appending (old data will be preserved)
 });
 let options = [];
-for(let i = 0; i < 54; i++) {
+for(let i = 0; i < 61; i++) {
 	options.push(i);
 }
 let classNames = Object.keys(cardDB.characterClasses);
 let titleNames = Object.keys(cardDB.characterTitles);
+
+console.log(options.length +' > '+(titleNames.length*classNames.length));
 
 for(let ti = 0; ti < titleNames.length; ti++) {
 	for (let ci = 0; ci < classNames.length; ci++) {
 		let i = Math.floor(Math.random()*options.length);
 		let option = options[i];
 		options.splice(i,1);
-		console.log(options.length / 54);
+		console.log(options.length +' / '+54);
 		fs.rename(
 			`./temp/${option}_character.svg`,
 			`./client/Assets/icons/card/character/${titleNames[ti]}_${classNames[ci]}.svg`,
