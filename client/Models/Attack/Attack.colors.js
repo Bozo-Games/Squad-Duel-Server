@@ -4,5 +4,6 @@ colors.attack = {
 	pierce: '#2297ab',
 	icon:'#ffffff',
 	background:'#aaabc2',
-	selected:'#c2fb72'
+	selected:'#c2fb72',
+	text:'#000000'
 };

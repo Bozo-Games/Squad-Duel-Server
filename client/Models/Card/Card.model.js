@@ -29,8 +29,23 @@ class Card extends Sprite {
 				this.name = json.name === undefined ? 'Adventuring_Barbarian' : json.name;
 				this.armor = json.armor === undefined ? 1 : json.armor;
 				this.health = json.health === undefined ? 1 : json.health;
+				for(let i = 0; i < json.attacks.length; i++) {
+					if(this.attacks[i] === undefined) {
+						this.attacks[i] = new Attack(json.attacks[i]);
+					} else {
+						this.attacks[i].loadJSON(json.attacks[i]);
+					}
+				}
 			}
 		}
+	}
+	hasAttack(attackID) {
+		for(let i =0; i < this.attacks.length; i++) {
+			if(this.attacks[i].id === attackID) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

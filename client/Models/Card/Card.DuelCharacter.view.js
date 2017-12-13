@@ -12,7 +12,7 @@ class CardDuelCharacter extends Card {
 				translate(this.bounds.w / 2, 0);
 				scale(-1, 1);
 			}
-			rect(this.bounds.x, this.bounds.y, this.bounds.h, this.bounds.h);
+			//rect(this.bounds.x, this.bounds.y, this.bounds.h, this.bounds.h);
 			let img = icons.getCharacter(this.name, this.loop);
 			image(img, this.bounds.x, this.bounds.y, this.bounds.h, this.bounds.h);
 			this.drawSubViews();

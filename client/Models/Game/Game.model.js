@@ -39,7 +39,6 @@ class Game extends Sprite {
 				h:this.bounds.h * defaults.duel.scale.h,
 			}
 		});
-		console.log(this.duel.bounds.h);
 		this.addSubSprite(this.playerHand);
 		this.addSubSprite(this.oppHand);
 		this.addSubSprite(this.duel);

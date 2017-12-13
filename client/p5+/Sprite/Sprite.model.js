@@ -92,4 +92,12 @@ class Sprite {
 		}
 		return didTap;
 	}
+
+	get activeAnimationCount() {
+		let aa = this.translationAnimation._keyValues.length + this.scaleAnimation._keyValues.length;
+		for (let i = 0; i < this.subSprites.length; i++) {
+			aa += this.subSprites[i].activeAnimationCount;
+		}
+		return aa;
+	}
 }

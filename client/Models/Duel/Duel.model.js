@@ -41,7 +41,9 @@ class Duel extends Sprite {
 		}
 	}
 	touchEnded() {
-
+		pushMouse();
+		let didTap = super.touchEnded();
+		popMouse();
 	}
 	draw() {
 		push();

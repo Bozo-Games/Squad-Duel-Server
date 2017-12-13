@@ -15,7 +15,6 @@ animations.card = {
 				let returnLoc = {
 					x:card.parentSprite.bounds.w*defaults.card.duel.player.characterScale.x,
 					y:card.parentSprite.bounds.h*defaults.card.duel.player.characterScale.y};
-				console.log(JSON.stringify(returnLoc));
 				card.scaleAnimation.forceUpdate({width:1,height:1});
 				card.translationAnimation.forceUpdate({x:-card.bounds.w,y:card.bounds.h*2});
 				card.translationAnimation.appendKeyValue(new KeyValue({
@@ -53,6 +52,75 @@ animations.card = {
 			}
 		} else {
 			card.currentState = 'inHand';
+			card.loadJSON(json);
+		}
+	},
+	"selected->lockedIn": function (card, json) {
+		if(currentGame.isPlayerCard(card.id)) {
+			if (card.constructor.name === 'CardDuelCharacter') {
+				card.loop = 'attack';
+				card.scaleAnimation.appendKeyValue(new KeyValue({
+					val:{width:1,height:0.8},
+					endEpoch: frameTime+200,
+					callBack: function (card) {
+						card.scaleAnimation.appendKeyValue(new KeyValue({
+							val:{width:1,height:1.1},
+							endEpoch: frameTime+300,
+							callBack: function (card) {
+								card.scaleAnimation.appendKeyValue(new KeyValue({
+									val:{width:1,height:1.1},
+									endEpoch: frameTime+100,
+									callBack: function (card) {
+										card.scaleAnimation.appendKeyValue(new KeyValue({
+											val:{width:1,height:1},
+											endEpoch: frameTime+300,
+											callBack: function (card) {
+												card.loop = 'idle';
+												card.currentState = 'lockedIn';
+												card.loadJSON(json);
+											}
+										}));
+									}
+								}));
+							}
+						}));
+					}
+				}));
+				//translations
+				let orign = {x: card.translationAnimation.x,y:card.translationAnimation.y};
+				card.translationAnimation.appendKeyValue(new KeyValue({
+					val: {x: card.translationAnimation.x, y: card.bounds.h*0.2},
+					endEpoch: frameTime + 200,
+					callBack: function (card) {
+						card.translationAnimation.appendKeyValue(new KeyValue({
+							val: {x:  card.translationAnimation.x, y: -card.bounds.h*0.5},
+							endEpoch: frameTime + 300,
+							callBack: function (card) {
+								card.translationAnimation.appendKeyValue(new KeyValue({
+									val: {x:  card.translationAnimation.x, y: -card.bounds.h*0.5},
+									endEpoch: frameTime + 50,
+									callBack: function (card) {
+										card.translationAnimation.appendKeyValue(new KeyValue({
+											val: orign,
+											endEpoch: frameTime + 300,
+											callBack: function (card) {
+												//do nothing scale is doing stuff
+											}
+										}));
+									}
+								}));
+							}
+						}));
+					}
+				}));
+			} else if(card.constructor.name === 'CardDuelCharacter') {
+
+			} else {
+				card.currentState = 'lockedIn';
+				card.loadJSON(json);
+			}
+		} else {
+			card.currentState = 'lockedIn';
 			card.loadJSON(json);
 		}
 	},
