@@ -1,5 +1,6 @@
 class Game extends Sprite {
 	constructor(json) {
+		json = json === undefined ? {} : json;
 		super({
 			bounds:{
 				x:0,
@@ -16,9 +17,9 @@ class Game extends Sprite {
 		this.playerHand = new Hand({
 			bounds:{
 				x:0,
-				y:this._bounds.h * 0.8,
+				y:this._bounds.h * 0.7,
 				w:this._bounds.w,
-				h:this._bounds.h * 0.2
+				h:this._bounds.h * 0.3
 			}
 		});
 		this.oppHand = new Hand({

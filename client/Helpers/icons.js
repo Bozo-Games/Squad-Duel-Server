@@ -4,9 +4,7 @@ let icons = {
 	getCharacter: function (name,loop) {
 		let img = icons.card[name][loop][frameCount % icons.card[name][loop].length];
 		if (img.name !== 'p5.Image') {
-			console.log('loading ' + name)
 			loadCharacterAssets(icons.card[name]);
-			console.log('setting img to ');
 			img = icons.loading;
 		}
 		return img;

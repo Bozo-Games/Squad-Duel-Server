@@ -4,7 +4,6 @@ animations.game = {
 			val: {width: 0.01, height: 0.01},
 			endEpoch: frameTime + 400,
 			callBack: function (game) {
-				console.log('small done');
 				game.scaleAnimation.appendKeyValue(new KeyValue({
 					val:{width:1,height:1},
 					endEpoch: frameTime + 400,

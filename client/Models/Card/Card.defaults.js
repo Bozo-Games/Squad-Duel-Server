@@ -8,7 +8,8 @@ defaults.card = {
 				return defaults.card.inHand.size.width();
 			}
 		},
-		iconScale:0.4
+		iconScale:0.4,
+		strokeWeight: 3,
 	},
 	selected: {
 		size: {

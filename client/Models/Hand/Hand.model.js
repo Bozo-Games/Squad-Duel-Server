@@ -11,7 +11,6 @@ class Hand extends Sprite{
 		}
 	}
 	loadJSON(json) {
-		console.log('loading new Hand')
 		json.cards = json.cards === undefined ? [] : json.cards;
 		for(let i = 0; i < json.cards.length;i++) {
 			if(this.cards[i] === undefined) {
@@ -32,18 +31,7 @@ class Hand extends Sprite{
 				w:w,
 				h:w
 			};
-			console.log('card bounds set to ' + JSON.stringify(this.cards[i].bounds));
 		}
-	}
-	touchEnded(){
-		pushMouse();
-		let didTap = super.touchEnded();
-		if(didTap) {
-			this.fillColor = '#00ff00';
-		} else {
-			this.fillColor = '#ff0000';
-		}
-		popMouse();
 	}
 	draw() {
 		push();

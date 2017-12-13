@@ -1,8 +1,27 @@
 animations.card = {
-	"inHand->selected": function (card,callBack) {
-		if(currentGame.isPlayerCard(card.id)) {
-			return [new TranslationAnimation(0, 0, 0, defaults.card.inHand.size.height() * 1.1, 400, callBack)];
+	"inHand->selected": function (card, json) {
+		if (card.constructor.name === 'CardInHand' && currentGame.isPlayerCard(card.id)) {
+			card.translationAnimation.appendKeyValue(new KeyValue({
+				val: {x: 0, y: card.bounds.h*2.2},
+				endEpoch: frameTime + 400,
+				callBack: function (card) {
+					card.currentState = 'selected';
+					card.loadJSON(json);
+				}
+			}));
 		}
-		return undefined;
+	},
+	"selected->inHand": function (card, json) {
+		if (card.constructor.name === 'CardInHand' && currentGame.isPlayerCard(card.id)) {
+			card.translationAnimation.appendKeyValue(new KeyValue({
+				val: {x: 0, y:0},
+				endEpoch: frameTime + 400,
+				callBack: function (card) {
+					card.currentState = 'inHand';
+					card.loadJSON(json);
+				}
+			}));
+		}
 	}
+
 };

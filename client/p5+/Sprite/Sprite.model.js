@@ -14,8 +14,8 @@ class Sprite {
 		this.subSprites = [];
 
 		this.parrentSprite = undefined;
-		this.fillColor = '#000000';
-		this.strokeWeight = 0;
+		this.fillColor = json.fillColor === undefined ? '#000000' : json.fillColor;
+		this.strokeWeight = json.strokeWeight === undefined ? 0 : json.strokeWeight;
 		this.touchEnabled = json.touchEnabled === undefined ? true : json.touchEnabled;
 
 		this.translationAnimation.forceUpdate({x:this.bounds.x,y:this.bounds.y});

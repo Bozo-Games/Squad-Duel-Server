@@ -1,6 +1,7 @@
-class Duel extends Sprite{
+class Duel extends Sprite {
 	constructor(json) {
-		super();
+		json = json === undefined ? {} : json;
+		super(json);
 		json = json === undefined ? {} : json;
 		this.forceDrawCancel = false;
 		this.currentState = json.currentState;
