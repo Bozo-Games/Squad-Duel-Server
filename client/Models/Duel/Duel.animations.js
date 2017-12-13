@@ -75,7 +75,7 @@ animations.duel = {
 						duel.floatingText = duel.floatingText.concat(
 							text1
 						); // add 1 floating text
-					}) //end of 1 scale Animation
+					}) //end of 1 scale p5+
 				); // end of 2 scale animation
 				duel.floatingText = duel.floatingText.concat(
 					text2

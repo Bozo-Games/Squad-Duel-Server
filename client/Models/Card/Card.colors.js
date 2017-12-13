@@ -10,4 +10,4 @@ colors.card = {
 		lockIn:'#bbaa33',
 		lockedIn:'#008833',
 	},
-}
+};
