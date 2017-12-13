@@ -16,23 +16,33 @@ class Game extends Sprite {
 		this.oppLetter = 'B';
 		this.playerHand = new Hand({
 			bounds:{
-				x:0,
-				y:this._bounds.h * 0.7,
-				w:this._bounds.w,
-				h:this._bounds.h * 0.3
+				x:this.bounds.x + defaults.hand.playerScale.x*this.bounds.w,
+				y:this.bounds.y + defaults.hand.playerScale.y*this.bounds.h,
+				w:this.bounds.w * defaults.hand.playerScale.w,
+				h:this.bounds.h * defaults.hand.playerScale.h,
 			}
 		});
 		this.oppHand = new Hand({
 			bounds:{
-				x:0,
-				y:0,
-				w:this._bounds.w,
-				h:this._bounds.h * 0.2
+				x:this.bounds.x + defaults.hand.oppScale.x*this.bounds.w,
+				y:this.bounds.y + defaults.hand.oppScale.y*this.bounds.h,
+				w:this.bounds.w * defaults.hand.oppScale.w,
+				h:this.bounds.h * defaults.hand.oppScale.h,
 			},
 			touchEnabled:false,
 		});
+		this.duel = new Duel({
+			bounds:{
+				x:this.bounds.x + defaults.duel.scale.x*this.bounds.w,
+				y:this.bounds.y + defaults.duel.scale.y*this.bounds.h,
+				w:this.bounds.w * defaults.duel.scale.w,
+				h:this.bounds.h * defaults.duel.scale.h,
+			}
+		});
+		console.log(this.duel.bounds.h);
 		this.addSubSprite(this.playerHand);
 		this.addSubSprite(this.oppHand);
+		this.addSubSprite(this.duel);
 		this.loadJSON(json);
 	}
 	loadJSON(json) {
@@ -62,6 +72,7 @@ class Game extends Sprite {
 			if(json['hand'+this.oppLetter] !== undefined) {
 				this.oppHand.loadJSON(json['hand' + this.oppLetter]);
 			}
+			this.duel.loadJSON(json.duel);
 		}
 	}
 	touchEnded() {
@@ -73,7 +84,9 @@ class Game extends Sprite {
 		push();
 		this.applyAnimations();
 		rect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h);
-		this.drawSubViews();
+		this.duel.draw();
+		this.oppHand.draw();
+		this.playerHand.draw();
 		pop();
 	}
 	isPlayerCard(cardID) {

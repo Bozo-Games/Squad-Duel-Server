@@ -1,7 +1,8 @@
 class Hand extends Sprite{
 	constructor(json){
-		super(json);
 		json = json === undefined ? {} : json;
+		json.fillColor = '#817283';
+		super(json);
 		this.cards = json.cards === undefined ? [] : json.cards;
 		this.cards = [];
 		json.cards = json.cards === undefined ? [] : json.cards;
@@ -36,7 +37,6 @@ class Hand extends Sprite{
 	draw() {
 		push();
 		this.applyAnimations();
-
 		this.drawSubViews();
 		pop();
 	}

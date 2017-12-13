@@ -1,22 +1,14 @@
 defaults.duel = {
-	playerCard: {
-		offset: {
-			x: function () {
-				return 20;
-			},
-			y: function () {
-				return height * 0.45;
-			}
-		}
+	scale: {
+		x: 0,
+		y: 0.25,
+		w: 1.0,
+		h: 0.45
 	},
-	oppCard: {
-		offset: {
-			x: function () {
-				return width - 20 - defaults.card.selected.size.width();
-			},
-			y: function () {
-				return defaults.card.inHand.size.height()*1.8;
-			}
-		}
+	player: {
+		x: 0,
+		y: 0.5,
+		w: 1,
+		h: 0.5
 	}
 };

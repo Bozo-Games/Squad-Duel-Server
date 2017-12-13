@@ -1,18 +1,14 @@
 defaults.hand = {
-	offset: {
-		x: function () {
-			return defaults.card.inHand.size.width() / 4;
-		},
-		y: function () {
-			return 0;
-		}
+	playerScale: {
+		x: 0,
+		y: 0.725,
+		w: 1.0,
+		h: 0.25
 	},
-	step: {
-		x: function () {
-			return defaults.card.inHand.size.width() + defaults.hand.offset.x();
-		},
-		y: function () {
-			return 0;
-		}
+	oppScale: {
+		x: 0,
+		y: 0.025,
+		w: 1.0,
+		h: 0.25
 	}
 };

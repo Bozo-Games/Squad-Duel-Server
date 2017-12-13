@@ -10,21 +10,25 @@ class Sprite {
 		this.scaleAnimation = json.scaleAnimation === undefined ? defaults.animation.scale.blank() : new ScaleAnimation(json.scaleAnimation);
 		this.translationAnimation = json.translationAnimation === undefined ? defaults.animation.translation.blank() : new TranslationAnimation(json.translationAnimation);
 
+		this.translationAnimation.forceUpdate({x:this._bounds.x,y:this._bounds.y});
+		this._bounds.x = 0;
+		this._bounds.y = 0;
 
 		this.subSprites = [];
 
-		this.parrentSprite = undefined;
+		this.parentSprite = undefined;
 		this.fillColor = json.fillColor === undefined ? '#000000' : json.fillColor;
 		this.strokeWeight = json.strokeWeight === undefined ? 0 : json.strokeWeight;
 		this.touchEnabled = json.touchEnabled === undefined ? true : json.touchEnabled;
 
-		this.translationAnimation.forceUpdate({x:this.bounds.x,y:this.bounds.y});
-		this._bounds.x = 0;
-		this._bounds.y = 0;
+		if(json.parentSprite instanceof Sprite) {
+			json.parentSprite.addSubSprite(this);
+		}
+
 	}
 
 	addSubSprite(sprite) {
-		sprite.parrentSprite = this;
+		sprite.parentSprite = this;
 		this.subSprites.push(sprite);
 	}
 	set bounds(json) {
@@ -38,18 +42,19 @@ class Sprite {
 	}
 
 	get bounds() {
-		return  this._bounds;
+		return this._bounds;
 	}
-
-	get boundsWithAnimations() {
+/*
+	get bounds() {
 		return  {
 			x:(this._bounds.x + this.translationAnimation.x)* this.scaleAnimation.width,
 			y:(this._bounds.y + this.translationAnimation.y)* this.scaleAnimation.height,
 			w:this._bounds.w * this.scaleAnimation.width,
 			h:this._bounds.h * this.scaleAnimation.height,
 		}
-	}
+	}*/
 	applyAnimations(){
+		//translate(this.bounds.x,this.bounds.y);
 		this.translationAnimation.applyEffect(this);
 		this.scaleAnimation.applyEffect(this);
 		fill(this.fillColor);
