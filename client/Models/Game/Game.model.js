@@ -86,6 +86,12 @@ class Game extends Sprite {
 		this.duel.draw();
 		this.oppHand.draw();
 		this.playerHand.draw();
+
+		this.subSprites.forEach(function (sprite) {
+			if(sprite instanceof FloatingText) {
+				sprite.draw();
+			}
+		});
 		pop();
 	}
 	isPlayerCard(cardID) {

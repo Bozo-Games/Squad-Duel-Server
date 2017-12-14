@@ -12,6 +12,16 @@ class CardDuelPlayer extends Card {
 		};
 		json.parentSprite = this;
 		this.character = new CardDuelCharacter(json);
+
+
+		json.bounds = {
+			x: this.bounds.w*defaults.card.duel.player.statBoxScale.x,
+			y: this.bounds.h*defaults.card.duel.player.statBoxScale.y,
+			w: this.bounds.h*defaults.card.duel.player.statBoxScale.h,
+			h: this.bounds.h*defaults.card.duel.player.statBoxScale.h
+		};
+		this.statsBox = new CardDuelStats(json);
+
 		this.attacks = [];
 		let h = this.bounds.h / (json.attacks.length+1.5); //1 for space,2 for lock in
 		let spaceing = (this.bounds.h - h*(json.attacks.length+1))/2;
@@ -29,7 +39,6 @@ class CardDuelPlayer extends Card {
 			animations.attack.newAttack(a);
 			this.attacks.push(a);
 		}
-
 		this.lockInBtn = new ButtonLockIn({
 			bounds:{
 				x: this.bounds.w*defaults.card.duel.player.attackScale.x,
@@ -39,6 +48,10 @@ class CardDuelPlayer extends Card {
 			},
 			parentSprite: this
 		});
+		this.lockInBtn.scaleAnimation.forceUpdate({width:0,height:0});
+		this.lockInBtn.translationAnimation.forceUpdate({x:(this.bounds.w*defaults.card.duel.player.attackScale.x)*1.5,y:h});
+		animations.button.lockIn.show(this.lockInBtn);
+
 
 	}
 	loadJSON(json) {
@@ -50,6 +63,7 @@ class CardDuelPlayer extends Card {
 			push();
 			this.applyAnimations();
 			this.character.draw();
+			this.statsBox.draw();
 			this.lockInBtn.draw();
 			this.attacks.forEach(function (attack) {
 				attack.draw();

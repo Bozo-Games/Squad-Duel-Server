@@ -20,6 +20,7 @@ class Sprite {
 		this.fillColor = json.fillColor === undefined ? '#000000' : json.fillColor;
 		this.strokeWeight = json.strokeWeight === undefined ? 0 : json.strokeWeight;
 		this.touchEnabled = json.touchEnabled === undefined ? true : json.touchEnabled;
+		this.fontSize = json.fontSize === undefined ? 14 : json.fontSize;
 
 		if(json.parentSprite instanceof Sprite) {
 			json.parentSprite.addSubSprite(this);
@@ -30,6 +31,14 @@ class Sprite {
 	addSubSprite(sprite) {
 		sprite.parentSprite = this;
 		this.subSprites.push(sprite);
+	}
+	removeSubSprite(sprite) {
+		for(let i = this.subSprites.length -1 ; i >= 0; i--){
+			if(this.subSprites[i] === sprite) {
+				this.subSprites.splice(i,1);
+				sprite.parentSprite = undefined;
+			}
+		}
 	}
 	set bounds(json) {
 		json = json === undefined ? {} : json;
@@ -59,6 +68,7 @@ class Sprite {
 		this.scaleAnimation.applyEffect(this);
 		fill(this.fillColor);
 		strokeWeight(this.strokeWeight);
+		textSize(this.fontSize);
 	}
 	drawSubViews() {
 		for(let i = 0; i < this.subSprites.length; i++) {

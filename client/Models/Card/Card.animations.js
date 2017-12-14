@@ -10,13 +10,15 @@ animations.card = {
 						card.loadJSON(json);
 					}
 				}));
-			} else if(card.constructor.name === 'CardDuelCharacter') {
+			} else if(card instanceof CardDuelCharacter && card.parentSprite instanceof CardDuelPlayer ) {
 				card.loop = 'walk';
 				let returnLoc = {
 					x:card.parentSprite.bounds.w*defaults.card.duel.player.characterScale.x,
 					y:card.parentSprite.bounds.h*defaults.card.duel.player.characterScale.y};
-				card.scaleAnimation.forceUpdate({width:1,height:1});
-				card.translationAnimation.forceUpdate({x:-card.bounds.w,y:card.bounds.h*2});
+
+				card.scaleAnimation.forceUpdate({width: 1, height: 1});
+				card.translationAnimation.forceUpdate({x: -card.bounds.w, y: card.bounds.h * 2});
+
 				card.translationAnimation.appendKeyValue(new KeyValue({
 					val:returnLoc,
 					endEpoch: frameTime + 800,
@@ -24,6 +26,9 @@ animations.card = {
 						card.currentState = 'selected';
 						card.loop = 'idle';
 						card.loadJSON(json);
+						if(card.parentSprite instanceof CardDuelPlayer) {
+							animations.button.lockIn.show(card.parentSprite.lockInBtn);
+						}
 					}
 				}));
 			} else {
@@ -151,6 +156,10 @@ animations.card = {
 						})); //end add move away animation add
 					} //end turn callback
 				})); //end scale animation
+			} else if(card instanceof CardDuelPlayer) {
+				animations.button.lockIn.hide(card.lockInBtn);
+				card.id = json.id;
+				card.loadJSON(json);
 			} else {
 				card.id = json.id;
 				card.loadJSON(json);
@@ -159,6 +168,22 @@ animations.card = {
 			card.id = json.id;
 			card.loadJSON(json);
 		}
+	},
+	oppEnter: function (card) {
+		card.scaleAnimation.forceUpdate({width: 1, height: 1});
+		card.translationAnimation.forceUpdate({x: card.parentSprite.orignalCharacterX+card.bounds.w, y: -card.bounds.h * 2});
+		console.log('here ' + card.translationAnimation.x);
+		card.loop = 'walk';
+		card.translationAnimation.appendKeyValue(new KeyValue({
+			val: {
+				x:card.parentSprite.orignalCharacterX,
+				y:card.parentSprite.bounds.h*defaults.card.duel.opp.characterScale.y
+			},
+			endEpoch: frameTime + 1200,
+			callBack:function (card) {
+				card.loop = 'idle';
+			}
+		}));
 	}
 
 };
