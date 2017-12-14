@@ -1,5 +1,5 @@
 const fs = require('fs');
-const cardDB = require('./server/Data/Card.js');
+const cardDB = require('./server/Data/Card.data.js');
 const readline = require('readline');
 const rl = readline.createInterface({
 	input: process.stdin,

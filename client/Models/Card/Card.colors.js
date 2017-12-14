@@ -8,8 +8,4 @@ colors.card = {
 		background:'#d8b086',
 		text: '#ffffff'
 	},
-	selected: {
-		lockIn:'#bbaa33',
-		lockedIn:'#008833',
-	},
-}
+};

@@ -1,3 +1,7 @@
 defaults.attack = {
+	duel: {
+		player: {
 
+		}
+	}
 };

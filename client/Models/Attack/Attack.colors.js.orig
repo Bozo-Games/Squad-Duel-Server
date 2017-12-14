@@ -8,5 +8,11 @@ colors.attack = {
     icon:'#ffffff',
     miniIcon:'e88012',
 	background:'#aaabc2',
+<<<<<<< HEAD:client/Models/Attack/Attack.color.js
     selected:'#c2fb72'
 }
+=======
+	selected:'#c2fb72',
+	text:'#000000'
+};
+>>>>>>> Bill:client/Models/Attack/Attack.colors.js

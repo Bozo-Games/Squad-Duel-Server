@@ -1,6 +1,6 @@
 "use strict";
 const attackDB = require('../Data/Attack.js');
-const cardDB = require('../Data/Card.js');
+const cardDB = require('../Data/Card.data.js');
 const defaults = require('./defaults.js');
 function random(choices) {
     return choices[Math.floor(Math.random()*choices.length)];

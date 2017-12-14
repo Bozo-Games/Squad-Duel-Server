@@ -138,7 +138,7 @@ class Card {
 	//------------------------------------------------- -------------------------------------------------- state machine
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
-		logs.log(E.logs.card,`~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		logs.log(E.logs.card,`~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to} \t\t${this.name}`);
 		//logs.log(E.logs.card, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
@@ -156,8 +156,8 @@ class Card {
 		return true;
 	}
 	_onInvalidTransition(transition,from,to){
-		logs.log(E.logs.duel, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
-		throw new Exception('transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
+		logs.log(E.logs.card, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
+		throw 'transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')';
 	}
 }
 module.exports = Card;

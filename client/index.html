@@ -13,12 +13,6 @@
       </style>
 
       <script src="/socket.io/socket.io.js"></script>
-
-    <script src="./p5/p5.min.js"></script>
-    <script src="./p5/p5.collide2d.min.js"></script>
-    <script src="./p5/addons/p5.dom.min.js"></script>
-    <script src="./p5/addons/p5.sound.min.js"></script>
-
       <script src="./Helpers/defaults.js"></script>
       <script src="./Helpers/colors.js"></script>
       <script src="./Helpers/strings.js"></script>
@@ -26,58 +20,80 @@
       <script src="./Helpers/icons.js"></script>
       <script src="./Helpers/helpers.js"></script>
 
+      <script src="./p5/p5.min.js"></script>
+      <script src="./p5/addons/p5.dom.min.js"></script>
+      <script src="./p5/addons/p5.sound.min.js"></script>
+
       <script src="./Network/network.js"></script>
 
+      <script src="p5pluss/mouseStack.js"></script>
+      <script src="p5pluss/Sprite/Sprite.model.js"></script>
+      <script src="p5pluss/Sprite/Sprite.defaults.js"></script>
+      <script src="p5pluss/Animation/Animation.model.js"></script>
+      <script src="p5pluss/Animation/Animation.defaults.js"></script>
+      <script src="p5pluss/Animation/KeyValue/KeyValue.model.js"></script>
+      <script src="p5pluss/Animation/KeyValue/KeyValue.defaults.js"></script>
+      <script src="p5pluss/Animation/ScaleAnimation/Scale.Animation.model.js"></script>
+      <script src="p5pluss/Animation/ScaleAnimation/Scale.animation.defaults.js"></script>
+      <script src="p5pluss/Animation/TranslationAnimation/Translation.Animation.model.js"></script>
+      <script src="p5pluss/Animation/TranslationAnimation/Translation.Animation.defaults.js"></script>
 
 
-    <script src="./Models/Sprite/Sprite.model.js"></script>
-    <script src="./Models/FloatingText/FloatingText.model.js"></script>
-
-      <script src="./Models/Attack/Attack.model.js"></script>
-      <script src="./Models/Attack/Attack.animations.js"></script>
-    <script src="./Models/Attack/Attack.icons.js"></script>
-    <script src="./Models/Attack/Attack.icons.js"></script>
-    <script src="./Models/Attack/Attack.strings.js"></script>
-    <script src="./Models/Attack/Attack.color.js"></script>
-      <script src="./Models/Attack/Attack.defaults.js"></script>
-
-      <script src="./Models/Card/Card.model.js"></script>
-      <script src="./Models/Card/Card.animations.js"></script>
-      <script src="./Models/Card/Card.icons.js"></script>
-      <script src="./Models/Card/Card.strings.js"></script>
-      <script src="./Models/Card/Card.colors.js"></script>
-      <script src="./Models/Card/Card.defaults.js"></script>
-
-      <script src="./Models/Hand/Hand.model.js"></script>
-      <script src="./Models/Hand/Hand.animations.js"></script>
-      <script src="./Models/Hand/Hand.icons.js"></script>
-      <script src="./Models/Hand/Hand.strings.js"></script>
-      <script src="./Models/Hand/Hand.defaults.js"></script>
-
-      <script src="./Models/Game/Game.model.js"></script>
       <script src="./Models/Game/Game.animations.js"></script>
-      <script src="./Models/Game/Game.icons.js"></script>
-      <script src="./Models/Game/Game.strings.js"></script>
       <script src="./Models/Game/Game.defaults.js"></script>
+      <script src="./Models/Game/Game.icons.js"></script>
+      <script src="./Models/Game/Game.model.js"></script>
+      <script src="./Models/Game/Game.strings.js"></script>
+      <script src="./Models/Game/Game.colors.js"></script>
 
-      <script src="./Models/Duel/Duel.model.js"></script>
       <script src="./Models/Duel/Duel.animations.js"></script>
-      <script src="./Models/Duel/Duel.icons.js"></script>
-      <script src="./Models/Duel/Duel.strings.js"></script>
       <script src="./Models/Duel/Duel.defaults.js"></script>
-
-      <script src="./Models/Player/Player.model.js"></script>
-      <script src="./Models/Player/Player.animations.js"></script>
-      <script src="./Models/Player/Player.icons.js"></script>
-      <script src="./Models/Player/Player.strings.js"></script>
-      <script src="./Models/Player/Player.defaults.js"></script>
+      <script src="./Models/Duel/Duel.icons.js"></script>
+      <script src="./Models/Duel/Duel.model.js"></script>
+      <script src="./Models/Duel/Duel.strings.js"></script>
 
 
-    <script src="./Models/Animation/Animation.model.js"></script>
-    <script src="Models/Animation/ValueAnimation.model.js"></script>
-    <script src="Models/Animation/TranslationAnimation.model.js"></script>
-    <script src="Models/Animation/ScaleAnimation.model.js"></script>
-    <script src="Models/Animation/FontSizeAnimation.model.js"></script>
+      <script src="./Models/Hand/Hand.animations.js"></script>
+      <script src="./Models/Hand/Hand.defaults.js"></script>
+      <script src="./Models/Hand/Hand.icons.js"></script>
+      <script src="./Models/Hand/Hand.model.js"></script>
+      <script src="./Models/Hand/Hand.strings.js"></script>
+
+
+      <script src="./Models/Card/Card.animations.js"></script>
+      <script src="./Models/Card/Card.defaults.js"></script>
+      <script src="./Models/Card/Card.icons.js"></script>
+      <script src="./Models/Card/Card.model.js"></script>
+      <script src="./Models/Card/Card.InHand.view.js"></script>
+      <script src="./Models/Card/Card.DuelCharacter.view.js"></script>
+      <script src="./Models/Card/Card.DuelPlayer.view.js"></script>
+      <script src="./Models/Card/Card.DuelOpp.view.js"></script>
+      <script src="./Models/Card/Card.DuelStats.view.js"></script>
+      <script src="./Models/Card/Card.colors.js"></script>
+      <script src="./Models/Card/Card.strings.js"></script>
+
+
+      <script src="./Models/Attack/Attack.animations.js"></script>
+      <script src="./Models/Attack/Attack.defaults.js"></script>
+      <script src="./Models/Attack/Attack.icons.js"></script>
+      <script src="./Models/Attack/Attack.model.js"></script>
+      <script src="./Models/Attack/Attack.DuelPlayer.view.js"></script>
+      <script src="./Models/Attack/Attack.strings.js"></script>
+      <script src="./Models/Attack/Attack.colors.js"></script>
+
+
+      <script src="./Models/Button/Button.animations.js"></script>
+      <script src="./Models/Button/Button.defaults.js"></script>
+      <script src="./Models/Button/Button.icons.js"></script>
+      <script src="./Models/Button/Button.strings.js"></script>
+      <script src="./Models/Button/Button.colors.js"></script>
+      <script src="./Models/Button/Button.LockIn.view.js"></script>
+
+
+      <script src="./Models/FloatingText/FloatingText.model.js"></script>
+
+
+
 
       <script src="./logInView.js"></script>
       <script src="./sketch.js"></script>

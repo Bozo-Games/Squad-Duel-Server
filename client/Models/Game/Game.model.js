@@ -1,115 +1,96 @@
-class Game {
+class Game extends Sprite {
 	constructor(json) {
-		this.currentState = json.currentState;
+		json = json === undefined ? {} : json;
+		super({
+			bounds:{
+				x:0,
+				y:0,
+				w:width,
+				h:height
+			},
+			fillColor:colors.game.background
+		});
+		this.currentState = 'newGame';
 		this._iAmPrimaryPlayer = false;
-		this.loadJSON(json)
+		this.playerLetter = 'A';
+		this.oppLetter = 'B';
+		this.playerHand = new Hand({
+			bounds:{
+				x:this.bounds.x + defaults.hand.playerScale.x*this.bounds.w,
+				y:this.bounds.y + defaults.hand.playerScale.y*this.bounds.h,
+				w:this.bounds.w * defaults.hand.playerScale.w,
+				h:this.bounds.h * defaults.hand.playerScale.h,
+			}
+		});
+		this.oppHand = new Hand({
+			bounds:{
+				x:this.bounds.x + defaults.hand.oppScale.x*this.bounds.w,
+				y:this.bounds.y + defaults.hand.oppScale.y*this.bounds.h,
+				w:this.bounds.w * defaults.hand.oppScale.w,
+				h:this.bounds.h * defaults.hand.oppScale.h,
+			},
+			touchEnabled:false,
+		});
+		this.duel = new Duel({
+			bounds:{
+				x:this.bounds.x + defaults.duel.scale.x*this.bounds.w,
+				y:this.bounds.y + defaults.duel.scale.y*this.bounds.h,
+				w:this.bounds.w * defaults.duel.scale.w,
+				h:this.bounds.h * defaults.duel.scale.h,
+			}
+		});
+		this.addSubSprite(this.playerHand);
+		this.addSubSprite(this.oppHand);
+		this.addSubSprite(this.duel);
+		this.loadJSON(json);
 	}
 	loadJSON(json) {
-		console.log('updating game json');
 		if(this.currentState !== json.currentState) {
-			let animation;
-			if(animations.game[`${this.currentState}->${json.currentState}`] !== undefined) {
-				animation = animations.game[`${this.currentState}->${json.currentState}`](this, function (game) {
-					game.currentState = json.currentState;
-					game.loadJSON(json);
-				});
-			}
-			if(animation !== undefined) {
-				this.activeAnimations = this.activeAnimations.concat(animation);
+			if(animations.game[this.currentState + '->'+json.currentState] !== undefined) {
+				animations.game[this.currentState + '->'+json.currentState](this,json);
 			} else {
 				this.currentState = json.currentState;
 				this.loadJSON(json);
 			}
 		} else {
-			//--------------------------------------- Players
-			let playerA = new Player(json.playerA);
-			let playerB = new Player(json.playerB);
-			if(playerA.isMe) {
+			if(json.playerA.socketID === socket.id) {
 				this._iAmPrimaryPlayer = true;
 				this.playerLetter = 'A';
 				this.oppLetter = 'B';
-			} else if(playerB.isMe) {
+			}
+			if(json.playerB.socketID === socket.id) {
+				this._iAmPrimaryPlayer = false;
 				this.playerLetter = 'B';
 				this.oppLetter = 'A';
 			}
-			if(this.player === undefined) {
-				this.player =  new Player(json[`player${this.playerLetter}`]);
-			} else {
-				//this.player.loadJSON(json[`player${this.playerLetter}`]);
+			if(json['hand'+this.playerLetter] !== undefined) {
+				this.playerHand.loadJSON(json['hand' + this.playerLetter]);
 			}
-			if(this.opp === undefined) {
-				this.opp =  new Player(json[`player${this.oppLetter}`]);
-			} else {
-				//this.opp.loadJSON(json[`player${this.oppLetter}`]);
+			if(json['hand'+this.oppLetter] !== undefined) {
+				this.oppHand.loadJSON(json['hand' + this.oppLetter]);
 			}
-			//----------------------------------------- Hands
-			if(this.playerHand === undefined) {
-				this.playerHand = new Hand(json[`hand${this.playerLetter}`]);
-			} else {
-				this.playerHand.loadJSON(json[`hand${this.playerLetter}`]);
-			}
-			if(this.oppHand === undefined) {
-				this.oppHand = new Hand(json[`hand${this.oppLetter}`]);
-			} else {
-				this.oppHand.loadJSON(json[`hand${this.oppLetter}`]);
-			}
-			//----------------------------------------- Duel
-			if(this.duel === undefined && currentGame !== undefined) {
-				this.duel = new Duel(json.duel);
-			} else if(this.duel !== undefined) {
-				this.duel.loadJSON(json.duel);
-			}
+			this.duel.loadJSON(json.duel);
 		}
 	}
 	touchEnded() {
 		pushMouse();
-		if(this.duel !== undefined) {
-			this.duel.touchEnded();
-		}
-		if(this.playerHand !== undefined) {
-			let isHandActive = true;
-			if(this.duel !== undefined) {
-				if(this.duel.playerCard !== undefined) {
-					isHandActive = (
-						this.duel.playerCard.currentState === 'inHand' ||
-						this.duel.playerCard.currentState === 'selected' );
-				}
-			}
-			if(isHandActive) {
-				pushMouse();
-				translateMouse(
-					defaults.game.playerHand.offset.x(),
-					defaults.game.playerHand.offset.y());
-				this.playerHand.touchEnded();
-				popMouse();
-			}
-		}
+		let didTap = super.touchEnded();
 		popMouse();
 	}
 	draw() {
-		if(this.duel !== undefined) {
-			push();
-			this.duel.draw();
-			pop();
-		}
-		if(this.playerHand !== undefined) {
-			push();
-			translate(
-				defaults.game.playerHand.offset.x(),
-				defaults.game.playerHand.offset.y());
-			this.playerHand.draw();
-			pop();
-		}
-		if(this.oppHand !== undefined) {
-			push();
-			translate(
-				defaults.game.oppHand.offset.x(),
-				defaults.game.oppHand.offset.y());
-			this.oppHand.draw();
-			pop();
-		}
-		if(this.player !== undefined) {this.player.draw();}
-		if(this.opp !== undefined) {this.opp.draw();}
+		push();
+		this.applyAnimations();
+		rect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h);
+		this.duel.draw();
+		this.oppHand.draw();
+		this.playerHand.draw();
+
+		this.subSprites.forEach(function (sprite) {
+			if(sprite instanceof FloatingText) {
+				sprite.draw();
+			}
+		});
+		pop();
 	}
 	isPlayerCard(cardID) {
 		for(let i = 0; i < this.playerHand.cards.length; i++) {

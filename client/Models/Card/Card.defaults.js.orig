@@ -1,7 +1,22 @@
 defaults.card = {
 	inHand: {
+<<<<<<< HEAD
+		size: {
+			width: function () {
+				return width/4;
+			},
+			height: function () {
+				return defaults.card.inHand.size.width();
+			}
+		},
+		iconScale:0.4,
+		attackScale: {width: .5, height: .5}
+
+
+=======
 		iconScale:0.4,
 		strokeWeight: 3,
+>>>>>>> Bill
 	},
 	duel: {
 		player: {
