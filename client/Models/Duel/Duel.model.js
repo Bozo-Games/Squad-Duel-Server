@@ -11,6 +11,7 @@ class Duel extends Sprite {
 			this.attacker = json.attacker === currentGame.playerLetter ? 'player' : 'opp';
 			this.defender = json.defender === currentGame.playerLetter ? 'player' : 'opp';
 			if (this.currentState !== json.currentState) {
+				console.log('duel state change '+this.currentState + '->' + json.currentState);
 				if (animations.duel[this.currentState + '->' + json.currentState] !== undefined) {
 					animations.duel[this.currentState + '->' + json.currentState](this, json);
 				} else {
@@ -36,7 +37,14 @@ class Duel extends Sprite {
 				let playerAttackJSON = json[`attack${currentGame.playerLetter}`];
 				if(playerAttackJSON !== undefined) {
 					if(this.playerAttack === undefined) {
-						this.playerAttack = new Attack(playerAttackJSON);
+						playerAttackJSON.bounds = {
+							x:-this.bounds.w,
+							y:0,
+							w:this.bounds.w,
+							h:this.bounds.h
+						};
+						playerAttackJSON.parentSprite = this;
+						this.playerAttack = new AttackComat(playerAttackJSON);
 					} else {
 						this.playerAttack.loadJSON(playerAttackJSON);
 					}
@@ -59,13 +67,26 @@ class Duel extends Sprite {
 				let oppAttackJSON = json[`attack${currentGame.oppLetter}`];
 				if(oppAttackJSON !== undefined) {
 					if(this.oppAttack === undefined) {
-						this.oppAttack = new Attack(oppAttackJSON);
+						oppAttackJSON.bounds = {
+							x:-this.bounds.w,
+							y:0,
+							w:this.bounds.w,
+							h:this.bounds.h
+						};
+						console.log(JSON.stringify(oppAttackJSON.bounds));
+						oppAttackJSON.parentSprite = this;
+						this.oppAttack = new AttackComat(oppAttackJSON);
 					} else {
 						this.oppAttack.loadJSON(oppAttackJSON);
 					}
 				}
 			}
 		}
+	}
+	saveCardStartStates(json){
+		this.playerStartCard = json['card'+currentGame.playerLetter];
+		this.oppStartCard = json['card'+currentGame.oppLetter];
+		this.turns = json.turns;
 	}
 	touchEnded() {
 		pushMouse();

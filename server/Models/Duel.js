@@ -156,6 +156,7 @@ class Duel {
             attackB:this._stateMachine.attackB === undefined ? undefined : this._stateMachine.attackB.toJSON(),
 	        attacker: this._stateMachine.attacker,
 	        defender: this._stateMachine.defender,
+	        turns:this._stateMachine.turns
         };
     }
 	//------------------------------------------------- -------------------------------------------------- state machine

@@ -205,6 +205,126 @@ animations.card = {
 			endEpoch: frameTime + 400,
 			callBack:function (card) {}
 		}));
+	},
+	oppAttackPlayer: function (attacker,defender,turn) {
+		let rise = 1;
+		let run = 1;
+		let attackerOrgin = {x: attacker.translationAnimation.x, y: attacker.translationAnimation.y};
+		attacker.loop = 'run';
+		attacker.translationAnimation.appendKeyValue(new KeyValue({
+			val: {
+				x:attacker.bounds.w*run,
+				y:attacker.bounds.h*rise
+			},
+			endEpoch: frameTime + 800,
+			callBack: function (card) {
+				attacker.loop = 'attack';
+				defender.loop = 'block';
+				attacker.translationAnimation.appendKeyValue(new KeyValue({
+					val:{
+						x:attacker.bounds.w*run,
+						y:attacker.bounds.h*rise
+					},
+					endEpoch: frameTime + 600*turn.powerMultiplier,
+					callBack: function (card) {
+						attacker.loop = 'run';
+						defender.loop = 'idle';
+						attacker.scaleAnimation.appendKeyValue(new KeyValue({
+							val: {width:-1, height:1},
+							endEpoch: frameTime + 200,
+							callBack: function (card) {
+							}}));
+						attacker.translationAnimation.appendKeyValue(new KeyValue({
+							val: {
+								x:attacker.translationAnimation.x,
+								y:attacker.bounds.h*rise
+							},
+							endEpoch: frameTime + 200,
+							callBack: function (card) {
+								attacker.translationAnimation.appendKeyValue(new KeyValue({
+									val: {
+										x:attackerOrgin.x,
+										y:attackerOrgin.y
+									},
+									endEpoch: frameTime + 800,
+									callBack: function (card) {
+										attacker.scaleAnimation.appendKeyValue(new KeyValue({
+											val: {width:1, height:1},
+											endEpoch: frameTime + 200,
+											callBack: function (card) {
+
+											}}));
+										attacker.translationAnimation.appendKeyValue(new KeyValue({
+											val: attackerOrgin,
+											endEpoch: frameTime + 200,
+											callBack: function (card) {
+												card.loop = 'idle';
+											}}));
+									}}));
+							}}));
+					}}));
+			}}));
+	},
+	playerAttackOpp: function (attacker,defender,turn) {
+		let rise = -1;
+		let run = 1;
+		let attackerOrgin = {x: attacker.translationAnimation.x, y: attacker.translationAnimation.y};
+		attacker.loop = 'run';
+		attacker.translationAnimation.appendKeyValue(new KeyValue({
+			val: {
+				x:attacker.bounds.w*run,
+				y:attacker.bounds.h*rise
+			},
+			endEpoch: frameTime + 800,
+			callBack: function (card) {
+				attacker.loop = 'attack';
+				defender.loop = 'block';
+				attacker.translationAnimation.appendKeyValue(new KeyValue({
+					val:{
+						x:attacker.bounds.w*run,
+						y:attacker.bounds.h*rise
+					},
+					endEpoch: frameTime + 600*turn.powerMultiplier,
+					callBack: function (card) {
+						attacker.loop = 'run';
+						defender.loop = 'idle';
+						attacker.scaleAnimation.appendKeyValue(new KeyValue({
+							val: {width:-1, height:1},
+							endEpoch: frameTime + 200,
+							callBack: function (card) {
+
+							}}));
+						attacker.translationAnimation.appendKeyValue(new KeyValue({
+							val: {
+								x:attacker.bounds.w*run*2,
+								y:attacker.bounds.h*rise
+							},
+							endEpoch: frameTime + 200,
+							callBack: function (card) {
+								attacker.translationAnimation.appendKeyValue(new KeyValue({
+									val: {
+										x:attackerOrgin.x+card.bounds.w,
+										y:attackerOrgin.y
+									},
+									endEpoch: frameTime + 800,
+									callBack: function (card) {
+										attacker.loop = 'idle';
+										attacker.scaleAnimation.appendKeyValue(new KeyValue({
+											val: {width:1, height:1},
+											endEpoch: frameTime + 200,
+											callBack: function (card) {
+
+											}}));
+										attacker.translationAnimation.appendKeyValue(new KeyValue({
+											val: attackerOrgin,
+											endEpoch: frameTime + 200,
+											callBack: function (card) {
+
+											}}));
+									}}));
+							}}));
+					}}));
+			}}));
 	}
 
 };
