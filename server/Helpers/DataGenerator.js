@@ -1,7 +1,7 @@
 "use strict";
 const attackDB = require('../Data/Attack.js');
-const cardDB = require('../Data/Card.js');
-const defaults = require('./defualts.js');
+const cardDB = require('../Data/Card.data.js');
+const defaults = require('./defaults.js');
 function random(choices) {
     return choices[Math.floor(Math.random()*choices.length)];
 }
@@ -42,12 +42,28 @@ const Generator = {
             json.speed = 0;
             json.health = json.health - negativeSpeed*2;
         }
+        json.attacks = [];
+        while(json.attacks.length < 2) {
+            let attackJSON = Generator.attack();
+            let goodToAdd = true;
+            for(let i = 0; i < json.attacks.length; i++) {
+                if(json.attacks[i].name === attackJSON.name) {
+	                goodToAdd = false;
+	                break;
+                }
+            }
+            if(goodToAdd) {
+                json.attacks.push(attackJSON);
+            }
+        }
+        for(let i =0; i < 2; i++) {
+            json.attacks.push()
+        }
         json.id = Generator.guid();
         return json;
     },
     hand: function () {
         let cardsJSON = [];
-        console.log('what we are looking for '+defaults.hand.numberOfCards);
         while (cardsJSON.length < defaults.hand.numberOfCards) {
             cardsJSON.push(Generator.card())
         }

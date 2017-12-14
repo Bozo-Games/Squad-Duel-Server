@@ -1,0 +1,73 @@
+class Attack extends Sprite {
+	constructor(json) {
+		json = json === undefined ? {} : json;
+		super(json);
+		this.name = '';
+		this.category = 'flat';
+		this.power = 0;
+		this.speed = 0;
+		this.id = json.id;
+		this.loadJSON(json);
+	}
+	loadJSON(json){
+		if(this.id !== json.id) {
+			animations.attack.swapAttack(this,json);
+		} else {
+			this.name = json.name === undefined ? '' : json.name;
+			this.category = json.category === undefined ? 'flat' : json.category;
+			this.power = json.power === undefined ? 0 : json.power;
+			this.speed = json.speed === undefined ? 0 : json.speed;
+		}
+	}
+
+
+<<<<<<< HEAD
+			//Power
+			tint(colors.card.speed);
+			image(icons.attack.power,
+				bounds.x + bounds.h*2,
+				bounds.y + bounds.h*0.55,
+				bounds.h*0.4,
+				bounds.h*0.4);
+			fill(colors.card.text);
+			text(this.power,
+				bounds.x + bounds.h*2.5,
+				bounds.y + bounds.h*0.6);
+
+		pop()
+	}
+
+	handDraw(bounds) {
+		push();
+			fill(colors.attack[this.category]);
+			tint(colors.attack.icon);
+			rect(
+				bounds.x,
+				bounds.y,
+				bounds.w,
+				bounds.h,
+                0,0,0,0);
+			tint(colors.attack.miniIcon);
+			image(icons.attack[this.category],
+				bounds.x + bounds.w*0.275,
+				bounds.y + bounds.h*0.1,
+				bounds.w*0.5,
+				bounds.w*0.5);
+            tint(colors.card.speed);
+			image(icons.card.speed,
+				bounds.x + bounds.w*0.1,
+				bounds.y + bounds.h*0.6,
+				bounds.w*0.35,
+				bounds.w*0.35);
+
+            tint(colors.card.power);
+			image(icons.card.power,
+				bounds.x + bounds.w*0.6,
+				bounds.y + bounds.h*0.65,
+				bounds.w*0.35,
+				bounds.w*0.35);
+		pop()
+	}
+=======
+>>>>>>> Bill
+}

@@ -1,0 +1,17 @@
+{
+  "name": "proving-grounds",
+  "version": "0.0.1",
+  "description": "A place to test out socket io",
+  "dependencies": {
+<<<<<<< HEAD
+    "express": "^4.15.2",
+    "javascript-state-machine": "^3.0.1",
+=======
+    "express": "^4.16.2",
+>>>>>>> master
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  }
+}

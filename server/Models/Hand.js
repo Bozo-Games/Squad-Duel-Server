@@ -1,8 +1,6 @@
 "use strict";
-const generate = require('../Helpers/DataGenerator.js');
-const defualts = require('../Helpers/defualts.js');
+const defaults = require('../Helpers/defaults.js');
 const Card = require('./Card.js');
-
 class Hand {
     constructor(json) {
         json = json === undefined ? {cards: []} : json;
@@ -20,14 +18,12 @@ class Hand {
             cards:cardsJSON
         };
     }
-    toString(){
-
-        let cardsString= '{cards:[';
-        for(let i = 0; i < this.cards.length; i++) {
-            cardsString += this.cards[i].toString() +', \n';
-        }
-        cardsString += '}';
-        return cardsString;
+    //------------------------------------------------------------------- public methods
+    getCardByID(cardID) {
+	    for(let i = 0; i < this.cards.length; i++) {
+		    if(this.cards[i].id === cardID) {return this.cards[i];}
+	    }
+	    return undefined;
     }
 }
 module.exports = Hand;

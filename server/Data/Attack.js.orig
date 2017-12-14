@@ -1,0 +1,29 @@
+const data = {
+<<<<<<< HEAD
+'Massive Strike'    : {category: 'flat'     , power:10 , speed: 1 },
+'Fierce Strike'     : {category: 'flat'     , power:8 ,  speed: 2 },
+'Swift Strike'      : {category: 'flat'     , power:6 ,  speed: 3 },
+'Fierce Pierce'     : {category: 'pierce'   , power:6 ,  speed: 3 },
+'Swift Pierce'      : {category: 'pierce'   , power:4 ,  speed: 4 },
+'Fierce Crush'      : {category: 'crush'    , power:5 ,  speed: 1 },
+'Swift Crush'       : {category: 'crush'    , power:3 ,  speed: 2 },
+
+/*
+'Block - Strike': {category: 'block', power:10, speed: 10},
+'Block - Pierce': {category: 'block', power:5, speed: 10},
+'Block - Crush': {category: 'block', power:5, speed: 10},
+'Rejuvenate': {category: 'heal', power:10, speed: 0},
+'Circle of Healing': {category: 'heal', power:3, speed: 0},
+'Heal': {category: 'heal', power:2, speed: 0},
+*/    
+=======
+	'Massive Blow'      : {category: 'flat'     , power:10 , speed: 1 },
+	'Jab-Jab-Stab'      : {category: 'flat'     , power:8 ,  speed: 2 },
+	'Slap'              : {category: 'flat'     , power:6 ,  speed: 3 },
+	'Hammer Down'       : {category: 'crush'    , power:6 ,  speed: 1 },
+	'Shield Bash'       : {category: 'crush'    , power:4 ,  speed: 3 },
+	'kidney Stab'       : {category: 'pierce'   , power:6 ,  speed: 3 },
+	'!@#?'              : {category: 'pierce'   , power:4 ,  speed: 4 },
+>>>>>>> Xan
+};
+module.exports = data;

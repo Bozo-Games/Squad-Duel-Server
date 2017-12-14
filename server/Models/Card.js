@@ -1,41 +1,115 @@
- "use strict";
-const generate = require('../Helpers/DataGenerator.js');
-const defualts = require('../Helpers/defualts.js');
+"use strict";
+const E = require('../Helpers/enums.js');
+const defaults = require('../Helpers/defaults.js');
 const Attack = require('./Attack.js');
+const StateMachine = require('javascript-state-machine');
+const logs = require('../Helpers/logger.js');
 class Card {
     constructor(json) {
-        json = json === undefined ? generate.card() : json;
-        this.id = json.id === undefined ? -1 : json.id;
-        this.health = json.health === undefined ? 0 : json.health;
-        this.armor = json.armor === undefined ? 0 : json.armor;
-        this.speed = json.speed === undefined ? 0 : json.speed;
-        this.power = json.power === undefined ? 0 : json.power ;
-        this.icon = json.icon === undefined ? 0 : json.icon;
-	    this.name = json.name === undefined ? 'Card -1' : json.name;
-        json.attacks = json.attacks === undefined ? [] : json.attacks;
+        json = json === undefined ? {} : json;
+	    this._stateMachine = new StateMachine({
+		    data: {
+			    id: json.id === undefined ? -1 : json.id,
+			    name: json.name === undefined ? 'No Name' : json.name,
+			    health:  json.health === undefined ? 0 : json.health,
+			    armor: json.armor === undefined ? 0 : json.armor,
+			    speed: json.speed === undefined ? 1 : json.speed,
+   			    power: json.power === undefined ? 1 : json.power,
+			    icon: json.icon === undefined ? 0 : json.icon,
+			    attacks: []
+		    },
+		    init:'inDeck',
+		    transitions: [
+			    {name:'dealToPlayer', from:'inDeck', to:'inHand'},
 
-	    this.isVisibleToPlayer = json.isVisibleToPlayer === undefined ? false : json.isVisibleToPlayer;
+			    {name:'selectCard', from:'inHand', to:'selected'},
 
-        this.attacks = [];
+			    {name:'returnToHand',from:['selected','dueling'], to:'inHand'},
 
-        for (let i = 0; i < json.attacks.length; i++) {
-            this.attacks.push(new Attack(json.attacks[i]));
+			    {name:'confirm',from:'selected', to:'lockedIn'},
+
+			    {name:'duel', from:'lockedIn', to:'dueling'},
+
+			    {name:'kill', from:'dueling', to:'dead'}
+		    ],
+		    methods: {
+			    //All state changes globaly
+			    onBeforeTransition: this._onBeforeTransition,
+			    onAfterTransition: this._onAfterTransition,
+			    onEnterState: this._onEnterState,
+			    onLeaveState: this._onLeaveState,
+		        onInvalidTransition:this._onInvalidTransition
+		    }
+	    });
+	    json.attacks = json.attacks === undefined ?  [] : json.attacks;
+        for(let i = 0; i < json.attacks.length; i++) {
+            this._stateMachine.attacks.push(new Attack(json.attacks[i]));
         }
-
-        while(this.attacks.length < defualts.card.numberOfAttacks) {
-            let newAttack = new Attack();
-            let match = false;
-            for (let i = 0; i < this.attacks.length; i++) {
-                if (this.attacks[i].category == newAttack.category) {
-                    match = true;
-                } 
-            }
-            if (match == false) { 
-                this.attacks.push(newAttack);  
-            }
-            
+        while(this._stateMachine.attacks.length < defaults.card.numberOfAttacks) {
+            this._stateMachine.attacks.push(new Attack());
         }
     }
+    //------------------------------------------------- -------------------------------------------------------- Getters
+	get id() {
+    	return this._stateMachine.id;
+	}
+	get name() {
+    	return this._stateMachine.name;
+	}
+	get health() {
+    	return this._stateMachine.health;
+	}
+	get armor() {
+    	return this._stateMachine.armor;
+	}
+	get speed() {
+    	return this._stateMachine.speed;
+	}
+	get power() {
+    	return this._stateMachine.power;
+	}
+	get icon() {
+    	return this._stateMachine.icon;
+	}
+	get attacks() {
+    	return this._stateMachine.attacks;
+	}
+	get currentState() {
+    	return this._stateMachine.state;
+	}
+	get canSelect(){
+    	return this._stateMachine.can('selectCard');
+	}
+	//------------------------------------------------- -------------------------------------------------------- Setters
+	set armor(newArmor) {
+    	this._stateMachine.armor = Math.max(0,newArmor);
+	}
+	set health(newHealth){
+		this._stateMachine.health = Math.max(0,newHealth);
+		if(this.health <=0) {
+			this.kill();
+		}
+	}
+	//----------------------------------------------------- -------------------------------- public State Machine Events
+	dealToPlayer() {
+		return this._stateMachine.dealToPlayer();
+	}
+	selectCard() {
+		return this._stateMachine.selectCard();
+	}
+	returnToHand() {
+		return this._stateMachine.returnToHand();
+	}
+	confirm(){
+    	return this._stateMachine.confirm();
+	}
+	duel() {
+    	return this._stateMachine.duel();
+	}
+	kill() {
+    	return this._stateMachine.kill()
+	}
+	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
         let attacksJSON = [];
         for(let i = 0; i < this.attacks.length; i++) {
@@ -50,8 +124,40 @@ class Card {
             icon:this.icon,
             name:this.name,
             attacks:attacksJSON,
-            isVisibleToPlayer:this.isVisibleToPlayer
-        }
+	        currentState:this._stateMachine.state
+        };
     }
+    getAttackByID(attackID) {
+	    for(let i = 0; i < this.attacks.length; i++) {
+	        if(this.attacks[i].id === attackID) {
+	            return this.attacks[i];
+            }
+	    }
+	    return undefined;
+    }
+	//------------------------------------------------- -------------------------------------------------- state machine
+	//------------------------------------------------- ------------------------------------------------ All transitions
+	_onBeforeTransition(lifecycle) {
+		logs.log(E.logs.card,`~~~~~~~~~~~~~~~~ NEW CARD STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to} \t\t${this.name}`);
+		//logs.log(E.logs.card, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	_onAfterTransition(lifecycle) {
+		//logs.log(E.logs.card, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	_onEnterState(lifecycle) {
+		//logs.log(E.logs.card, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	_onLeaveState(lifecycle) {
+		logs.log(E.logs.card,`~~~~~~~~~~~~~~~~ END CARD STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
+		//logs.log(E.logs.card, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		return true;
+	}
+	_onInvalidTransition(transition,from,to){
+		logs.log(E.logs.card, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
+		throw 'transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')';
+	}
 }
 module.exports = Card;

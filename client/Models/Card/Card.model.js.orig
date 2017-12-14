@@ -1,0 +1,266 @@
+class Card extends Sprite {
+	constructor(json) {
+		json = json === undefined ? {} : json;
+<<<<<<< HEAD
+		this.health = 0;
+		this.armor = 0;
+		this.power = 0;
+		this.forceDrawCancel = false;
+		this.currentState = json.currentState;
+=======
+		json.bounds = json.bounds === undefined ? {x:0,y:0,w:100,h:100} : json.bounds;
+		super(json);
+		this.health = 20;
+		this.armor = 10;
+		this.currentState = 'inHand';
+>>>>>>> Bill
+		this.id = json.id;
+		this.attacks = [];
+		this.name = json.name === undefined ? 'Adventuring_Barbarian' : json.name;
+		this.loop = 'idle';
+		this.loadJSON(json);
+	}
+	loadJSON(json) {
+		if(this.id !== json.id) {
+			animations.card.swapCard(this,json);
+		} else {
+<<<<<<< HEAD
+			this.name = json.name;
+			if(this.health !== json.health && (this.currentState === 'dueling' || this.currentState === 'lockedIn')) {
+				this.addFloatingHealth(this.health,json.health);
+			} else  {
+				this.health = json.health;
+			}
+			if(this.armor !== json.armor && (this.currentState === 'dueling' || this.currentState === 'lockedIn')) {
+				this.addFloatingArmor(this.armor,json.armor);
+			} else {
+				this.armor = json.armor;
+			}
+			this.power = json.power;
+			this.speed = json.speed;
+			if(this.attacks.length !== json.attacks.length) {
+				let attacks = [];
+				for(let i = 0; i < json.attacks.length; i++) {
+					attacks.push(new Attack(json.attacks[i]));
+=======
+			if (this.currentState !== json.currentState) {
+				if (animations.card[this.currentState + '->' + json.currentState] !== undefined) {
+					animations.card[this.currentState + '->' + json.currentState](this, json);
+				} else {
+					this.currentState = json.currentState;
+					this.loadJSON(json);
+>>>>>>> Bill
+				}
+			} else {
+				this.name = json.name === undefined ? 'Adventuring_Barbarian' : json.name;
+				this.armor = json.armor === undefined ? 1 : json.armor;
+				this.health = json.health === undefined ? 1 : json.health;
+				for(let i = 0; i < json.attacks.length; i++) {
+					if(this.attacks[i] === undefined) {
+						this.attacks[i] = new Attack(json.attacks[i]);
+					} else {
+						this.attacks[i].loadJSON(json.attacks[i]);
+					}
+				}
+			}
+		}
+	}
+	hasAttack(attackID) {
+		for(let i =0; i < this.attacks.length; i++) {
+			if(this.attacks[i].id === attackID) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+<<<<<<< HEAD
+		//speed
+		tint(colors.card.speed);
+		image(icons.card.speed,
+			0,
+			iconRect.h*2.2,
+			iconRect.w,
+			iconRect.h);
+		text(data.speed,
+			iconRect.w*1.1,
+			iconRect.h*2.2,
+			iconRect.w,
+			iconRect.h);
+	}
+	_duelDraw() {
+		push();
+		this._dudeDraw();
+		this._duelStatsBoxDraw(this);
+		//Attacks
+		if(this.attacks.length > 0) {
+			this.attacks[0].duelDraw(this._duelAttack0Bounds);
+		}
+		if(this.attacks.length > 1) {
+			this.attacks[1].duelDraw(this._duelAttack1Bounds);
+		}
+		pop();
+	}
+	//-------------------------------------------------------------------------------------------------------- Locked In
+	get _selectedLockedInBounds() {
+		return this._selectedLockInBounds;
+	}
+	_lockedInTouchEnded() {
+		pushMouse();
+
+		popMouse();
+	}
+	_lockedInDraw(){
+		push();
+		this._duelDraw();
+		//locked in statment
+		fill(colors.card.selected.lockedIn);
+		let bounds =this._selectedLockInBounds;
+		rect(bounds.x,bounds.y,bounds.w,bounds.h,4);
+		textAlign(CENTER,CENTER);
+		fill(colors.card.text)
+		textSize(bounds.h*0.8);
+		text(strings.card.selected.lockedIn,
+			bounds.x,bounds.y,bounds.w,bounds.h);
+		pop();
+	}
+	//--------------------------------------------------------------------------------------------------------- Selected
+	get _selectedLockInBounds() {
+		return {
+			x:this._duelRect.x+this._duelRect.w*1.05,
+			y:this._duelRect.y+this._duelRect.h*0.0,
+			w:this._duelRect.w*1.2,
+			h:this._duelRect.h*0.3
+		};
+	}
+	_selectedTouchEnded() {
+		pushMouse();
+		let didTap = collidePointRect(
+			mouseX,mouseY,
+			this._selectedLockInBounds.x,this._selectedLockInBounds.y,this._selectedLockInBounds.w,this._selectedLockInBounds.h);
+		if(didTap) {
+			network.lockIn(this.id);
+		}
+		popMouse();
+	}
+	_selectedDraw() {
+		push();
+		this._duelDraw();
+		//locked in statment
+		fill(colors.card.selected.lockIn);
+		let bounds =this._selectedLockInBounds;
+		rect(bounds.x,bounds.y,bounds.w,bounds.h,4);
+		textAlign(CENTER,CENTER);
+		fill(colors.card.text)
+		textSize(bounds.h*0.8);
+		text(strings.card.selected.lockIn,
+			bounds.x,bounds.y,bounds.w,bounds.h);
+		pop();
+	}
+	//----------------------------------------------------------------------------------------------------------- inHand
+	get _handRect() {
+		return {x:0,
+			y:0,
+			w:defaults.card.inHand.size.width(),
+			h:defaults.card.inHand.size.height()}
+	}
+	_inHandTouchEnded(){
+		pushMouse();
+		let didTap = collidePointRect(
+			mouseX,mouseY,
+			this._handRect.x,this._handRect.y,this._handRect.w,this._handRect.h);
+		if(didTap) {
+			network.selectCard(this.id);
+		}
+		popMouse();
+	}
+	_inHandDraw() {
+		push();
+		fill(colors.card.inHand.background);
+		ellipseMode(CORNER);
+		ellipse(this._handRect.x,this._handRect.y,this._handRect.w,this._handRect.h);
+		let iconScale = defaults.card.inHand.iconScale;
+		fill(colors.card.text);
+		let frame = frameCount % icons.card[this.name][this.loop].length;
+		image(icons.card[this.name][this.loop][frame],
+			this._handRect.x+this._handRect.w*0,
+			this._handRect.y+this._handRect.h*-.05,
+			this._handRect.w*1,
+			this._handRect.h*1);
+		//health
+		tint(colors.card.health);
+		image(icons.card.health,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		textAlign(CENTER,CENTER);
+		text(this.health,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		//armor
+		tint(colors.card.armor);
+		image(icons.card.armor,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		text(this.armor,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y-this._handRect.w*0.05,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		//speed
+		tint(colors.card.speed);
+		image(icons.card.speed,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y+this._handRect.w*0.65,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		textAlign(CENTER,CENTER);
+		text(this.speed,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y+this._handRect.w*0.66,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		//power
+		tint(colors.card.power);
+		image(icons.card.power,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y+this._handRect.w*0.65,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		textAlign(CENTER,CENTER);
+		text(this.power,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y+this._handRect.w*0.66,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+
+		let attackScale = defaults.card.inHand.attackScale;
+
+		if(this.attacks.length > 0) {
+			let bounds = {
+				x:this._handRect.x,
+				y:this._handRect.y + this._handRect.h * 1.06,
+				w:this._handRect.w*attackScale.width,
+				h:this._handRect.h*attackScale.height
+				};
+			this.attacks[0].handDraw(bounds);
+		}
+		if(this.attacks.length > 1) {
+			let bounds = {
+				x:this._handRect.x + this._handRect.w*attackScale.width,
+				y:this._handRect.y + this._handRect.h * 1.06,
+				w:this._handRect.w*attackScale.width,
+				h:this._handRect.h*attackScale.height
+			};
+			this.attacks[1].handDraw(bounds);
+		}
+		pop();
+	}
+=======
+>>>>>>> Bill
+}
