@@ -6,6 +6,7 @@ class AttackComat extends Attack {
 	}
 
 	draw(){
+		push();
 		this.applyAnimations();
 		textAlign(CENTER,CENTER);
 
@@ -13,5 +14,6 @@ class AttackComat extends Attack {
 		rect(this.bounds.w - (this.bounds.w - textWidth(this.name)) / 2.1,this.bounds.h/2,(this.bounds.w - textWidth(this.name)) / 2.1,2);
 		text(this.name,this.bounds.w/2,this.bounds.h/2);
 		this.drawSubViews();
+		pop();
 	}
 }

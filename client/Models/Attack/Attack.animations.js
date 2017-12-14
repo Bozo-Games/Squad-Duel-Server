@@ -52,7 +52,6 @@ animations.attack = {
 		}
 	},
 	attackNameSlide(attack,isLeftRight) {
-		console.log('here');
 		let from = {x:-attack.bounds.w,y:0};
 		let to = {x:attack.bounds.w,y:0};
 		if(!isLeftRight) {
@@ -67,7 +66,7 @@ animations.attack = {
 			callBack: function (attack) {
 				attack.translationAnimation.appendKeyValue(new KeyValue({
 					val: {x:0,y:0},
-					endEpoch: frameTime + 400,
+					endEpoch: frameTime + 800,
 					callBack: function (attack) {
 						attack.translationAnimation.appendKeyValue(new KeyValue({
 							val: to,

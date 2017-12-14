@@ -44,6 +44,7 @@ class Duel extends Sprite {
 							h:this.bounds.h
 						};
 						playerAttackJSON.parentSprite = this;
+						console.log('player - '+JSON.stringify(playerAttackJSON.bounds));
 						this.playerAttack = new AttackComat(playerAttackJSON);
 					} else {
 						this.playerAttack.loadJSON(playerAttackJSON);
@@ -68,12 +69,12 @@ class Duel extends Sprite {
 				if(oppAttackJSON !== undefined) {
 					if(this.oppAttack === undefined) {
 						oppAttackJSON.bounds = {
-							x:this.bounds.w,
+							x:-this.bounds.w,
 							y:0,
 							w:this.bounds.w,
 							h:this.bounds.h
 						};
-						console.log(JSON.stringify(oppAttackJSON.bounds));
+						console.log('opp - '+JSON.stringify(oppAttackJSON.bounds));
 						oppAttackJSON.parentSprite = this;
 						this.oppAttack = new AttackComat(oppAttackJSON);
 					} else {
@@ -83,11 +84,18 @@ class Duel extends Sprite {
 			}
 		}
 	}
-	saveCardStartStates(json){
+	saveCardStartStats(json){
 		this.playerStartCard = json['card'+currentGame.playerLetter];
 		this.oppStartCard = json['card'+currentGame.oppLetter];
 		this.turns = json.turns;
+		this.saveCardCurrentStats(json);
 	}
+	saveCardCurrentStats(json){
+		this.playerCurrentCard = json['card'+currentGame.playerLetter];
+		this.oppCurrentCard = json['card'+currentGame.oppLetter];
+		this.turns = json.turns;
+	}
+
 	touchEnded() {
 		pushMouse();
 		let didTap = super.touchEnded();
