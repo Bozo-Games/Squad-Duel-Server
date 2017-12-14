@@ -14,6 +14,7 @@ class Card {
 			    health:  json.health === undefined ? 0 : json.health,
 			    armor: json.armor === undefined ? 0 : json.armor,
 			    speed: json.speed === undefined ? 1 : json.speed,
+   			    power: json.power === undefined ? 1 : json.power,
 			    icon: json.icon === undefined ? 0 : json.icon,
 			    attacks: []
 		    },
@@ -63,6 +64,9 @@ class Card {
 	}
 	get speed() {
     	return this._stateMachine.speed;
+	}
+	get power() {
+    	return this._stateMachine.power;
 	}
 	get icon() {
     	return this._stateMachine.icon;
@@ -116,6 +120,7 @@ class Card {
             health:this.health,
             armor:this.armor,
             speed:this.speed,
+            power:this.power,
             icon:this.icon,
             name:this.name,
             attacks:attacksJSON,

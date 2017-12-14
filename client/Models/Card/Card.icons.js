@@ -2,6 +2,7 @@ icons.card = {
 	health:'./Assets/icons/card/health.svg',
 	armor:'./Assets/icons/card/armor.svg',
 	speed:'./Assets/icons/card/speed.svg',
+	power:'./Assets/icons/card/power.svg',
 	character: {
 		"Berserker Guard": './Assets/icons/card/character/Berserker_Guard.svg',
 		"Berserker Thief": './Assets/icons/card/character/Berserker_Thief.svg',

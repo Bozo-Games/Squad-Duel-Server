@@ -8,7 +8,10 @@ defaults.card = {
 				return defaults.card.inHand.size.width();
 			}
 		},
-		iconScale:0.4
+		iconScale:0.4,
+		attackScale: {width: .5, height: .5}
+
+
 	},
 	selected: {
 		size: {

@@ -4,6 +4,7 @@ class Card extends Sprite {
 		json = json === undefined ? {} : json;
 		this.health = 0;
 		this.armor = 0;
+		this.power = 0;
 		this.forceDrawCancel = false;
 		this.currentState = json.currentState;
 		this.id = json.id;
@@ -39,6 +40,7 @@ class Card extends Sprite {
 			} else {
 				this.armor = json.armor;
 			}
+			this.power = json.power;
 			this.speed = json.speed;
 			if(this.attacks.length !== json.attacks.length) {
 				let attacks = [];
@@ -475,11 +477,13 @@ class Card extends Sprite {
 		ellipseMode(CORNER);
 		ellipse(this._handRect.x,this._handRect.y,this._handRect.w,this._handRect.h);
 		let iconScale = defaults.card.inHand.iconScale;
-		image(icons.card.character[this.name],
-			this._handRect.x+this._handRect.w*0.05,
-			this._handRect.y+this._handRect.h*0.05,
-			this._handRect.w*0.9,
-			this._handRect.h*0.9);
+		fill(colors.card.text);
+		let frame = frameCount % icons.card[this.name][this.loop].length;
+		image(icons.card[this.name][this.loop][frame],
+			this._handRect.x+this._handRect.w*0,
+			this._handRect.y+this._handRect.h*-.05,
+			this._handRect.w*1,
+			this._handRect.h*1);
 		//health
 		tint(colors.card.health);
 		image(icons.card.health,
@@ -505,22 +509,50 @@ class Card extends Sprite {
 			this._handRect.y-this._handRect.w*0.05,
 			this._handRect.w*iconScale,
 			this._handRect.h*iconScale);
+		//speed
+		tint(colors.card.speed);
+		image(icons.card.speed,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y+this._handRect.w*0.65,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		textAlign(CENTER,CENTER);
+		text(this.speed,
+			this._handRect.x-this._handRect.w*0.05,
+			this._handRect.y+this._handRect.w*0.66,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		//power
+		tint(colors.card.power);
+		image(icons.card.power,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y+this._handRect.w*0.65,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+		textAlign(CENTER,CENTER);
+		text(this.power,
+			this._handRect.x+this._handRect.w*0.65,
+			this._handRect.y+this._handRect.w*0.66,
+			this._handRect.w*iconScale,
+			this._handRect.h*iconScale);
+
+		let attackScale = defaults.card.inHand.attackScale;
 
 		if(this.attacks.length > 0) {
 			let bounds = {
-				x:this._handRect.x-this._handRect.w*0.05,
-				y:this._handRect.y + this._handRect.w * 0.65,
-				w:this._handRect.w*iconScale,
-				h:this._handRect.h*iconScale
+				x:this._handRect.x,
+				y:this._handRect.y + this._handRect.h * 1.06,
+				w:this._handRect.w*attackScale.width,
+				h:this._handRect.h*attackScale.height
 				};
 			this.attacks[0].handDraw(bounds);
 		}
 		if(this.attacks.length > 1) {
 			let bounds = {
-				x:this._handRect.x + this._handRect.w*0.65,
-				y:this._handRect.y + this._handRect.w * 0.65,
-				w:this._handRect.w*iconScale,
-				h:this._handRect.h*iconScale
+				x:this._handRect.x + this._handRect.w*attackScale.width,
+				y:this._handRect.y + this._handRect.h * 1.06,
+				w:this._handRect.w*attackScale.width,
+				h:this._handRect.h*attackScale.height
 			};
 			this.attacks[1].handDraw(bounds);
 		}

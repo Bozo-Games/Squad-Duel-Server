@@ -69,7 +69,7 @@ class Attack {
 
 			//Power
 			tint(colors.card.speed);
-			image(icons.attack[this.category],
+			image(icons.attack.power,
 				bounds.x + bounds.h*2,
 				bounds.y + bounds.h*0.55,
 				bounds.h*0.4,
@@ -86,16 +86,31 @@ class Attack {
 		push();
 			fill(colors.attack[this.category]);
 			tint(colors.attack.icon);
-			ellipse(
+			rect(
 				bounds.x,
 				bounds.y,
 				bounds.w,
-				bounds.h);
+				bounds.h,
+                0,0,0,0);
+			tint(colors.attack.miniIcon);
 			image(icons.attack[this.category],
-				bounds.x + bounds.w*0.1,
+				bounds.x + bounds.w*0.275,
 				bounds.y + bounds.h*0.1,
-				bounds.w*0.8,
-				bounds.h*0.8);
+				bounds.w*0.5,
+				bounds.w*0.5);
+            tint(colors.card.speed);
+			image(icons.card.speed,
+				bounds.x + bounds.w*0.1,
+				bounds.y + bounds.h*0.6,
+				bounds.w*0.35,
+				bounds.w*0.35);
+
+            tint(colors.card.power);
+			image(icons.card.power,
+				bounds.x + bounds.w*0.6,
+				bounds.y + bounds.h*0.65,
+				bounds.w*0.35,
+				bounds.w*0.35);
 		pop()
 	}
 }

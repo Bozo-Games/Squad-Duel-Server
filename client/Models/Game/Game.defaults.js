@@ -5,7 +5,7 @@ defaults.game = {
 				return 0;
 			},
 			y: function () {
-				return height - defaults.hand.offset.x() * 2 - defaults.card.inHand.size.height()
+				return height - defaults.hand.offset.x() * 2 - defaults.card.inHand.size.height() *1.2
 			}
 		}
 	},
