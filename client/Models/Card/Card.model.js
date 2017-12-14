@@ -18,10 +18,8 @@ class Card extends Sprite {
 		} else {
 			if (this.currentState !== json.currentState) {
 				if (animations.card[this.currentState + '->' + json.currentState] !== undefined) {
-					console.log(this.constructor.name + ' performing state has changed ' + this.currentState + '->' + json.currentState);
 					animations.card[this.currentState + '->' + json.currentState](this, json);
 				} else {
-					console.log('Unknown Card state has changed ' + this.currentState + '->' + json.currentState);
 					this.currentState = json.currentState;
 					this.loadJSON(json);
 				}

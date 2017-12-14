@@ -14,7 +14,6 @@ class Duel extends Sprite {
 				if (animations.duel[this.currentState + '->' + json.currentState] !== undefined) {
 					animations.duel[this.currentState + '->' + json.currentState](this, json);
 				} else {
-					console.log('Unknown Duel state has changed ' + this.currentState + '->' + json.currentState);
 					this.currentState = json.currentState;
 					this.loadJSON(json);
 				}

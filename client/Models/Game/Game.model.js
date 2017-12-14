@@ -45,12 +45,10 @@ class Game extends Sprite {
 		this.loadJSON(json);
 	}
 	loadJSON(json) {
-		console.log('Updating game json');
 		if(this.currentState !== json.currentState) {
 			if(animations.game[this.currentState + '->'+json.currentState] !== undefined) {
 				animations.game[this.currentState + '->'+json.currentState](this,json);
 			} else {
-				console.log('Unknown Game state has changed '+this.currentState + '->'+json.currentState);
 				this.currentState = json.currentState;
 				this.loadJSON(json);
 			}

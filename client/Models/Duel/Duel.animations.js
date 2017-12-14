@@ -9,4 +9,11 @@ animations.duel = {
 		duel.currentState = json.currentState;
 		duel.loadJSON(json);
 	},
+	"waitingForAttacks->ready":function (duel,json) {
+
+		duel.playerCard.hideUI();
+
+		duel.currentState = json.currentState;
+		duel.loadJSON(json);
+	}
 };

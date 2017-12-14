@@ -11,6 +11,18 @@ animations.attack = {
 			}
 		}));
 	},
+	hideAttack: function (attack) {
+		if(attack.constructor.name instanceof  AttackDuelPlayer) {
+			attack.translationAnimation.appendKeyValue(new KeyValue({
+				val:{
+					x:attack.translationAnimation.x + attack.bounds.w*1.2,
+					y:attack.translationAnimation.y
+				},
+				endEpoch: frameTime+400,
+				callBack: function (attack) {}
+			}));
+		}
+	},
 	swapAttack: function (attack,json) {
 		if(attack.constructor.name === 'AttackDuelPlayer') {
 			attack.translationAnimation.appendKeyValue(new KeyValue({

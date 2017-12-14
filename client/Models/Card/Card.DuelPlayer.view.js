@@ -21,6 +21,10 @@ class CardDuelPlayer extends Card {
 			h: this.bounds.h*defaults.card.duel.player.statBoxScale.h
 		};
 		this.statsBox = new CardDuelStats(json);
+		this.statsBox.translationAnimation.forceUpdate({
+			x:-this.statsBox.bounds.w*1.3,
+			y:this.statsBox.translationAnimation.y});
+		animations.card.showStatBox(this.statsBox);
 
 		this.attacks = [];
 		let h = this.bounds.h / (json.attacks.length+1.5); //1 for space,2 for lock in
@@ -52,7 +56,14 @@ class CardDuelPlayer extends Card {
 		this.lockInBtn.translationAnimation.forceUpdate({x:(this.bounds.w*defaults.card.duel.player.attackScale.x)*1.5,y:h});
 		animations.button.lockIn.show(this.lockInBtn);
 
-
+	}
+	hideUI() {
+		this.attacks.forEach(function (attack) {
+			if(attack.id !== currentGame.duel.playerAttack.id) {
+				animations.attack.hideAttack(attack);
+			}
+		});
+		animations.card.hideStatBox(this.statsBox);
 	}
 	loadJSON(json) {
 		super.loadJSON(json);

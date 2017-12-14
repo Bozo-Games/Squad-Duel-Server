@@ -28,6 +28,7 @@ animations.card = {
 						card.loadJSON(json);
 						if(card.parentSprite instanceof CardDuelPlayer) {
 							animations.button.lockIn.show(card.parentSprite.lockInBtn);
+							animations.card.showStatBox(card.parentSprite.statsBox);
 						}
 					}
 				}));
@@ -158,6 +159,7 @@ animations.card = {
 				})); //end scale animation
 			} else if(card instanceof CardDuelPlayer) {
 				animations.button.lockIn.hide(card.lockInBtn);
+				animations.card.hideStatBox(card.statsBox);
 				card.id = json.id;
 				card.loadJSON(json);
 			} else {
@@ -172,7 +174,6 @@ animations.card = {
 	oppEnter: function (card) {
 		card.scaleAnimation.forceUpdate({width: 1, height: 1});
 		card.translationAnimation.forceUpdate({x: card.parentSprite.orignalCharacterX+card.bounds.w, y: -card.bounds.h * 2});
-		console.log('here ' + card.translationAnimation.x);
 		card.loop = 'walk';
 		card.translationAnimation.appendKeyValue(new KeyValue({
 			val: {
@@ -183,6 +184,26 @@ animations.card = {
 			callBack:function (card) {
 				card.loop = 'idle';
 			}
+		}));
+	},
+	hideStatBox: function (card) {
+		card.translationAnimation.appendKeyValue(new KeyValue({
+			val: {
+				x:-card.bounds.w*1.3,
+				y:card.translationAnimation.y
+			},
+			endEpoch: frameTime + 400,
+			callBack:function (card) {}
+		}));
+	},
+	showStatBox: function (card) {
+		card.translationAnimation.appendKeyValue(new KeyValue({
+			val: {
+				x: card.parentSprite.bounds.w*defaults.card.duel.player.statBoxScale.x,
+				y: card.parentSprite.bounds.h*defaults.card.duel.player.statBoxScale.y,
+			},
+			endEpoch: frameTime + 400,
+			callBack:function (card) {}
 		}));
 	}
 
