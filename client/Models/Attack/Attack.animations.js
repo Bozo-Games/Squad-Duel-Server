@@ -52,6 +52,7 @@ animations.attack = {
 		}
 	},
 	attackNameSlide(attack,isLeftRight) {
+		console.log('here');
 		let from = {x:-attack.bounds.w,y:0};
 		let to = {x:attack.bounds.w,y:0};
 		if(!isLeftRight) {

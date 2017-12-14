@@ -68,7 +68,7 @@ class Duel extends Sprite {
 				if(oppAttackJSON !== undefined) {
 					if(this.oppAttack === undefined) {
 						oppAttackJSON.bounds = {
-							x:-this.bounds.w,
+							x:this.bounds.w,
 							y:0,
 							w:this.bounds.w,
 							h:this.bounds.h
