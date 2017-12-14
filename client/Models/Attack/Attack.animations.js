@@ -12,7 +12,7 @@ animations.attack = {
 		}));
 	},
 	hideAttack: function (attack) {
-		if(attack.constructor.name instanceof  AttackDuelPlayer) {
+		if(attack instanceof AttackDuelPlayer) {
 			attack.translationAnimation.appendKeyValue(new KeyValue({
 				val:{
 					x:attack.translationAnimation.x + attack.bounds.w*1.2,

@@ -59,9 +59,7 @@ class CardDuelPlayer extends Card {
 	}
 	hideUI() {
 		this.attacks.forEach(function (attack) {
-			if(attack.id !== currentGame.duel.playerAttack.id) {
-				animations.attack.hideAttack(attack);
-			}
+			animations.attack.hideAttack(attack);
 		});
 		animations.card.hideStatBox(this.statsBox);
 	}
