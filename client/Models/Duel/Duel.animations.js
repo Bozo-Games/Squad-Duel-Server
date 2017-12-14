@@ -11,9 +11,9 @@ animations.duel = {
 	},
 	"waitingForAttacks->ready":function (duel,json) {
 
-		duel.playerCard.hideUI();
 
 		duel.currentState = json.currentState;
 		duel.loadJSON(json);
+		duel.playerCard.hideUI();
 	}
 };
