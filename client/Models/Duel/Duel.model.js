@@ -164,6 +164,9 @@ class Duel extends Sprite {
 			},
 			parentSprite:this
 		});
+
+		this.playerCard.character.loadJSON(this.playerCurrentCard);
+		this.oppCard.character.loadJSON(this.oppCurrentCard);
 	}
 
 	touchEnded() {

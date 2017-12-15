@@ -10,7 +10,11 @@ class CardInHand extends Card {
 			this.applyAnimations();
 			ellipseMode(CORNER);
 			ellipse(0,0,this.bounds.w,this.bounds.h);
+
 			let img = icons.getCharacter(this.name,this.loop);
+			if(this.currentState === 'dead') {
+				img = icons.card[this.name].dead;
+			}
 			image(img,0,0,this.bounds.w, this.bounds.h);
 			//get ready for icons
 			let iconSize = this.bounds.w * defaults.card.inHand.iconScale;

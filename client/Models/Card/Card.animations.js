@@ -49,33 +49,28 @@ animations.card = {
 		}
 	},
 	"dueling->inHand": function (card, json) {
-		if(currentGame.isPlayerCard(card.id)) {
-			if (card instanceof CardInHand) {
-				card.translationAnimation.appendKeyValue(new KeyValue({
-					val: {x: 0, y: 0},
-					endEpoch: frameTime + 400,
-					callBack: function (card) {
-						card.currentState = 'inHand';
-						card.loadJSON(json);
-					}
-				}));
-			} else {
-				card.currentState = 'inHand';
-				card.loadJSON(json);
-			}
+		if (card instanceof CardInHand) {
+			card.translationAnimation.appendKeyValue(new KeyValue({
+				val: {x: 0, y: 0},
+				endEpoch: frameTime + 400,
+				callBack: function (card) {
+					card.currentState = 'inHand';
+					card.loadJSON(json);
+				}
+			}));
 		} else {
 			card.currentState = 'inHand';
 			card.loadJSON(json);
 		}
 	},
 	"selected->lockedIn": function (card, json) {
-		if(currentGame.isPlayerCard(card.id)) {
+		if (currentGame.isPlayerCard(card.id)) {
 			if (card.constructor.name === 'CardDuelCharacter') {
-				animations.card.characterJump(card,function (card) {
+				animations.card.characterJump(card, function (card) {
 					card.currentState = 'lockedIn';
 					card.loadJSON(json);
 				});
-			} else if(card.constructor.name === 'CardDuelCharacter') {
+			} else if (card.constructor.name === 'CardDuelCharacter') {
 
 			} else {
 				card.currentState = 'lockedIn';
@@ -83,6 +78,28 @@ animations.card = {
 			}
 		} else {
 			card.currentState = 'lockedIn';
+			card.loadJSON(json);
+		}
+	}
+	,
+	"dueling->dead": function (card, json) {
+		if(currentGame.isPlayerCard(card.id)) {
+			if (card instanceof CardInHand) {
+				card.loop = 'die';
+				card.translationAnimation.appendKeyValue(new KeyValue({
+					val: {x: 0, y: 0},
+					endEpoch: frameTime + 400,
+					callBack: function (card) {
+						card.currentState = 'dead';
+						card.loadJSON(json);
+					}
+				}));
+			} else {
+				card.currentState = 'dead';
+				card.loadJSON(json);
+			}
+		} else {
+			card.currentState = 'dead';
 			card.loadJSON(json);
 		}
 	},

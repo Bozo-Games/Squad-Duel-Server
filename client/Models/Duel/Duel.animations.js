@@ -1,5 +1,12 @@
 animations.duel = {
 	"waitingForCards->waitingForAttacks": function (duel,json) {
+		//hide card in opp hand
+		let index = duel.oppCard.id === currentGame.oppHand.cards[1] ? 1 : duel.oppCard.id === currentGame.oppHand.cards[1] ? 1 : 0;
+		currentGame.oppHand.cards[index].translationAnimation.appendKeyValue(new KeyValue({
+			val: {x: 0, y: -currentGame.oppHand.cards[index].bounds.h*2.2},
+			endEpoch: frameTime + 400,
+			callBack: function (card) {	}
+		}));
 
 		duel.oppCard.show();
 
@@ -111,7 +118,7 @@ animations.duel = {
 	},
 	"displayResults->waitingForCards":function (duel,json) {
 		animations.sprite.shrinkToNothing(duel.acceptResultsBtn,210,function (button) {
-			//currentGame.duel = new Duel(json);
+
 		});
 
 		[duel.oppArrowResults,duel.oppEndResults,duel.oppStartResults].forEach(function (sprite) {
