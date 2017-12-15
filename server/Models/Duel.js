@@ -161,10 +161,21 @@ class Duel {
     }
 	//------------------------------------------------- -------------------------------------------------- state machine
 	_onBeforeAddCard(lifecycle,card,letter) {
-    	logs.log(E.logs.duel,"card " + card.id + " is selected by player "+ letter);
-		this['card'+letter] = card;
-		if(card.canSelect) {
-			card.selectCard();
+    	let allowSwap = false;
+		if(this['card'+letter] !== undefined) {
+			if((this['card'+letter].currentState === 'inHand' || this['card'+letter].currentState === 'selected') &&
+				this['card'+letter].id !== card.id){
+				allowSwap = true;
+			}
+		} else {
+			allowSwap = true;
+		}
+		if(allowSwap) {
+			logs.log(E.logs.duel, "card " + card.id + " is selected by player " + letter);
+			this['card' + letter] = card;
+			if (card.canSelect) {
+				card.selectCard();
+			}
 		}
 		if( (this.cardA !== undefined && this.cardB !== undefined)) {
 			return this.cardA.currentState === 'lockedIn' && this.cardB.currentState === 'lockedIn';

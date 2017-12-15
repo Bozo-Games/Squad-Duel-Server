@@ -9,7 +9,7 @@ class CardDuelStats extends Card {
 	draw() {
 		push();
 		super.applyAnimations();
-		rect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h,5);
+		rect(0,0,this.bounds.w,this.bounds.h,5);
 		//TODO draw stats
 		super.drawSubViews();
 		pop();

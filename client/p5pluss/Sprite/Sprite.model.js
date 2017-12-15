@@ -10,10 +10,11 @@ class Sprite {
 		this.scaleAnimation = json.scaleAnimation === undefined ? defaults.animation.scale.blank() : new ScaleAnimation(json.scaleAnimation);
 		this.translationAnimation = json.translationAnimation === undefined ? defaults.animation.translation.blank() : new TranslationAnimation(json.translationAnimation);
 
+		/*
 		this.translationAnimation.forceUpdate({x:this._bounds.x,y:this._bounds.y});
 		this._bounds.x = 0;
 		this._bounds.y = 0;
-
+*/
 		this.subSprites = [];
 
 		this.parentSprite = undefined;
@@ -50,6 +51,17 @@ class Sprite {
 		}
 	}
 
+	get gloablLoc() {
+		let x = (this.bounds.x+this.translationAnimation.x)* this.scaleAnimation.width;
+		let y = (this.bounds.y+this.translationAnimation.y)* this.scaleAnimation.height;
+		let s = this.parentSprite;
+		while(s !== undefined) {
+			x += (s.bounds.x+this.translationAnimation.x)* s.scaleAnimation.width;
+			y += (s.bounds.y+this.translationAnimation.y)* s.scaleAnimation.height;
+			s = s.parentSprite;
+		}
+		return {x:x,y:y};
+	}
 	get bounds() {
 		return this._bounds;
 	}
@@ -63,7 +75,7 @@ class Sprite {
 		}
 	}*/
 	applyAnimations(){
-		//translate(this.bounds.x,this.bounds.y);
+		translate(this.bounds.x,this.bounds.y);
 		this.translationAnimation.applyEffect(this);
 		this.scaleAnimation.applyEffect(this);
 		fill(this.fillColor);
@@ -87,10 +99,11 @@ class Sprite {
 		let didTap = false;
 		if(this.touchEnabled) {
 			pushMouse();
+				translateMouse(this.bounds.x,this.bounds.y);
 				this.translationAnimation.applyEffectMouse(this);
 				this.scaleAnimation.applyEffectMouse(this);
-				if ((mouseX >= this._bounds.x && mouseX <= (this._bounds.x + this._bounds.w)) &&
-					(mouseY >= this._bounds.y && mouseY <= (this._bounds.y + this._bounds.h))) {
+				if ((mouseX >= 0 && mouseX <=  this.bounds.w) &&
+					(mouseY >= 0 && mouseY <= this.bounds.h)) {
 					didTap = true;
 				} else {
 					didTap = false

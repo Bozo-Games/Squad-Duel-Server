@@ -3,10 +3,11 @@ class CardDuelOpp extends  Card {
 		json = json === undefined ? {} : json;
 		json.touchEnabled = false;
 		super(json);
-		let size = this.bounds.h*defaults.card.duel.opp.characterScale.h;
+		let size = this.bounds.h*defaults.card.duel.player.characterScale.h;
+
 		json.bounds = {
-			x: this.orignalCharacterX,
-			y: this.bounds.h*defaults.card.duel.opp.characterScale.y,
+			x: this.bounds.w - size+this.bounds.w*defaults.card.duel.player.characterScale.x,
+			y: this.bounds.h*defaults.card.duel.player.characterScale.y,
 			w: size,
 			h: size
 		};
@@ -14,14 +15,12 @@ class CardDuelOpp extends  Card {
 		this.character = new CardDuelCharacter(json);
 		//foce to hide until the right moment
 		this.character.scaleAnimation.forceUpdate({width: 1, height: 1});
-		this.character.translationAnimation.forceUpdate({x: this.character.bounds.w, y: -this.character.bounds.h * 2});
+		this.character.translationAnimation.forceUpdate({
+			x: this.character.bounds.w+this.character.bounds.x,
+			y: -this.character.bounds.h * 2});
 	}
 	show() {
-		animations.card.oppEnter(this.character);
-	}
-	get orignalCharacterX() {
-		let size = this.bounds.h*defaults.card.duel.opp.characterScale.h;
-		return  this.bounds.w - size + this.bounds.w*defaults.card.duel.player.characterScale.x
+		animations.card.oppCharacterEnters(this.character,function (card) {});
 	}
 
 	draw() {

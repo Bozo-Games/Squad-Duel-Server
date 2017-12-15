@@ -38,14 +38,14 @@ class Duel extends Sprite {
 				if(playerAttackJSON !== undefined) {
 					if(this.playerAttack === undefined) {
 						playerAttackJSON.bounds = {
-							x:-this.bounds.w,
+							x:0,
 							y:0,
 							w:this.bounds.w,
 							h:this.bounds.h
 						};
 						playerAttackJSON.parentSprite = this;
-						console.log('player - '+JSON.stringify(playerAttackJSON.bounds));
 						this.playerAttack = new AttackComat(playerAttackJSON);
+						this.playerAttack.translationAnimation.forceUpdate({x:-this.bounds.w,y:0});
 					} else {
 						this.playerAttack.loadJSON(playerAttackJSON);
 					}
@@ -69,14 +69,14 @@ class Duel extends Sprite {
 				if(oppAttackJSON !== undefined) {
 					if(this.oppAttack === undefined) {
 						oppAttackJSON.bounds = {
-							x:-this.bounds.w,
+							x:0,
 							y:0,
 							w:this.bounds.w,
 							h:this.bounds.h
 						};
-						console.log('opp - '+JSON.stringify(oppAttackJSON.bounds));
 						oppAttackJSON.parentSprite = this;
 						this.oppAttack = new AttackComat(oppAttackJSON);
+						this.oppAttack.translationAnimation.forceUpdate({x:-this.bounds.w,y:0})
 					} else {
 						this.oppAttack.loadJSON(oppAttackJSON);
 					}

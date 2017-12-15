@@ -15,12 +15,12 @@ class AttackDuelPlayer extends Attack {
 				fill(colors.attack.selected);
 			}
 		}
-		rect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h,5);
+		rect(0,0,this.bounds.w,this.bounds.h,5);
 
 		textSize(this.bounds.h*0.4);
-		textAlign(LEFT,TOP);
+		textAlign(CENTER,CENTER);
 		fill(colors.attack.text);
-		text(this.name,this.bounds.w*0.05,0);
+		text(this.name,this.bounds.w/2,this.bounds.h/2);
 		this.drawSubViews();
 		pop();
 	}

@@ -9,9 +9,9 @@ class CardInHand extends Card {
 		push();
 			this.applyAnimations();
 			ellipseMode(CORNER);
-			ellipse(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h);
+			ellipse(0,0,this.bounds.w,this.bounds.h);
 			let img = icons.getCharacter(this.name,this.loop);
-			image(img,this.bounds.x,this.bounds.y,this.bounds.w, this.bounds.h);
+			image(img,0,0,this.bounds.w, this.bounds.h);
 			//get ready for icons
 			let iconSize = this.bounds.w * defaults.card.inHand.iconScale;
 			textAlign(LEFT,TOP);
@@ -24,10 +24,10 @@ class CardInHand extends Card {
 				letterScale -= 0.01;
 				textSize(iconSize*letterScale);
 			}
-			image(icons.card.health,this.bounds.x,this.bounds.y, iconSize,iconSize);
+			image(icons.card.health,0,0, iconSize,iconSize);
 			text(this.health,
-				this.bounds.x + (iconSize-textWidth(this.health))/2,
-				this.bounds.y + (iconSize-(iconSize*letterScale))/2.5);
+				(iconSize-textWidth(this.health))/2,
+				(iconSize-(iconSize*letterScale))/2.5);
 			//armor
 			letterScale = 0.5;
 			textSize(iconSize*letterScale);
@@ -36,10 +36,14 @@ class CardInHand extends Card {
 				textSize(iconSize*letterScale);
 			}
 			tint(colors.card.armor);
-			image(icons.card.armor,this.bounds.x+(this.bounds.w -iconSize),this.bounds.y,iconSize,iconSize);
+			image(icons.card.armor,
+				(this.bounds.w -iconSize),
+				0,
+				iconSize,
+				iconSize);
 			text(this.armor,
-				this.bounds.x+(this.bounds.w -iconSize)+(iconSize-textWidth(this.armor))/2,
-				this.bounds.y+(iconSize-(iconSize*letterScale))/2.5);
+				(this.bounds.w -iconSize)+(iconSize-textWidth(this.armor))/2,
+				(iconSize-(iconSize*letterScale))/2.5);
 
 			this.drawSubViews();
 		pop();

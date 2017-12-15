@@ -6,15 +6,15 @@ defaults.card = {
 	duel: {
 		player: {
 			scale: {
-				x: 0.125,
+				x: 0.1,
 				y: 0.5,
 				w: 1,
 				h: 0.5,
 			},
 			statBoxScale: {
-				x: 0.05,
+				x: 0.025,
 				y: 0,
-				w: 0.125,
+				w: 0.15,
 				h: 0.5,
 			},
 			characterScale: {

@@ -1,5 +1,6 @@
 animations.duel = {
 	"waitingForCards->waitingForAttacks": function (duel,json) {
+
 		duel.oppCard.show();
 
 		animations.button.lockIn.hide(duel.playerCard.lockInBtn);
@@ -63,6 +64,7 @@ animations.duel = {
 				armorDMGJSON.parentSprite = duel.playerCard.character;
 				healthDMGJSON.parentSprite = duel.playerCard.character;
 			}
+
 		}
 		duel.currentState = json.currentState;
 		duel.saveCardCurrentStats(json);
