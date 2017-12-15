@@ -4,7 +4,6 @@ class CardDuelCharacter extends Card {
 		json.bounds = json.bounds === undefined ? {x:0,y:0,w:100,h:100} : json.bounds;
 		super(json);
 		if (currentGame.isOppCard(this.id)) {
-			console.log('here');
 			animations.card.flipCharacterHorizonaly(this,function (card) {
 			},10);
 		}

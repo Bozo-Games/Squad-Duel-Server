@@ -83,8 +83,12 @@ class Sprite {
 		textSize(this.fontSize);
 	}
 	drawSubViews() {
-		for(let i = 0; i < this.subSprites.length; i++) {
-			this.subSprites[i].draw();
+		for(let i =  this.subSprites.length-1; i >=0; i--) {
+			if(this.subSprites[i] !== undefined) {
+				this.subSprites[i].draw();
+			} else {
+				this.subSprites.splice(i,1);
+			}
 		}
 	}
 	draw() {

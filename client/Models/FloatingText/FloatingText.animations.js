@@ -13,5 +13,15 @@ animations.floatingText = {
 			callBack: function (floatingText) {
 
 			}}));
+	},
+	floatAway: function (floatingText,callBack) {
+		floatingText.translationAnimation.appendKeyValue(new KeyValue({
+			val:{x:(Math.random() - Math.random())*floatingText.bounds.w/2,y:-floatingText.bounds.w/3},
+			endEpoch:frameTime + 1000,
+			callBack: function (floatingText) {
+				if(typeof callBack === 'function') {
+					callBack(floatingText);
+				}
+			}}));
 	}
 };

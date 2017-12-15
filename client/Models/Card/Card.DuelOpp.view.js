@@ -30,10 +30,12 @@ class CardDuelOpp extends  Card {
 			this.character.draw();
 			//this.statsBox.draw();
 			//this.lockInBtn.draw();
-			/*
-			this.attacks.forEach(function (attack) {
-				attack.draw();
-			});*/
+
+			this.subSprites.forEach(function (sprite) {
+				if(sprite instanceof FloatingText) {
+					sprite.draw();
+				}
+			});
 			pop();
 		}
 	}

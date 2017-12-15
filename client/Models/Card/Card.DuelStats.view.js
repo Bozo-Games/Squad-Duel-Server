@@ -10,7 +10,19 @@ class CardDuelStats extends Card {
 		push();
 		super.applyAnimations();
 		rect(0,0,this.bounds.w,this.bounds.h,5);
-		//TODO draw stats
+
+		let iconSize = this.bounds.h / 4;
+		let y = (iconSize)/4;
+		let step = iconSize + y;
+		fill(colors.card.text);
+		textSize(iconSize*0.8);
+		textAlign(LEFT,TOP);
+		['health','armor','speed'].forEach(function (stat) {
+			tint(colors.card[stat]);
+			image(icons.card[stat],(this.bounds.w*0.5-iconSize)/2,y,iconSize,iconSize);
+			text(this[stat],this.bounds.w*0.55,y);
+			y += step;
+		}.bind(this));
 		super.drawSubViews();
 		pop();
 	}

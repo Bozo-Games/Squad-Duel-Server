@@ -48,6 +48,26 @@ animations.card = {
 			card.loadJSON(json);
 		}
 	},
+	"dueling->inHand": function (card, json) {
+		if(currentGame.isPlayerCard(card.id)) {
+			if (card instanceof CardInHand) {
+				card.translationAnimation.appendKeyValue(new KeyValue({
+					val: {x: 0, y: 0},
+					endEpoch: frameTime + 400,
+					callBack: function (card) {
+						card.currentState = 'inHand';
+						card.loadJSON(json);
+					}
+				}));
+			} else {
+				card.currentState = 'inHand';
+				card.loadJSON(json);
+			}
+		} else {
+			card.currentState = 'inHand';
+			card.loadJSON(json);
+		}
+	},
 	"selected->lockedIn": function (card, json) {
 		if(currentGame.isPlayerCard(card.id)) {
 			if (card.constructor.name === 'CardDuelCharacter') {
@@ -66,6 +86,7 @@ animations.card = {
 			card.loadJSON(json);
 		}
 	},
+
 	swapCard: function (card,json) {
 		if(currentGame.isPlayerCard(card.id)) {
 			if(card.constructor.name === 'CardDuelCharacter') {
@@ -185,11 +206,9 @@ animations.card = {
 	flipCharacterHorizonaly: function (card,callBack,time=200) {
 		let dir = -1;
 		let x = 1;
-		console.log(card.scaleAnimation.width +' is w');
 		if(card.scaleAnimation.width < 0) {
 			dir = 1;
 			x = -1;
-			console.log('here');
 		}
 		card.scaleAnimation.appendKeyValue(new KeyValue({
 			val:{width:dir,height:1},
@@ -214,6 +233,40 @@ animations.card = {
 				callBack(card);
 			}
 		}));
+	},
+	playerCharacterLeaves: function (card,callBack) {
+		card.loop = 'walk';
+		card.scaleAnimation.forceUpdate({width: 1, height: 1});
+		card.translationAnimation.forceUpdate({x:0,y:0});
+		animations.card.flipCharacterHorizonaly(card,function(card){
+			card.translationAnimation.appendKeyValue(new KeyValue({
+				val:{x: -card.bounds.w-card.bounds.x, y: card.bounds.h * 2},
+				endEpoch:frameTime + 800,
+				callBack:function(card){
+					card.loop = 'idle';
+					callBack(card);
+				}
+			}));
+		});
+	},
+
+	oppCharacterLeaves: function (card,callBack) {
+		card.loop = 'walk';
+		card.scaleAnimation.forceUpdate({width: -1, height: 1});
+		card.translationAnimation.forceUpdate({x:card.bounds.w/2,y:0});
+		animations.card.flipCharacterHorizonaly(card,function(card){
+			card.translationAnimation.appendKeyValue(new KeyValue({
+				val:{
+					x: card.bounds.w+card.bounds.x,
+					y: -card.bounds.h * 2
+				},
+				endEpoch:frameTime + 800,
+				callBack:function(card){
+					card.loop = 'idle';
+					callBack(card);
+				}
+			}));
+		});
 	},
 	oppCharacterEnters: function (card,callBack) {
 		card.loop = 'walk';

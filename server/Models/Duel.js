@@ -112,15 +112,15 @@ class Duel {
 				    } else {return false;}
 			    } else if(this._stateMachine.can('handleCrushing')) {
 				    if(this._stateMachine.handleCrushing()) {
-					    this.processDuel(); //auto step to next stage of duel
+					    this.processDuel(); //auto step to next stage of button
 				    } else {return false;}
 			    } else if(this._stateMachine.can('handlePiercing')) {
 				    if(this._stateMachine.handlePiercing()) {
-					    this.processDuel(); //auto step to next stage of duel
+					    this.processDuel(); //auto step to next stage of button
 				    } else {return false;}
 			    } else if(this._stateMachine.can('handleFlat')) {
 				    if(this._stateMachine.handleFlat()) {
-					    this.processDuel(); //auto step to next stage of duel
+					    this.processDuel(); //auto step to next stage of button
 				    } else {return false;}
 			    } else if(this._stateMachine.can('finishAttack')) {
 				    if(this._stateMachine.finishAttack()) {
@@ -137,7 +137,7 @@ class Duel {
 				    	this.processDuel();
 				    }
 			    } else {
-			    	logs.log(E.logs.duel,'Error processing duel @' + this.currentState);
+			    	logs.log(E.logs.duel,'Error processing button @' + this.currentState);
 			    }
 		    }
 	    }
@@ -306,20 +306,20 @@ class Duel {
 	//------------------------------------------------- ------------------------------------------------ All transitions
 	_onBeforeTransition(lifecycle) {
 		logs.log(E.logs.duel,`~~~~~~~~~~~~~~~~ NEW DUEL STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
-		//logs.log(E.logs.duel, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.button, "On BEFORE transition - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onAfterTransition(lifecycle) {
-		//logs.log(E.logs.duel, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.button, "On AFTER transition  - " + lifecycle.transition +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onEnterState(lifecycle) {
-		//logs.log(E.logs.duel, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.button, "On ENTER state       - " + lifecycle.to +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onLeaveState(lifecycle) {
 		logs.log(E.logs.duel,`~~~~~~~~~~~~~~~~ END DUEL STATE CHANGE ${lifecycle.from} -> ${lifecycle.transition} -> ${lifecycle.to}`);
-		//logs.log(E.logs.duel, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
+		//logs.log(E.logs.button, "On LEAVE state       - " + lifecycle.from +"\t | " + lifecycle.from + ' -> ' + lifecycle.transition + ' -> ' + lifecycle.to);
 		return true;
 	}
 	_onInvalidTransition(transition,from,to){

@@ -63,6 +63,13 @@ class CardDuelPlayer extends Card {
 		});
 		animations.card.hideStatBox(this.statsBox);
 	}
+	showUI() {
+		this.attacks.forEach(function (attack) {
+			animations.attack.showAttack(attack);
+		});
+		animations.card.showStatBox(this.statsBox);
+	}
+
 	loadJSON(json) {
 		super.loadJSON(json);
 		if(this.character !== undefined){this.character.loadJSON(json);}
@@ -76,6 +83,12 @@ class CardDuelPlayer extends Card {
 			this.lockInBtn.draw();
 			this.attacks.forEach(function (attack) {
 				attack.draw();
+			});
+
+			this.subSprites.forEach(function (sprite) {
+				if(sprite instanceof FloatingText) {
+					sprite.draw();
+				}
 			});
 			pop();
 		}
