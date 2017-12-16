@@ -54,7 +54,9 @@ class Animation {
 				this._startEpoch = this._keyValues[0].endEpoch;
 				let cb = this._keyValues[0].callBack;
 				this._keyValues.splice(0, 1);
-				cb(sprite);
+				if(typeof cb === 'function') {
+					cb(sprite);
+				}
 			}
 		}
 		//here is where the effect would be applied

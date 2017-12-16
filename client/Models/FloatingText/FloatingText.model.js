@@ -10,9 +10,9 @@ class FloatingText extends Sprite {
 	draw() {
 		push();
 		super.applyAnimations();
-		textAlign(LEFT,TOP);
+		textAlign(CENTER,CENTER);
 		textSize(this.bounds.h*this.scaleAnimation.height);
-		text(this.text,0,0);
+		text(this.text,this.bounds.w/2,this.bounds.h/2);
 		super.drawSubViews();
 		pop();
 	}

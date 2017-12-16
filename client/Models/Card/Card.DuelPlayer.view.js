@@ -4,6 +4,8 @@ class CardDuelPlayer extends Card {
 		json.strokeWeight = 1;
 		json.bounds = json.bounds === undefined ? {x:0,y:0,w:100,h:100} : json.bounds;
 		super(json);
+		
+
 		json.bounds = {
 			x: this.bounds.w*defaults.card.duel.player.characterScale.x,
 			y: this.bounds.h*defaults.card.duel.player.characterScale.y,
@@ -17,7 +19,7 @@ class CardDuelPlayer extends Card {
 		json.bounds = {
 			x: this.bounds.w*defaults.card.duel.player.statBoxScale.x,
 			y: this.bounds.h*defaults.card.duel.player.statBoxScale.y,
-			w: this.bounds.h*defaults.card.duel.player.statBoxScale.h,
+			w: this.bounds.w*defaults.card.duel.player.statBoxScale.w,
 			h: this.bounds.h*defaults.card.duel.player.statBoxScale.h
 		};
 		this.statsBox = new CardDuelStats(json);
@@ -33,14 +35,15 @@ class CardDuelPlayer extends Card {
 			let attackJSON = json.attacks[i];
 			let yy = spaceing*(i+1) + h*(i+1);
 			attackJSON.bounds = {
-				x: this.bounds.w*defaults.card.duel.player.attackScale.x+this.bounds.w*defaults.card.duel.player.attackScale.w*1.2,
+				x: this.bounds.w*defaults.card.duel.player.attackScale.x,
 				y: yy,
 				w: this.bounds.w*defaults.card.duel.player.attackScale.w,
 				h: h
 			};
 			attackJSON.parentSprite = this;
 			let a = new AttackDuelPlayer(attackJSON);
-			animations.attack.newAttack(a);
+			a.translationAnimation.forceUpdate({x:a.bounds.w*1.2,y:0});
+			animations.attack.showAttack(a,function (attack) {});
 			this.attacks.push(a);
 		}
 		this.lockInBtn = new ButtonLockIn({
@@ -52,10 +55,9 @@ class CardDuelPlayer extends Card {
 			},
 			parentSprite: this
 		});
+		this.lockInBtn.translationAnimation.forceUpdate({x:this.lockInBtn.bounds.w/2,y:h/2});
 		this.lockInBtn.scaleAnimation.forceUpdate({width:0,height:0});
-		this.lockInBtn.translationAnimation.forceUpdate({x:(this.bounds.w*defaults.card.duel.player.attackScale.x)*1.5,y:h});
 		animations.button.lockIn.show(this.lockInBtn);
-
 	}
 	hideUI() {
 		this.attacks.forEach(function (attack) {
@@ -63,6 +65,13 @@ class CardDuelPlayer extends Card {
 		});
 		animations.card.hideStatBox(this.statsBox);
 	}
+	showUI() {
+		this.attacks.forEach(function (attack) {
+			animations.attack.showAttack(attack);
+		});
+		animations.card.showStatBox(this.statsBox);
+	}
+
 	loadJSON(json) {
 		super.loadJSON(json);
 		if(this.character !== undefined){this.character.loadJSON(json);}
@@ -76,6 +85,12 @@ class CardDuelPlayer extends Card {
 			this.lockInBtn.draw();
 			this.attacks.forEach(function (attack) {
 				attack.draw();
+			});
+
+			this.subSprites.forEach(function (sprite) {
+				if(sprite instanceof FloatingText) {
+					sprite.draw();
+				}
 			});
 			pop();
 		}

@@ -38,7 +38,7 @@ class Card {
 			    onAfterTransition: this._onAfterTransition,
 			    onEnterState: this._onEnterState,
 			    onLeaveState: this._onLeaveState,
-		        onInvalidTransition:this._onInvalidTransition
+		        onInvalidTransition:this._onInvalidTransition,
 		    }
 	    });
 	    json.attacks = json.attacks === undefined ?  [] : json.attacks;
@@ -92,22 +92,40 @@ class Card {
 	}
 	//----------------------------------------------------- -------------------------------- public State Machine Events
 	dealToPlayer() {
-		return this._stateMachine.dealToPlayer();
+		if(this._stateMachine.can('dealToPlayer')) {
+			return this._stateMachine.dealToPlayer();
+		}
+		return false;
 	}
 	selectCard() {
-		return this._stateMachine.selectCard();
+		if(this._stateMachine.can('selectCard')) {
+			return this._stateMachine.selectCard();
+		}
+		return false;
 	}
 	returnToHand() {
-		return this._stateMachine.returnToHand();
+		if(this._stateMachine.can('returnToHand')) {
+			return this._stateMachine.returnToHand();
+		}
+		return false;
 	}
 	confirm(){
-    	return this._stateMachine.confirm();
+		if(this._stateMachine.can('confirm')) {
+			return this._stateMachine.confirm();
+		}
+		return false;
 	}
 	duel() {
-    	return this._stateMachine.duel();
+		if(this._stateMachine.can('duel')) {
+			return this._stateMachine.duel();
+		}
+		return false;
 	}
 	kill() {
-    	return this._stateMachine.kill()
+		if(this._stateMachine.can('kill')) {
+			return this._stateMachine.kill();
+		}
+		return false;
 	}
 	//----------------------------------------------------- --------------------------------------------- public methods
     toJSON(){
@@ -157,7 +175,7 @@ class Card {
 	}
 	_onInvalidTransition(transition,from,to){
 		logs.log(E.logs.card, 'INVALID TRANSITION   - transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
-		throw 'transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')';
+		//throw new Exception('transition ('+transition+') is not allowed from state ('+from+') to state ('+to+')');
 	}
 }
 module.exports = Card;

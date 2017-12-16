@@ -133,7 +133,7 @@ describe('Game Model', function () {
 		assert.equal(g.selectAttack('abc123','bad-id'),false,'player A selects invalid attack');
 		assert.equal(g.duel.attackA, undefined);
 	});
-	it('should get Ready to duel',function () {
+	it('should get Ready to button',function () {
 		let g = new Game();
 		let playerA = new Player({socketID:'abc123',name:'Player A'});
 		let playerB = new Player({socketID:'edf456',name:'Player B'});
@@ -159,7 +159,7 @@ describe('Game Model', function () {
 		assert.equal(g.duel.currentState,'ready');
 	});
 
-	it('should get process to duel',function () {
+	it('should get process to button',function () {
 		let g = new Game();
 		let playerA = new Player({socketID:'abc123',name:'Player A'});
 		let playerB = new Player({socketID:'edf456',name:'Player B'});
@@ -184,7 +184,7 @@ describe('Game Model', function () {
 		assert.equal(g.currentState,'readyToDuel');
 		assert.equal(g.duel.currentState,'ready');
 
-		assert.equal(g.processDuel(),true,'processing duel');
+		assert.equal(g.processDuel(),true,'processing button');
 		assert.equal(g.currentState,'showingDuelResults');
 	});
 	it('should be able to continue the game',function () {
@@ -211,7 +211,7 @@ describe('Game Model', function () {
 		assert.equal(g.duel.attackB.id, 'new-attack-id-2');
 		assert.equal(g.currentState,'readyToDuel');
 		assert.equal(g.duel.currentState,'ready');
-		assert.equal(g.processDuel(),true,'processing duel');
+		assert.equal(g.processDuel(),true,'processing button');
 		assert.equal(g.continueGame(),true,'continue game');
 		assert.equal(g.duel.currentState,'waitingForCards');
 		assert.equal(g.handA.cards[0].currentState,'inHand');
@@ -242,7 +242,7 @@ describe('Game Model', function () {
 		assert.equal(g.duel.attackB.id, 'new-attack-id-2');
 		assert.equal(g.currentState,'readyToDuel');
 		assert.equal(g.duel.currentState,'ready');
-		assert.equal(g.processDuel(),true,'processing duel');
+		assert.equal(g.processDuel(),true,'processing button');
 		//hacky to get all cards dead
 		g.handA.cards[0].health = -10;
 		g.handA.cards[1].selectCard();

@@ -1,1 +1,4 @@
-let animations = {};
+let animations = {
+
+};
+let animationDebug;

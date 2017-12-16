@@ -4,5 +4,8 @@ colors.button = {
 	},
 	lockedIn: {
 		background: '#008833'
-	}
+	},
+	acceptResults: {
+		background: '#008833'
+	},
 };

@@ -100,7 +100,7 @@ describe('Card Model', function () {
 		c.confirm();
 		assert.equal(c.currentState,'lockedIn');
 	});
-	it('should be dueling on duel ', function () {
+	it('should be dueling on button ', function () {
 		let c =  new Card();
 		c.dealToPlayer();
 		c.selectCard();

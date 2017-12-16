@@ -19,8 +19,9 @@ class Game extends Sprite {
 				x:this.bounds.x + defaults.hand.playerScale.x*this.bounds.w,
 				y:this.bounds.y + defaults.hand.playerScale.y*this.bounds.h,
 				w:this.bounds.w * defaults.hand.playerScale.w,
-				h:this.bounds.h * defaults.hand.playerScale.h,
-			}
+				h:this.bounds.h * defaults.hand.playerScale.h
+			},
+			parentSprite:this
 		});
 		this.oppHand = new Hand({
 			bounds:{
@@ -30,6 +31,7 @@ class Game extends Sprite {
 				h:this.bounds.h * defaults.hand.oppScale.h,
 			},
 			touchEnabled:false,
+			parentSprite:this
 		});
 		this.duel = new Duel({
 			bounds:{
@@ -37,11 +39,9 @@ class Game extends Sprite {
 				y:this.bounds.y + defaults.duel.scale.y*this.bounds.h,
 				w:this.bounds.w * defaults.duel.scale.w,
 				h:this.bounds.h * defaults.duel.scale.h,
-			}
+			},
+			parentSprite:this
 		});
-		this.addSubSprite(this.playerHand);
-		this.addSubSprite(this.oppHand);
-		this.addSubSprite(this.duel);
 		this.loadJSON(json);
 	}
 	loadJSON(json) {

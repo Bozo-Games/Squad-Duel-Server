@@ -20,6 +20,7 @@ class Card extends Sprite {
 				if (animations.card[this.currentState + '->' + json.currentState] !== undefined) {
 					animations.card[this.currentState + '->' + json.currentState](this, json);
 				} else {
+					console.log(this.constructor.name+' State Change '+this.currentState + '->' + json.currentState );
 					this.currentState = json.currentState;
 					this.loadJSON(json);
 				}
@@ -27,6 +28,7 @@ class Card extends Sprite {
 				this.name = json.name === undefined ? 'Adventuring_Barbarian' : json.name;
 				this.armor = json.armor === undefined ? 1 : json.armor;
 				this.health = json.health === undefined ? 1 : json.health;
+				this.speed = json.speed === undefined ? 1 : json.speed;
 				for(let i = 0; i < json.attacks.length; i++) {
 					if(this.attacks[i] === undefined) {
 						this.attacks[i] = new Attack(json.attacks[i]);
