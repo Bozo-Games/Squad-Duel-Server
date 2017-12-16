@@ -4,7 +4,7 @@ class CardDuelPlayer extends Card {
 		json.strokeWeight = 1;
 		json.bounds = json.bounds === undefined ? {x:0,y:0,w:100,h:100} : json.bounds;
 		super(json);
-		
+
 
 		json.bounds = {
 			x: this.bounds.w*defaults.card.duel.player.characterScale.x,
