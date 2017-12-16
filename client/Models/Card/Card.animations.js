@@ -50,6 +50,7 @@ animations.card = {
 	},
 	"dueling->inHand": function (card, json) {
 		if (card instanceof CardInHand) {
+			console.log('hereaksjfdlkasjdf;lkasdjf;lkasdjf;lkasj')
 			card.translationAnimation.appendKeyValue(new KeyValue({
 				val: {x: 0, y: 0},
 				endEpoch: frameTime + 400,
