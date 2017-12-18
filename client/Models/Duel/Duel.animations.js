@@ -2,15 +2,16 @@ animations.duel = {
 	"waitingForCards->waitingForAttacks": function (duel,json) {
 		//hide card in opp hand
 		let index = duel.oppCard.id === currentGame.oppHand.cards[1].id ? 1 : duel.oppCard.id === currentGame.oppHand.cards[2].id ? 2 : 0;
-		currentGame.oppHand.cards[index].translationAnimation.appendKeyValue(new KeyValue({
-			val: {x: 0, y: -currentGame.oppHand.cards[index].bounds.h*2.2},
-			endEpoch: frameTime + 400,
-			callBack: function (card) {	}
-		}));
+		currentGame.oppHand.cards[index].moveToGlobal(
+			currentGame.oppHand.cards[index].bounds.x,
+			-currentGame.oppHand.cards[index].h,
+			undefined,
+			400);
 
 		duel.oppCard.show();
 
-		animations.button.lockIn.hide(duel.playerCard.lockInBtn);
+		duel.lockInButton.hide();
+
 		duel.playerCard.attacks.forEach(function (attack) {
 			attack.touchEnabled = true;
 		});

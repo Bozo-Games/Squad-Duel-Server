@@ -61,14 +61,13 @@ class Duel extends Sprite {
 				let oppCardJSON = json[`card${currentGame.oppLetter}`];
 				if(oppCardJSON !== undefined) {
 					if (this.oppCard === undefined) {
-						oppCardJSON.bounds = {
-							x: this.bounds.w*defaults.duel.opp.x,
-							y: this.bounds.h*defaults.duel.opp.y,
-							w: this.bounds.w*defaults.duel.opp.w,
-							h: this.bounds.h*defaults.duel.opp.h
-						};
+						oppCardJSON.x = this.w*defaults.duel.opp.x;
+						oppCardJSON.y = this.h*defaults.duel.opp.y;
+						oppCardJSON.w = this.w*defaults.duel.opp.w;
+						oppCardJSON.h = this.h*defaults.duel.opp.h;
 						oppCardJSON.parentSprite = this;
 						this.oppCard = new CardDuelOpp(oppCardJSON);
+						this.oppCard.debug = true;
 					} else {
 						this.oppCard.loadJSON(oppCardJSON);
 					}

@@ -1,10 +1,7 @@
 class CardDuelPlayer extends Card {
 	constructor(json) {
 		json = json === undefined ? {} : json;
-		json.color= '#ff0000';
 		super(json);
-
-		console.log(JSON.stringify(this.bounds));
 
 		json.x = this.w*defaults.card.duel.player.characterScale.x;
 		json.y = this.h*defaults.card.duel.player.characterScale.y;
@@ -14,7 +11,6 @@ class CardDuelPlayer extends Card {
 			x: -json.w*2,
 			y: json.y + this.bounds.y+json.h,
 		};
-		console.log(JSON.stringify(json.animation));
 		json.parentSprite = this;
 		this.character = new CardDuelCharacter(json);
 
@@ -29,11 +25,11 @@ class CardDuelPlayer extends Card {
 		this.statsBox = new CardDuelStats(json);
 
 		this.attacks = [];
-		let h = this.h / (json.attacks.length+1.5); //1 for space,2 for lock in
-		let spacing = (this.h - h*(json.attacks.length+1))/2;
+		let h = this.h / (json.attacks.length+1); //1 for space,2 for lock in
+		let spacing = h / (json.attacks.length+1);
 		for(let i = 0; i < json.attacks.length; i++) {
 			let attackJSON = json.attacks[i];
-			let yy = spacing*(i+1) + h*(i+1);
+			let yy = spacing*(i+1) + h*(i);
 			attackJSON.x = this.w*defaults.card.duel.player.attackScale.x;
 			attackJSON.y = yy;
 			attackJSON.w = this.w*defaults.card.duel.player.attackScale.w;
@@ -83,15 +79,17 @@ class CardDuelPlayer extends Card {
 	}
 	hideUI() {
 		this.attacks.forEach(function (attack) {
+			attack.hide();
 			animations.attack.hideAttack(attack);
 		});
-		animations.card.hideStatBox(this.statsBox);
+		this.statsBox.hide();
 	}
 	showUI() {
 		this.attacks.forEach(function (attack) {
+			attack.show();
 			animations.attack.showAttack(attack);
 		});
-		animations.card.showStatBox(this.statsBox);
+		this.statsBox.show();
 	}
 
 	loadJSON(json) {

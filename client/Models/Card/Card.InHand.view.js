@@ -95,7 +95,6 @@ class CardInHand extends Card {
         	fill(colors.card.name);
 	        text(this.name,0,-iconSize*.25);
 
-
             this.drawSubSprites();
 		pop();
 	}

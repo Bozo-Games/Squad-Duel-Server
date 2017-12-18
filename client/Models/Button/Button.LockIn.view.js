@@ -32,4 +32,15 @@ class ButtonLockIn extends Sprite {
 			network.lockIn(this.parentSprite.playerCard.id);
 		}
 	}
+
+	hide(callBack,time=200) {
+		this.push(new AnimationValue({
+			x:this.animation.x + this.w /2,
+			y:this.animation.y + this.h /2,
+			w: 0,
+			h:0,
+			time:time,
+			callBack:callBack
+		}))
+	}
 }

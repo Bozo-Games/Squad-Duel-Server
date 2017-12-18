@@ -27,4 +27,10 @@ class CardDuelStats extends Card {
 		super.drawSubSprites();
 		pop();
 	}
+	show(callBack,time=800){
+		this.moveToLocal(0,0,callBack,time)
+	}
+	hide(callBack,time=800){
+		this.moveToGlobal(-this.w,this.bounds.y,callBack,time);
+	}
 }

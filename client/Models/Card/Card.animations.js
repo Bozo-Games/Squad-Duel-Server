@@ -24,7 +24,7 @@ animations.card = {
 			}
 		} else if(card instanceof CardDuelStats) {
 			if(currentGame.isPlayerCard(card.id)) {
-				card.moveToLocal(0,0,function (card) {
+				card.show(function (card) {
 					card.currentState = 'selected';
 					card.loadJSON(json);
 				},800);
@@ -64,9 +64,8 @@ animations.card = {
 				card.loadJSON(json);
 			}
 		} else if(card instanceof CardDuelStats) {
-			console.log('here');
 			if(currentGame.isPlayerCard(card.id)) {
-				card.moveToGlobal(-card.w,card.bounds.y,function (card) {
+				card.hide(function (card) {
 					card.currentState = 'inHand';
 					card.id = json.id;
 					card.speed = json.speed;
@@ -101,13 +100,11 @@ animations.card = {
 	},
 	"selected->lockedIn": function (card, json) {
 		if (currentGame.isPlayerCard(card.id)) {
-			if (card.constructor.name === 'CardDuelCharacter') {
-				animations.card.characterJump(card, function (card) {
+			if (card instanceof CardDuelCharacter) {
+				card.jump(function (card) {
 					card.currentState = 'lockedIn';
 					card.loadJSON(json);
-				});
-			} else if (card.constructor.name === 'CardDuelCharacter') {
-
+				},1200);
 			} else {
 				card.currentState = 'lockedIn';
 				card.loadJSON(json);
@@ -159,26 +156,6 @@ animations.card = {
 			card.id = json.id;
 			card.loadJSON(json);
 		}
-	},
-	hideStatBox: function (card) {
-		card.translationAnimation.appendKeyValue(new KeyValue({
-			val: {
-				x:-card.bounds.w*1.3,
-				y:0
-			},
-			endEpoch: frameTime + 400,
-			callBack:function (card) {}
-		}));
-	},
-	showStatBox: function (card) {
-		card.translationAnimation.appendKeyValue(new KeyValue({
-			val: {
-				x: 0,
-				y: 0,
-			},
-			endEpoch: frameTime + 400,
-			callBack:function (card) {}
-		}));
 	},
 	characterAttackCharacter(attacker,defender,turn,rise,run,callBack) {
 		let attackerOrgin = {x: attacker.translationAnimation.x, y: attacker.translationAnimation.y};
@@ -251,19 +228,6 @@ animations.card = {
 			val:{x:card.translationAnimation.x+card.bounds.w*x ,y:card.translationAnimation.y},
 			endEpoch: frameTime+time,
 			callBack:function (card) {}
-		}));
-	},
-	playerCharacterEnters: function (card,callBack) {
-		card.loop = 'walk';
-		card.scaleAnimation.forceUpdate({width: 1, height: 1});
-		card.translationAnimation.forceUpdate({x: -card.bounds.w-card.bounds.x, y: card.bounds.h * 2});
-		card.translationAnimation.appendKeyValue(new KeyValue({
-			val:{x:0,y:0},
-			endEpoch: frameTime + 800,
-			callBack: function (card) {
-				card.loop = 'idle';
-				callBack(card);
-			}
 		}));
 	},
 	playerCharacterLeaves: function (card,callBack) {

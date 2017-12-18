@@ -5,12 +5,6 @@ defaults.card = {
 	},
 	duel: {
 		player: {
-			scale: {
-				x: 0.1,
-				y: 0.5,
-				w: 1,
-				h: 0.5,
-			},
 			statBoxScale: {
 				x: 0.05,
 				y: 0,
@@ -31,28 +25,22 @@ defaults.card = {
 			}
 		},
 		opp: {
-			scale: {
-				x: 0.125,
-				y: 0.5,
-				w: 1,
-				h: 0.5,
-			},
 			statBoxScale: {
-				x: 0.05,
+				x: 0.825,
 				y: 0,
 				w: 0.125,
 				h: 0.5,
 			},
-			characterScale: { //not sure this is usefull am doing other things when drawing but are here so ...
-				x: 0.125,
+			characterScale: {
+				x: 0.5,
 				y: 0,
 				w: 1, //uses H to be square
 				h: 1,
 			},
 			attackScale: {
-				x: 0.6,
+				x: 0.05,
 				y: 0,
-				w: 0.6,
+				w: 0.5,
 				h: 1//calculated based on number of attacks
 			}
 		}
