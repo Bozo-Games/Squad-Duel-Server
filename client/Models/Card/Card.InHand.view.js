@@ -16,40 +16,87 @@ class CardInHand extends Card {
 				img = icons.card[this.name].dead;
 			}
 			image(img,0,0,this.bounds.w, this.bounds.h);
+
 			//get ready for icons
-			let iconSize = this.bounds.w * defaults.card.inHand.iconScale;
-			textAlign(LEFT,TOP);
+	        imageMode(CENTER);
+    	    let iconSize = this.bounds.w * defaults.card.inHand.iconScale;
+			textAlign(CENTER, CENTER);
 			fill(colors.card.text);
 			tint(colors.card.health);
 			//health
+
 			let letterScale = 0.5;
 			textSize(iconSize*letterScale);
 			while(textWidth(this.health) > iconSize*0.4) {
 				letterScale -= 0.01;
 				textSize(iconSize*letterScale);
 			}
-			image(icons.card.health,0,0, iconSize,iconSize);
-			text(this.health,
-				(iconSize-textWidth(this.health))/2,
-				(iconSize-(iconSize*letterScale))/2.5);
+			image(icons.card.health,
+				this.bounds.w - iconSize*.5,
+				iconSize*.5,
+				iconSize*1.35,
+				iconSize*1.35);
+        	if (this.armor > 0) {
+                textSize(iconSize*letterScale);
+                text(this.health, this.bounds.w - iconSize*.85,
+                iconSize*letterScale);
+                //(iconSize-(iconSize*letterScale)));
 			//armor
-			letterScale = 0.5;
-			textSize(iconSize*letterScale);
-			while(textWidth(this.armor) > iconSize*0.4) {
-				letterScale -= 0.01;
-				textSize(iconSize*letterScale);
-			}
-			tint(colors.card.armor);
-			image(icons.card.armor,
-				(this.bounds.w -iconSize),
-				0,
-				iconSize,
-				iconSize);
-			text(this.armor,
-				(this.bounds.w -iconSize)+(iconSize-textWidth(this.armor))/2,
-				(iconSize-(iconSize*letterScale))/2.5);
+				letterScale = 0.5;
+				textSize(iconSize * letterScale);
+				/*while (textWidth(this.armor) > iconSize * 0.4) {
+					letterScale -= 0.01;
+					textSize(iconSize * letterScale);
+				}*/
+				tint(colors.card.armor);
+				image(icons.card.armor,
+					(this.bounds.w - iconSize *.2),
+					iconSize*.35,
+					iconSize,
+					iconSize);
+				text(this.armor,
+					(this.bounds.w) - iconSize*.2,// (iconSize + textWidth(this.armor)),
+					(iconSize - (iconSize * letterScale))*.75);
+			} else {
+                let letterScale = 0.5;
+                textSize(iconSize*letterScale);
+                text(this.health,
+                    this.bounds.w - iconSize*.5,
+                    (iconSize-(iconSize*letterScale)));
+            }
 
-			this.drawSubViews();
+			//let letterScale = 0.5;
+			//power
+			tint(colors.card.power);
+			image(icons.card.power,
+                iconSize*.7,
+				iconSize*.2,
+				iconSize,
+				iconSize
+				);
+			text(this.power,
+                iconSize*.7,
+                iconSize*.2);
+			//speed
+			tint(colors.card.speed);
+			image(icons.card.speed,
+                iconSize*.2,
+				iconSize*.5,
+				iconSize*.9,
+				iconSize*.9
+				);
+			text(this.speed,
+				iconSize*.2,
+				iconSize*.66);
+			//name
+			textSize(14);
+	        textAlign(LEFT, RIGHT);
+
+        	fill(colors.card.name);
+	        text(this.name,0,-iconSize*.25);
+
+
+            this.drawSubViews();
 		pop();
 	}
 	touchEnded() {

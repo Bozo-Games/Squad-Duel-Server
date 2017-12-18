@@ -1,6 +1,6 @@
 defaults.card = {
 	inHand: {
-		iconScale:0.4,
+        iconScale:0.4,
 		strokeWeight: 3,
 	},
 	duel: {
