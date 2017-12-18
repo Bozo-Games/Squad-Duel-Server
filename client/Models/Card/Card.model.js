@@ -29,7 +29,8 @@ class Card extends Sprite {
 				this.armor = json.armor === undefined ? 1 : json.armor;
 				this.health = json.health === undefined ? 1 : json.health;
 				this.speed = json.speed === undefined ? 1 : json.speed;
-				for(let i = 0; i < json.attacks.length; i++) {
+                this.power = json.power === undefined ? 1 : json.power;
+                for(let i = 0; i < json.attacks.length; i++) {
 					if(this.attacks[i] === undefined) {
 						this.attacks[i] = new Attack(json.attacks[i]);
 					} else {
