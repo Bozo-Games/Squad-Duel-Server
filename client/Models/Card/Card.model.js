@@ -3,8 +3,10 @@ class Card extends Sprite {
 		json = json === undefined ? {} : json;
 		json.bounds = json.bounds === undefined ? {x:0,y:0,w:100,h:100} : json.bounds;
 		super(json);
-		this.health = 20;
-		this.armor = 10;
+		this.armor = json.armor === undefined ? 1 : json.armor;
+		this.health = json.health === undefined ? 1 : json.health;
+		this.speed = json.speed === undefined ? 1 : json.speed;
+		this.power = json.power === undefined ? 1 : json.power;
 		this.currentState = 'inHand';
 		this.id = json.id;
 		this.attacks = [];
@@ -14,15 +16,18 @@ class Card extends Sprite {
 	}
 	loadJSON(json) {
 		if(this.id !== json.id) {
+			console.log(this.constructor.name + ' is calling card swap ' + (this instanceof CardDuelCharacter));
 			animations.card.swapCard(this,json);
+			return false;
 		} else {
 			if (this.currentState !== json.currentState) {
 				if (animations.card[this.currentState + '->' + json.currentState] !== undefined) {
 					animations.card[this.currentState + '->' + json.currentState](this, json);
+					return false;
 				} else {
 					console.log(this.constructor.name+' State Change '+this.currentState + '->' + json.currentState );
 					this.currentState = json.currentState;
-					this.loadJSON(json);
+					return this.loadJSON(json);
 				}
 			} else {
 				this.name = json.name === undefined ? 'Adventuring_Barbarian' : json.name;
@@ -37,6 +42,7 @@ class Card extends Sprite {
 						this.attacks[i].loadJSON(json.attacks[i]);
 					}
 				}
+				return true;
 			}
 		}
 	}

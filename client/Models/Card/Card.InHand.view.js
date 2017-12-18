@@ -7,19 +7,19 @@ class CardInHand extends Card {
 	}
 	draw() {
 		push();
-			this.applyAnimations();
+			this.applyTransformations();
 			ellipseMode(CORNER);
-			ellipse(0,0,this.bounds.w,this.bounds.h);
+			ellipse(0,0,this.w,this.h);
 
 			let img = icons.getCharacter(this.name,this.loop);
 			if(this.currentState === 'dead') {
 				img = icons.card[this.name].dead;
 			}
-			image(img,0,0,this.bounds.w, this.bounds.h);
+			image(img,0,0,this.w, this.h);
 
 			//get ready for icons
 	        imageMode(CENTER);
-    	    let iconSize = this.bounds.w * defaults.card.inHand.iconScale;
+    	    let iconSize = this.w * defaults.card.inHand.iconScale;
 			textAlign(CENTER, CENTER);
 			fill(colors.card.text);
 			tint(colors.card.health);
@@ -32,13 +32,13 @@ class CardInHand extends Card {
 				textSize(iconSize*letterScale);
 			}
 			image(icons.card.health,
-				this.bounds.w - iconSize*.5,
+				this.w - iconSize*.5,
 				iconSize*.5,
 				iconSize*1.35,
 				iconSize*1.35);
         	if (this.armor > 0) {
                 textSize(iconSize*letterScale);
-                text(this.health, this.bounds.w - iconSize*.85,
+                text(this.health, this.w - iconSize*.85,
                 iconSize*letterScale);
                 //(iconSize-(iconSize*letterScale)));
 			//armor
@@ -50,18 +50,18 @@ class CardInHand extends Card {
 				}*/
 				tint(colors.card.armor);
 				image(icons.card.armor,
-					(this.bounds.w - iconSize *.2),
+					(this.w - iconSize *.2),
 					iconSize*.35,
 					iconSize,
 					iconSize);
 				text(this.armor,
-					(this.bounds.w) - iconSize*.2,// (iconSize + textWidth(this.armor)),
+					(this.w) - iconSize*.2,// (iconSize + textWidth(this.armor)),
 					(iconSize - (iconSize * letterScale))*.75);
 			} else {
                 let letterScale = 0.5;
                 textSize(iconSize*letterScale);
                 text(this.health,
-                    this.bounds.w - iconSize*.5,
+                    this.w - iconSize*.5,
                     (iconSize-(iconSize*letterScale)));
             }
 
@@ -96,17 +96,15 @@ class CardInHand extends Card {
 	        text(this.name,0,-iconSize*.25);
 
 
-            this.drawSubViews();
+            this.drawSubSprites();
 		pop();
 	}
 	touchEnded() {
-		pushMouse();
 		let didTap = super.touchEnded();
 		if(didTap) {
 			if(this.currentState === 'inHand') {
 				network.selectCard(this.id);
 			}
 		}
-		popMouse();
 	}
 }

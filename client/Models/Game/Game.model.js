@@ -2,12 +2,10 @@ class Game extends Sprite {
 	constructor(json) {
 		json = json === undefined ? {} : json;
 		super({
-			bounds:{
-				x:0,
-				y:0,
-				w:width,
-				h:height
-			},
+			x:0,
+			y:0,
+			w:width,
+			h:height,
 			fillColor:colors.game.background
 		});
 		this.currentState = 'newGame';
@@ -15,31 +13,25 @@ class Game extends Sprite {
 		this.playerLetter = 'A';
 		this.oppLetter = 'B';
 		this.playerHand = new Hand({
-			bounds:{
-				x:this.bounds.x + defaults.hand.playerScale.x*this.bounds.w,
-				y:this.bounds.y + defaults.hand.playerScale.y*this.bounds.h,
-				w:this.bounds.w * defaults.hand.playerScale.w,
-				h:this.bounds.h * defaults.hand.playerScale.h
-			},
+			x:this.bounds.w * defaults.hand.playerScale.x,
+			y:this.bounds.h * defaults.hand.playerScale.y,
+			w:this.bounds.w * defaults.hand.playerScale.w,
+			h:this.bounds.h * defaults.hand.playerScale.h,
 			parentSprite:this
 		});
 		this.oppHand = new Hand({
-			bounds:{
-				x:this.bounds.x + defaults.hand.oppScale.x*this.bounds.w,
-				y:this.bounds.y + defaults.hand.oppScale.y*this.bounds.h,
-				w:this.bounds.w * defaults.hand.oppScale.w,
-				h:this.bounds.h * defaults.hand.oppScale.h,
-			},
+			x:this.bounds.w * defaults.hand.oppScale.x,
+			y:this.bounds.h * defaults.hand.oppScale.y,
+			w:this.bounds.w * defaults.hand.oppScale.w,
+			h:this.bounds.h * defaults.hand.oppScale.h,
 			touchEnabled:false,
 			parentSprite:this
 		});
 		this.duel = new Duel({
-			bounds:{
-				x:this.bounds.x + defaults.duel.scale.x*this.bounds.w,
-				y:this.bounds.y + defaults.duel.scale.y*this.bounds.h,
-				w:this.bounds.w * defaults.duel.scale.w,
-				h:this.bounds.h * defaults.duel.scale.h,
-			},
+			x:this.bounds.w * defaults.duel.scale.x,
+			y:this.bounds.h * defaults.duel.scale.y,
+			w:this.bounds.w * defaults.duel.scale.w,
+			h:this.bounds.h * defaults.duel.scale.h,
 			parentSprite:this
 		});
 		this.loadJSON(json);
@@ -73,14 +65,13 @@ class Game extends Sprite {
 		}
 	}
 	touchEnded() {
-		pushMouse();
 		let didTap = super.touchEnded();
-		popMouse();
 	}
 	draw() {
 		push();
-		this.applyAnimations();
-		rect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h);
+		this.applyTransformations();
+		rect(this.x,this.y,this.w,this.h);
+
 		this.duel.draw();
 		this.oppHand.draw();
 		this.playerHand.draw();
@@ -90,6 +81,9 @@ class Game extends Sprite {
 				sprite.draw();
 			}
 		});
+		if(this.debug) {
+			this.debugDraw();
+		}
 		pop();
 	}
 	isPlayerCard(cardID) {

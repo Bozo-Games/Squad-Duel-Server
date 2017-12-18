@@ -16,5 +16,11 @@ defaults.duel = {
 		y: 0,
 		w: 1,
 		h: 0.5
+	},
+	lockInButton: {
+		x: 0.5,
+		y: 0.05,
+		w: 0.3,
+		h: 0.4
 	}
 };

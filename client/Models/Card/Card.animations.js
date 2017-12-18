@@ -1,24 +1,33 @@
 animations.card = {
 	"inHand->selected": function (card, json) {
-		if(currentGame.isPlayerCard(card.id)) {
-			if (card.constructor.name === 'CardInHand') {
-				card.translationAnimation.appendKeyValue(new KeyValue({
-					val: {x: 0, y: card.bounds.h * 2.2},
-					endEpoch: frameTime + 400,
-					callBack: function (card) {
-						card.currentState = 'selected';
-						card.loadJSON(json);
-					}
-				}));
-			} else if(card instanceof CardDuelCharacter && card.parentSprite instanceof CardDuelPlayer ) {
-				animations.card.playerCharacterEnters(card,function (card) {
+		if(card instanceof CardInHand) {
+			if(currentGame.isPlayerCard(card.id)) {
+				card.moveToGlobal(card.bounds.x,height,function (card) {
 					card.currentState = 'selected';
 					card.loadJSON(json);
-					if(card.parentSprite instanceof CardDuelPlayer) {
-						animations.button.lockIn.show(card.parentSprite.lockInBtn);
-						animations.card.showStatBox(card.parentSprite.statsBox);
-					}
-				})
+				},400);
+			} else {
+				card.currentState = 'selected';
+				card.loadJSON(json);
+			}
+		} else if(card instanceof CardDuelCharacter) {
+			if(currentGame.isPlayerCard(card.id)) {
+				card.loop = 'walk';
+				card.moveToLocal(0,0,function (card) {
+					card.loop = 'idle';
+					card.currentState = 'selected';
+					card.loadJSON(json);
+				},800);
+			} else {
+				card.currentState = 'selected';
+				card.loadJSON(json);
+			}
+		} else if(card instanceof CardDuelStats) {
+			if(currentGame.isPlayerCard(card.id)) {
+				card.moveToLocal(0,0,function (card) {
+					card.currentState = 'selected';
+					card.loadJSON(json);
+				},800);
 			} else {
 				card.currentState = 'selected';
 				card.loadJSON(json);
@@ -29,18 +38,45 @@ animations.card = {
 		}
 	},
 	"selected->inHand": function (card, json) {
-		if(currentGame.isPlayerCard(card.id)) {
-			if (card.constructor.name === 'CardInHand') {
-				card.translationAnimation.appendKeyValue(new KeyValue({
-					val: {x: 0, y: 0},
-					endEpoch: frameTime + 400,
-					callBack: function (card) {
-						card.currentState = 'inHand';
-						card.loadJSON(json);
-					}
-				}));
+		if(card instanceof CardInHand) {
+			card.moveToLocal(0,0,function (card) {
+				card.currentState = 'inHand';
+				card.loadJSON(json);
+			},400);
+		} else if(card instanceof CardDuelCharacter) {
+			if (currentGame.isPlayerCard(card.id)) {
+				card.loop = 'walk';
+				card.flipHorizontally(function (card) {
+					card.moveToGlobal(0, height-card.h, function (card) {
+						console.log(frameTime +' move done');
+						card.flipHorizontally(function (card) {
+							card.loop = 'idle';
+							card.currentState = 'inHand';
+							card.id = json.id;
+							card.name = json.name; //this changes character drawn
+							console.log(frameTime + ' done move Out ' +JSON.stringify(card.animation));
+							card.loadJSON(json);
+						},0);
+					}, 800); //walk time
+				},200);//flip time
 			} else {
 				card.currentState = 'inHand';
+				card.loadJSON(json);
+			}
+		} else if(card instanceof CardDuelStats) {
+			console.log('here');
+			if(currentGame.isPlayerCard(card.id)) {
+				card.moveToGlobal(-card.w,card.bounds.y,function (card) {
+					card.currentState = 'inHand';
+					card.id = json.id;
+					card.speed = json.speed;
+					card.health = json.health;
+					card.armor = json.armor;
+					card.power = json.power;
+					card.loadJSON(json);
+				},1000);
+			} else {
+				card.currentState = 'selected';
 				card.loadJSON(json);
 			}
 		} else {
@@ -50,7 +86,6 @@ animations.card = {
 	},
 	"dueling->inHand": function (card, json) {
 		if (card instanceof CardInHand) {
-			console.log('hereaksjfdlkasjdf;lkasdjf;lkasdjf;lkasj')
 			card.translationAnimation.appendKeyValue(new KeyValue({
 				val: {x: 0, y: 0},
 				endEpoch: frameTime + 400,
@@ -106,37 +141,16 @@ animations.card = {
 	},
 
 	swapCard: function (card,json) {
-		if(currentGame.isPlayerCard(card.id)) {
-			if(card.constructor.name === 'CardDuelCharacter') {
-				card.translationAnimation.appendKeyValue(new KeyValue({
-					val: {x: card.bounds.w + card.translationAnimation.x, y: card.translationAnimation.y},
-					endEpoch: frameTime + 300,
-					callBack: function (card) {
-						//do nothing other animations are working
-					}
-				}));
-				card.scaleAnimation.appendKeyValue(new KeyValue({
-					val:{width:-1,height:1},
-					endEpoch: frameTime + 300,
-					callBack:function (card) {
-						card.loop = 'walk';
-						card.translationAnimation.appendKeyValue(new KeyValue({
-							val: {x: card.bounds.w-card.translationAnimation.x, y: card.bounds.h * 2},
-							endEpoch: frameTime + 800,
-							callBack: function (card) {
-								card.id = json.id;
-								card.loadJSON(json);
-								card.currentState = 'inHand';
-								card.loadJSON(json);
-							} //end move away callback
-						})); //end add move away animation add
-					} //end turn callback
-				})); //end scale animation
-			} else if(card instanceof CardDuelPlayer) {
-				animations.button.lockIn.hide(card.lockInBtn);
-				animations.card.hideStatBox(card.statsBox);
+		if(card instanceof CardDuelCharacter) {
+			if(currentGame.isPlayerCard(card.id)) {
+				animations.card["selected->inHand"](card,json);
+			} else {
 				card.id = json.id;
 				card.loadJSON(json);
+			}
+		}if(card instanceof CardDuelStats) {
+			if(currentGame.isPlayerCard(card.id)) {
+				animations.card["selected->inHand"](card,json);
 			} else {
 				card.id = json.id;
 				card.loadJSON(json);

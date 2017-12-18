@@ -12,10 +12,10 @@ defaults.card = {
 				h: 0.5,
 			},
 			statBoxScale: {
-				x: 0.025,
+				x: 0.05,
 				y: 0,
 				w: 0.15,
-				h: 0.5,
+				h: 0.6,
 			},
 			characterScale: {
 				x: 0.125,

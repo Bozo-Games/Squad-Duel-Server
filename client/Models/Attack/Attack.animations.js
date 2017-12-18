@@ -1,39 +1,12 @@
 animations.attack = {
-	hideAttack: function (attack,callBack) {
-		if(attack instanceof AttackDuelPlayer) {
-			attack.translationAnimation.appendKeyValue(new KeyValue({
-				val:{
-					x:attack.bounds.w*1.2,
-					y:0
-				},
-				endEpoch: frameTime+400,
-				callBack: callBack
-			}));
-		}
-	},
-	showAttack: function (attack,callBack) {
-		if(attack instanceof AttackDuelPlayer) {
-			attack.translationAnimation.appendKeyValue(new KeyValue({
-				val:{
-					x:0,
-					y:0
-				},
-				endEpoch: frameTime+400,
-				callBack: function (attack) {callBack(attack);}
-			}));
-		}
-	},
+
 	swapAttack: function (attack,json) {
-		if(attack.constructor.name === 'AttackDuelPlayer') {
-			animations.attack.hideAttack(attack,function (attack) {
+		if(attack instanceof AttackDuelPlayer) {
+			attack.hide(function (attack) {
 				attack.id = json.id;
 				attack.loadJSON(json);
-				animations.sprite.holdCurrentAnimation(attack,1500,function (attack) {
-					animations.attack.showAttack(attack,function (attack) {
-						
-					});
-				});
-			});
+				attack.show(undefined,1000);
+			})
 		} else {
 			attack.id = json.id;
 			attack.loadJSON(json);

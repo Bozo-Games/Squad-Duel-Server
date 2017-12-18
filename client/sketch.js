@@ -1,5 +1,6 @@
 "use strict";
 let currentGame;
+let d;
 let frameTime = (new Date()).getTime();
 function preload() {
 	icons.loading = loadImage('./Assets/icons/uncertainty.svg');

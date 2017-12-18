@@ -1,32 +1,54 @@
 class CardDuelPlayer extends Card {
 	constructor(json) {
 		json = json === undefined ? {} : json;
-		json.strokeWeight = 1;
-		json.bounds = json.bounds === undefined ? {x:0,y:0,w:100,h:100} : json.bounds;
+		json.color= '#ff0000';
 		super(json);
 
+		console.log(JSON.stringify(this.bounds));
 
-		json.bounds = {
-			x: this.bounds.w*defaults.card.duel.player.characterScale.x,
-			y: this.bounds.h*defaults.card.duel.player.characterScale.y,
-			w: this.bounds.h*defaults.card.duel.player.characterScale.h,
-			h: this.bounds.h*defaults.card.duel.player.characterScale.h
+		json.x = this.w*defaults.card.duel.player.characterScale.x;
+		json.y = this.h*defaults.card.duel.player.characterScale.y;
+		json.w = this.h*defaults.card.duel.player.characterScale.h;
+		json.h = this.h*defaults.card.duel.player.characterScale.h;
+		json.animation = {
+			x: -json.w*2,
+			y: json.y + this.bounds.y+json.h,
 		};
+		console.log(JSON.stringify(json.animation));
 		json.parentSprite = this;
 		this.character = new CardDuelCharacter(json);
 
-
-		json.bounds = {
-			x: this.bounds.w*defaults.card.duel.player.statBoxScale.x,
-			y: this.bounds.h*defaults.card.duel.player.statBoxScale.y,
-			w: this.bounds.w*defaults.card.duel.player.statBoxScale.w,
-			h: this.bounds.h*defaults.card.duel.player.statBoxScale.h
+		json.x = this.w*defaults.card.duel.player.statBoxScale.x;
+		json.y = this.h*defaults.card.duel.player.statBoxScale.y;
+		json.w = this.w*defaults.card.duel.player.statBoxScale.w;
+		json.h = this.h*defaults.card.duel.player.statBoxScale.h;
+		json.animation = {
+			x: -json.w-json.x,
+			y: 0,
 		};
 		this.statsBox = new CardDuelStats(json);
-		this.statsBox.translationAnimation.forceUpdate({
-			x:-this.statsBox.bounds.w*1.3,
-			y:this.statsBox.translationAnimation.y});
-		animations.card.showStatBox(this.statsBox);
+
+		this.attacks = [];
+		let h = this.h / (json.attacks.length+1.5); //1 for space,2 for lock in
+		let spacing = (this.h - h*(json.attacks.length+1))/2;
+		for(let i = 0; i < json.attacks.length; i++) {
+			let attackJSON = json.attacks[i];
+			let yy = spacing*(i+1) + h*(i+1);
+			attackJSON.x = this.w*defaults.card.duel.player.attackScale.x;
+			attackJSON.y = yy;
+			attackJSON.w = this.w*defaults.card.duel.player.attackScale.w;
+			attackJSON.h = h;
+			attackJSON.animation = {
+				x: this.w - (attackJSON.w-attackJSON.x ) ,
+				y: 0,
+			};
+			attackJSON.parentSprite = this;
+			let a = new AttackDuelPlayer(attackJSON);
+			this.attacks.push(a);
+			a.show();
+		}
+
+/*
 
 		this.attacks = [];
 		let h = this.bounds.h / (json.attacks.length+1.5); //1 for space,2 for lock in
@@ -57,7 +79,7 @@ class CardDuelPlayer extends Card {
 		});
 		this.lockInBtn.translationAnimation.forceUpdate({x:this.lockInBtn.bounds.w/2,y:h/2});
 		this.lockInBtn.scaleAnimation.forceUpdate({width:0,height:0});
-		animations.button.lockIn.show(this.lockInBtn);
+		animations.button.lockIn.show(this.lockInBtn);*/
 	}
 	hideUI() {
 		this.attacks.forEach(function (attack) {
@@ -73,16 +95,22 @@ class CardDuelPlayer extends Card {
 	}
 
 	loadJSON(json) {
-		super.loadJSON(json);
-		if(this.character !== undefined){this.character.loadJSON(json);}
+		let didLoad = super.loadJSON(json);
+		if(didLoad) {
+			if (this.character !== undefined) {
+				this.character.loadJSON(json);
+			}
+			if(this.statsBox !== undefined) {
+				this.statsBox.loadJSON(json);
+			}
+		}
 	}
 	draw() {
 		if(this.id !== undefined) {
 			push();
-			this.applyAnimations();
+			this.applyTransformations();
 			this.character.draw();
 			this.statsBox.draw();
-			this.lockInBtn.draw();
 			this.attacks.forEach(function (attack) {
 				attack.draw();
 			});
@@ -92,12 +120,11 @@ class CardDuelPlayer extends Card {
 					sprite.draw();
 				}
 			});
+			if(this.debug) {this.debugDraw()}
 			pop();
 		}
 	}
 	touchEnded() {
-		pushMouse();
 		let didTap = super.touchEnded();
-		popMouse();
 	}
 }

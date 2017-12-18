@@ -7,12 +7,12 @@ class ButtonLockIn extends Sprite {
 
 	draw() {
 		push();
-		this.applyAnimations();
+		this.applyTransformations();
 		let txt ='bad state for this btn';
-		if(this.parentSprite.currentState === 'selected') {
+		if(this.parentSprite.playerCard.currentState === 'selected') {
 			fill(colors.button.lockIn.background);
 			txt = strings.button.lockIn;
-		} else if(this.parentSprite.currentState === 'lockedIn') {
+		} else if(this.parentSprite.playerCard.currentState === 'lockedIn') {
 			fill(colors.button.lockedIn.background);
 			txt = strings.button.lockedIn;
 		}
@@ -22,16 +22,14 @@ class ButtonLockIn extends Sprite {
 		textAlign(CENTER, CENTER);
 		fill(colors.attack.text);
 		text(txt, this.bounds.w /2, this.bounds.h / 2);
-		this.drawSubViews();
+		this.drawSubSprites();
 		pop();
 	}
 
 	touchEnded() {
-		pushMouse();
 		let didTap = super.touchEnded();
 		if(didTap) {
-			network.lockIn(this.parentSprite.id);
+			network.lockIn(this.parentSprite.playerCard.id);
 		}
-		popMouse();
 	}
 }

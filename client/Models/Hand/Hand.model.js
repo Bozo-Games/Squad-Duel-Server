@@ -24,20 +24,18 @@ class Hand extends Sprite{
 		this._resizeCards();
 	}
 	_resizeCards() {
-		let w = this.bounds.w/(this.cards.length+0.5);
+		let w = this.w/(this.cards.length+0.5);
 		for(let i = 0; i < this.cards.length;i++) {
-			this.cards[i].bounds = {
-				x: (i+1)*(this.bounds.w-w*this.cards.length)/(this.cards.length +1) + w*i,
-				y: 0,
-				w:w,
-				h:w
-			};
+			this.cards[i].x = (i+1)*(this.w-w*this.cards.length)/(this.cards.length +1) + w*i;
+			this.cards[i].y = 0;
+			this.cards[i].w = w;
+			this.cards[i].h = w;
 		}
 	}
 	draw() {
 		push();
-		this.applyAnimations();
-		this.drawSubViews();
+		this.applyTransformations();
+		this.drawSubSprites();
 		pop();
 	}
 }

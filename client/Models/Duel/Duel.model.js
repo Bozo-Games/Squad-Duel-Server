@@ -4,6 +4,7 @@ class Duel extends Sprite {
 		super(json);
 		this.currentState = 'waitingForCards';
 
+		console.log('duel - '+JSON.stringify(this.bounds));
 		this.loadJSON(json);
 	}
 	loadJSON(json){
@@ -22,14 +23,21 @@ class Duel extends Sprite {
 				let playerCardJSON = json[`card${currentGame.playerLetter}`];
 				if(playerCardJSON !== undefined) {
 					if (this.playerCard === undefined) {
-						playerCardJSON.bounds = {
-							x: this.bounds.w*defaults.duel.player.x,
-							y: this.bounds.h*defaults.duel.player.y,
-							w: this.bounds.w*defaults.duel.player.w,
-							h: this.bounds.h*defaults.duel.player.h
-						};
+						playerCardJSON.x = this.w*defaults.duel.player.x;
+						playerCardJSON.y = this.h*defaults.duel.player.y;
+						playerCardJSON.w = this.w*defaults.duel.player.w;
+						playerCardJSON.h = this.h*defaults.duel.player.h;
 						playerCardJSON.parentSprite = this;
 						this.playerCard = new CardDuelPlayer(playerCardJSON);
+
+						this.lockInButton = new ButtonLockIn({
+							x:this.w*defaults.duel.lockInButton.x,
+							y:this.h*defaults.duel.lockInButton.y,
+							w:this.w*defaults.duel.lockInButton.w,
+							h:this.h*defaults.duel.lockInButton.h,
+							parentSprite:this,
+						});
+						this.lockInButton.debug = true;
 					} else {
 						this.playerCard.loadJSON(playerCardJSON);
 					}
@@ -170,14 +178,12 @@ class Duel extends Sprite {
 	}
 
 	touchEnded() {
-		pushMouse();
 		let didTap = super.touchEnded();
-		popMouse();
 	}
 	draw() {
 		push();
-		this.applyAnimations();
-		this.drawSubViews();
+		this.applyTransformations();
+		this.drawSubSprites();
 		pop();
 	}
 }
