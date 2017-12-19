@@ -1,4 +1,4 @@
-"use strict";
+
 const attackDB = require('../Data/Attack.js');
 const cardDB = require('../Data/Card.data.js');
 const defaults = require('./defaults.js');

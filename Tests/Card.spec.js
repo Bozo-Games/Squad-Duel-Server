@@ -1,4 +1,4 @@
-"use strict";
+
 const assert = require('assert');
 const defaults = require('../server/Helpers/defaults.js');
 const logger = require('../server/Helpers/logger.js');

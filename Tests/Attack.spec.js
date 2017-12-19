@@ -1,4 +1,4 @@
-"use strict";
+
 const assert = require('assert');
 const Attack = require('../server/Models/Attack.js');
 const logger = require('../server/Helpers/logger.js');

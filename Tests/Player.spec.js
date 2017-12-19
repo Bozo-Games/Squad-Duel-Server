@@ -1,4 +1,4 @@
-"use strict";
+
 const assert = require('assert');
 const Player = require('../server/Models/Player.js');
 const logger = require('../server/Helpers/logger.js');

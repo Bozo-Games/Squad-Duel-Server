@@ -46,20 +46,23 @@ animations.card = {
 		} else if(card instanceof CardDuelCharacter) {
 			if (currentGame.isPlayerCard(card.id)) {
 				card.loop = 'walk';
+				console.log('-------------- 0 '+card.name);
 				card.flipHorizontally(function (card) {
+					console.log('-------------- 1 '+card.name);
 					card.moveToGlobal(0, height-card.h, function (card) {
-						console.log(frameTime +' move done');
+						console.log('-------------- 2 '+card.name);
 						card.flipHorizontally(function (card) {
+							console.log('-------------- 3 '+card.name);
 							card.loop = 'idle';
 							card.currentState = 'inHand';
 							card.id = json.id;
 							card.name = json.name; //this changes character drawn
-							console.log(frameTime + ' done move Out ' +JSON.stringify(card.animation));
 							card.loadJSON(json);
-						},0);
+					  	},0);
 					}, 800); //walk time
-				},200);//flip time
+				},2000);//flip time
 			} else {
+				console.log('-------------- !!!!!');
 				card.currentState = 'inHand';
 				card.loadJSON(json);
 			}
@@ -85,14 +88,10 @@ animations.card = {
 	},
 	"dueling->inHand": function (card, json) {
 		if (card instanceof CardInHand) {
-			card.translationAnimation.appendKeyValue(new KeyValue({
-				val: {x: 0, y: 0},
-				endEpoch: frameTime + 400,
-				callBack: function (card) {
-					card.currentState = 'inHand';
-					card.loadJSON(json);
-				}
-			}));
+			card.moveToLocal(0,0,function (card) {
+				card.currentState = 'inHand';
+				card.loadJSON(json);
+			},400);
 		} else {
 			card.currentState = 'inHand';
 			card.loadJSON(json);
@@ -116,36 +115,28 @@ animations.card = {
 	}
 	,
 	"dueling->dead": function (card, json) {
-		if(currentGame.isPlayerCard(card.id)) {
-			if (card instanceof CardInHand) {
-				card.loop = 'die';
-				card.translationAnimation.appendKeyValue(new KeyValue({
-					val: {x: 0, y: 0},
-					endEpoch: frameTime + 400,
-					callBack: function (card) {
-						card.currentState = 'dead';
-						card.loadJSON(json);
-					}
-				}));
-			} else {
+		if (card instanceof CardInHand) {
+			card.loop = 'die';
+			card.moveToLocal(0,0,function (card) {
 				card.currentState = 'dead';
 				card.loadJSON(json);
-			}
+			},400);
 		} else {
 			card.currentState = 'dead';
 			card.loadJSON(json);
 		}
-	},
 
+	},
 	swapCard: function (card,json) {
 		if(card instanceof CardDuelCharacter) {
 			if(currentGame.isPlayerCard(card.id)) {
+				console.log('-------------- '+card.name);
 				animations.card["selected->inHand"](card,json);
 			} else {
 				card.id = json.id;
 				card.loadJSON(json);
 			}
-		}if(card instanceof CardDuelStats) {
+		}else if(card instanceof CardDuelStats) {
 			if(currentGame.isPlayerCard(card.id)) {
 				animations.card["selected->inHand"](card,json);
 			} else {
@@ -158,7 +149,6 @@ animations.card = {
 		}
 	},
 	characterAttackCharacter(attacker,defender,turn,rise,run,callBack) {
-		attacker.debug = true;
 		attacker.loop = 'run';
 		attacker.moveToGlobal(defender.global.x - run*defender.w,defender.global.y,function (attacker) {
 			attacker.loop = 'attack';
@@ -174,7 +164,6 @@ animations.card = {
 							attacker.flipHorizontally(function (attacker) {
 								attacker.loop = 'idle';
 								callBack(attacker);
-								console.log(JSON.stringify(attacker.animation));
 							},200);
 						},800);//run Back*/
 					},200); //turn
@@ -193,37 +182,20 @@ animations.card = {
 	},
 	playerCharacterLeaves: function (card,callBack) {
 		card.loop = 'walk';
-		card.scaleAnimation.forceUpdate({width: 1, height: 1});
-		card.translationAnimation.forceUpdate({x:0,y:0});
-		animations.card.flipCharacterHorizonaly(card,function(card){
-			card.translationAnimation.appendKeyValue(new KeyValue({
-				val:{x: -card.global.w-card.global.x, y: card.global.h * 2},
-				endEpoch:frameTime + 800,
-				callBack:function(card){
-					card.loop = 'idle';
-					callBack(card);
-				}
-			}));
-		});
+		card.flipHorizontally(function (card) {
+			card.moveToGlobal(0, height-card.h, function (card) {
+				card.flipHorizontally(callBack,0);
+			}, 800); //walk time
+		},200);//flip time
 	},
 
 	oppCharacterLeaves: function (card,callBack) {
 		card.loop = 'walk';
-		card.scaleAnimation.forceUpdate({width: -1, height: 1});
-		card.translationAnimation.forceUpdate({x:card.global.w/2,y:0});
-		animations.card.flipCharacterHorizonaly(card,function(card){
-			card.translationAnimation.appendKeyValue(new KeyValue({
-				val:{
-					x: card.global.w+card.global.x,
-					y: -card.global.h * 2
-				},
-				endEpoch:frameTime + 800,
-				callBack:function(card){
-					card.loop = 'idle';
-					callBack(card);
-				}
-			}));
-		});
+		card.flipHorizontally(function (card) {
+			card.moveToGlobal(width+card.w, 0, function (card) {
+				card.flipHorizontally(callBack,0);
+			}, 800); //walk time
+		},200);//flip time
 	},
 
 };

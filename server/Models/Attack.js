@@ -1,4 +1,4 @@
-"use strict";
+
 class Attack {
     constructor(json) {
         json = json === undefined ? {} : json;

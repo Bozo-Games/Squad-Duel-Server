@@ -112,11 +112,15 @@ class CardDuelPlayer extends Card {
 				attack.draw();
 			});
 
-			this.subSprites.forEach(function (sprite) {
+			for(let sprite of this.subSprites) {
 				if(sprite instanceof FloatingText) {
 					sprite.draw();
+				} else if(sprite instanceof CardDuelStats) {
+					if(sprite !== this.statsBox){
+						sprite.draw();
+					}
 				}
-			});
+			}
 			if(this.debug) {this.debugDraw()}
 			pop();
 		}

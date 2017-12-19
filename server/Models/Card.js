@@ -1,4 +1,4 @@
-"use strict";
+
 const E = require('../Helpers/enums.js');
 const defaults = require('../Helpers/defaults.js');
 const Attack = require('./Attack.js');

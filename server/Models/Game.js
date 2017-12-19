@@ -1,4 +1,4 @@
-"use strict";
+
 const E = require('../Helpers/enums.js');
 const logs = require('../Helpers/logger.js');
 const generate = require('../Helpers/DataGenerator.js');

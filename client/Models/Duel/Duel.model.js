@@ -4,7 +4,6 @@ class Duel extends Sprite {
 		super(json);
 		this.currentState = 'waitingForCards';
 
-		console.log('duel - '+JSON.stringify(this.global));
 		this.loadJSON(json);
 	}
 	loadJSON(json){
@@ -12,7 +11,6 @@ class Duel extends Sprite {
 			this.attacker = json.attacker === currentGame.playerLetter ? 'player' : 'opp';
 			this.defender = json.defender === currentGame.playerLetter ? 'player' : 'opp';
 			if (this.currentState !== json.currentState) {
-				console.log('duel state change '+this.currentState + '->' + json.currentState);
 				if (animations.duel[this.currentState + '->' + json.currentState] !== undefined) {
 					animations.duel[this.currentState + '->' + json.currentState](this, json);
 				} else {
@@ -37,7 +35,6 @@ class Duel extends Sprite {
 							h:this.h*defaults.duel.lockInButton.h,
 							parentSprite:this,
 						});
-						this.lockInButton.debug = true;
 					} else {
 						this.playerCard.loadJSON(playerCardJSON);
 					}
@@ -67,7 +64,6 @@ class Duel extends Sprite {
 						oppCardJSON.h = this.h*defaults.duel.opp.h;
 						oppCardJSON.parentSprite = this;
 						this.oppCard = new CardDuelOpp(oppCardJSON);
-						this.oppCard.debug = true;
 					} else {
 						this.oppCard.loadJSON(oppCardJSON);
 					}
@@ -108,56 +104,53 @@ class Duel extends Sprite {
 		let statWidth = this.playerCard.w*defaults.card.duel.player.statBoxScale.w;
 
 		this.playerStartCard.x = this.playerCard.character.x + this.playerCard.character.w;
-		this.playerStartCard.y = this.playerCard.y+(this.playerCard.h-statHeight)/2;
+		this.playerStartCard.y = (this.playerCard.h-statHeight)/2;
 		this.playerStartCard.w = statWidth;
 		this.playerStartCard.h = statHeight;
-		this.playerStartCard.parentSprite = this;
+		this.playerStartCard.parentSprite = this.playerCard;
 
 		this.playerCurrentCard.x = this.playerCard.character.x+this.playerCard.character.w+statWidth+30;
-		this.playerCurrentCard.y = this.playerCard.y+(this.playerCard.h-statHeight)/2;
+		this.playerCurrentCard.y = (this.playerCard.h-statHeight)/2;
 		this.playerCurrentCard.w = statWidth;
 		this.playerCurrentCard.h = statHeight;
-		this.playerCurrentCard.parentSprite = this;
+		this.playerCurrentCard.parentSprite = this.playerCard;
 
 		this.playerStartResults = new CardDuelStats(this.playerStartCard);
 		this.playerEndResults = new CardDuelStats(this.playerCurrentCard);
 
 		this.playerArrowResults = new FloatingText({
 			x:this.playerCard.character.x+this.playerCard.character.w+statWidth,
-			y:this.playerCard.y+(this.playerCard.h-20)/2,
+			y:(this.playerCard.h-20)/2,
 			w:30,
 			h:20,
 			text:"=>",
 			color:'#000',
-			parentSprite:this
+			parentSprite:this.playerCard
 		});
 
-
-		this.oppStartCard.x = this.oppCard.character.x - this.oppCard.character.w - statWidth - 30;
-		this.oppStartCard.y = this.oppCard.y+(this.oppCard.h-statHeight)/2;
+		this.oppStartCard.x = this.oppCard.character.x - statWidth - 30-this.oppCard.character.w/2;
+		this.oppStartCard.y = (this.oppCard.h-statHeight)/2;
 		this.oppStartCard.w = statWidth;
 		this.oppStartCard.h = statHeight;
-		this.oppStartCard.parentSprite = this;
+		this.oppStartCard.parentSprite = this.oppCard;
 
-		this.oppCurrentCard.x = this.oppCard.character.x-this.oppCard.character.w;
-		this.oppCurrentCard.y = this.oppCard.y+(this.oppCard.h-statHeight)/2;
+		this.oppCurrentCard.x = this.oppCard.character.x-this.oppCard.character.w/2;
+		this.oppCurrentCard.y = (this.oppCard.h-statHeight)/2;
 		this.oppCurrentCard.w = statWidth;
 		this.oppCurrentCard.h = statHeight;
-		this.oppCurrentCard.parentSprite = this;
+		this.oppCurrentCard.parentSprite = this.oppCard;
 
 		this.oppStartResults = new CardDuelStats(this.oppStartCard);
 		this.oppEndResults = new CardDuelStats(this.oppCurrentCard);
 
 		this.oppArrowResults = new FloatingText({
-			bounds: {
-				x:this.oppCard.character.x-this.oppCard.character.w - 30,
-				y:this.oppCard.y+(this.oppCard.h-20)/2,
-				w:30,
-				h:20
-			},
+			x:this.oppCard.character.x-this.oppCard.character.w/2 - 30,
+			y:(this.oppCard.h-20)/2,
+			w:30,
+			h:20,
 			text:"=>",
 			color:'#000',
-			parentSprite:this
+			parentSprite:this.oppCard
 		});
 
 		this.acceptResultsBtn = new ButtonAcceptReuslt({

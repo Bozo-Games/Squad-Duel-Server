@@ -1,4 +1,4 @@
-"use strict";
+
 const E = require('../Helpers/enums.js');
 class Player {
     constructor(json) {

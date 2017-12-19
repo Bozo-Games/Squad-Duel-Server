@@ -1,4 +1,4 @@
-"use strict";
+
 const defaults = require('../Helpers/defaults.js');
 const Card = require('./Card.js');
 class Hand {

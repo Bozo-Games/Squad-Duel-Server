@@ -1,4 +1,4 @@
-"use strict";
+
 const assert = require('assert');
 const seedrandom = require('seedrandom');
 const defaults = require('../server/Helpers/defaults.js');

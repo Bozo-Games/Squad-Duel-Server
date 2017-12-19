@@ -12,7 +12,7 @@ class CardDuelOpp extends  Card {
 		json.animation = {
 			x: json.w*2,
 			y: json.y - this.global.y-json.h,
-			w:-1
+			w: -1
 		};
 		json.parentSprite = this;
 		this.character = new CardDuelCharacter(json);
@@ -47,7 +47,6 @@ class CardDuelOpp extends  Card {
 			this.attacks.push(a);
 			//a.show();
 		}
-		this.character.debug = true;
 	}
 	show() {
 		this.character.loop = 'walk';
@@ -81,11 +80,15 @@ class CardDuelOpp extends  Card {
 				attack.draw();
 			});
 
-			this.subSprites.forEach(function (sprite) {
+			for(let sprite of this.subSprites) {
 				if(sprite instanceof FloatingText) {
 					sprite.draw();
+				} else if(sprite instanceof CardDuelStats) {
+					if(sprite !== this.statsBox){
+						sprite.draw();
+					}
 				}
-			});
+			}
 			if(this.debug) {this.debugDraw()}
 			pop();
 		}

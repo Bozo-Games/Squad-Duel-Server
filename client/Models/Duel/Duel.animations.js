@@ -42,21 +42,17 @@ animations.duel = {
 			let turn = duel.turns[0];
 			duel.turns.splice(0,1);
 			let armorDMGJSON = {
-				bounds: {
-					x: 0,
-					y: 0,
-					w: 100,
-					h: 40
-				},
+				x: 0,
+				y: 0,
+				w: 100,
+				h: 40,
 				fillColor: colors.card.armor
 			};
 			let healthDMGJSON = {
-				bounds: {
-					x: 0,
-					y: 0,
-					w: 100,
-					h: 40
-				},
+				x: 0,
+				y: 0,
+				w: 100,
+				h: 40,
 				fillColor: colors.card.health
 			};
 			let attackAnimationCallBack = function (attacker,defender) {
@@ -71,8 +67,8 @@ animations.duel = {
 				animations.attack.attackNameSlide(duel.playerAttack,true);
 				defender = 'opp';
 				defenderLetter = currentGame.oppLetter;
-				healthDMGJSON.global.x -= duel[defender+'Card'].character.global.w;
-				armorDMGJSON.global.x -= duel[defender+'Card'].character.global.w;
+				healthDMGJSON.x -= duel[defender+'Card'].character.global.w;
+				armorDMGJSON.x -= duel[defender+'Card'].character.global.w;
 			} else {
 				animations.card.oppAttackPlayer(duel.oppCard.character, duel.playerCard.character, turn,attackAnimationCallBack);
 				animations.attack.attackNameSlide(duel.oppAttack, false);
@@ -82,15 +78,15 @@ animations.duel = {
 			if(json['card'+currentGame.oppLetter].health !== duel[defender+'CurrentCard'].health) {
 				healthDMGJSON.text = json['card' + defenderLetter].health - duel[defender+'CurrentCard'].health;
 				healthDMGJSON.parentSprite = duel[defender+'Card'];
-				healthDMGJSON.global.x += duel[defender+'Card'].character.global.x;
-				healthDMGJSON.global.w = duel[defender+'Card'].character.global.w;
+				healthDMGJSON.x += duel[defender+'Card'].character.global.x;
+				healthDMGJSON.w = duel[defender+'Card'].character.global.w;
 			}
 			//armor
 			if( json['card'+defenderLetter].armor !== duel[defender+'CurrentCard'].armor) {
 				armorDMGJSON.text = json['card' + defenderLetter].armor - duel[defender+'CurrentCard'].armor;
 				armorDMGJSON.parentSprite = duel[defender+'Card'];
-				armorDMGJSON.global.x += duel[defender+'Card'].character.global.x;
-				armorDMGJSON.global.w = duel[defender+'Card'].character.global.w;
+				armorDMGJSON.x += duel[defender+'Card'].character.global.x;
+				armorDMGJSON.w = duel[defender+'Card'].character.global.w;
 				let armorMsg = new FloatingText(armorDMGJSON);
 				armorMsg.floatAway(function (floatingText) {
 					floatingText.parentSprite.removeSubSprite(floatingText);
@@ -119,23 +115,17 @@ animations.duel = {
 		duel.loadJSON(json);
 	},
 	"displayResults->waitingForCards":function (duel,json) {
-		animations.sprite.shrinkToNothing(duel.acceptResultsBtn,210,function (button) {
-
-		});
+		duel.acceptResultsBtn.shrinkToNothing(210);
 
 		[duel.oppArrowResults,duel.oppEndResults,duel.oppStartResults].forEach(function (sprite) {
-			sprite.translationAnimation.appendKeyValue(new KeyValue({
-				val: {x:-duel.global.w/1.2,y:0},
-				endEpoch:frameTime+200,
-				callBack: undefined
-			}))
+			sprite.moveToGlobal(-duel.global.w/1.2,sprite.global.y,function (sprite) {
+
+			},200);
 		});
 		[duel.playerArrowResults,duel.playerEndResults,duel.playerStartResults].forEach(function (sprite) {
-			sprite.translationAnimation.appendKeyValue(new KeyValue({
-				val: {x:duel.global.w/1.2,y:0},
-				endEpoch:frameTime+200,
-				callBack: undefined
-			}))
+			sprite.moveToGlobal(duel.global.w/1.2,sprite.global.y,function (sprite) {
+
+			},200);
 		});
 
 		animations.card.oppCharacterLeaves(duel.oppCard.character,function (card) {
@@ -144,12 +134,10 @@ animations.duel = {
 		animations.card.playerCharacterLeaves(duel.playerCard.character,function (card) {
 			currentGame.removeSubSprite(currentGame.duel);
 			currentGame.duel = new Duel({
-				bounds:{
-					x:currentGame.global.x + defaults.duel.scale.x*currentGame.global.w,
-					y:currentGame.global.y + defaults.duel.scale.y*currentGame.global.h,
-					w:currentGame.global.w * defaults.duel.scale.w,
-					h:currentGame.global.h * defaults.duel.scale.h,
-				},
+				x:currentGame.local.w * defaults.duel.scale.x,
+				y:currentGame.local.h * defaults.duel.scale.y,
+				w:currentGame.local.w * defaults.duel.scale.w,
+				h:currentGame.local.h * defaults.duel.scale.h,
 				parentSprite:currentGame
 			});
 			currentGame.duel.loadJSON(json);
