@@ -158,77 +158,38 @@ animations.card = {
 		}
 	},
 	characterAttackCharacter(attacker,defender,turn,rise,run,callBack) {
-		let attackerOrgin = {x: attacker.translationAnimation.x, y: attacker.translationAnimation.y};
-
+		attacker.debug = true;
 		attacker.loop = 'run';
-		attacker.translationAnimation.appendKeyValue(new KeyValue({
-			val: {
-				x:attacker.bounds.w*run,
-				y:attacker.bounds.h*rise
-			},
-			endEpoch: frameTime + 800,
-			callBack: function (card) {
-				attacker.loop = 'attack';
-				defender.loop = 'block';
-				attacker.translationAnimation.appendKeyValue(new KeyValue({
-					val:{
-						x:attacker.bounds.w*run,
-						y:attacker.bounds.h*rise
-					},
-					endEpoch: frameTime + 600*turn.powerMultiplier,
-					callBack: function (card) {
-						attacker.loop = 'run';
-						defender.loop = 'idle';
-
-						animationDebug = function () {
-							animations.card.flipCharacterHorizonaly(attacker,function (card) {
-								attacker.translationAnimation.appendKeyValue(new KeyValue({
-									val:{
-										x:attackerOrgin.x+attacker.bounds.w*-1*(rise/Math.abs(rise)),
-										y:attackerOrgin.y
-									},
-									endEpoch:frameTime+800,
-									callBack: function (card) {
-										animations.card.flipCharacterHorizonaly(attacker,function (card) {
-											attacker.loop = 'idle';
-											if(typeof callBack === 'function') {
-												callBack(attacker,defender);
-											}
-										});
-									}}));
-							});
-						};
-						animationDebug();
-					}}));
-			}}));
+		attacker.moveToGlobal(defender.bounds.x - run*defender.w,defender.bounds.y,function (attacker) {
+			attacker.loop = 'attack';
+			attacker.push(new AnimationValue({
+				x: attacker.animation.x,
+				y: attacker.animation.y,
+				w: attacker.animation.w,
+				time: 300*turn.powerMultiplier,
+				callBack: function (attacker) {
+					attacker.loop = 'run';
+					attacker.flipHorizontally(function(attacker){
+						attacker.moveToLocal(rise*attacker.w,0,function(attacker){
+							attacker.flipHorizontally(function (attacker) {
+								attacker.loop = 'idle';
+								callBack(attacker);
+								console.log(JSON.stringify(attacker.animation));
+							},200);
+						},800);//run Back*/
+					},200); //turn
+				}}));//hold
+		},800); //move to global
 	},
 	oppAttackPlayer: function (attacker,defender,turn,callBack) {
-		let rise = 1;
-		let run = -0.1;
+		let rise = 0;
+		let run = -2.4;
 		animations.card.characterAttackCharacter(attacker,defender,turn,rise,run,callBack);
 	},
 	playerAttackOpp: function (attacker,defender,turn,callBack) {
-		let rise = -1;
-		let run = 0.6;
+		let rise = 1;
+		let run = 1.4;
 		animations.card.characterAttackCharacter(attacker,defender,turn,rise,run,callBack);
-	},
-	flipCharacterHorizonaly: function (card,callBack,time=200) {
-		let dir = -1;
-		let x = 1;
-		if(card.scaleAnimation.width < 0) {
-			dir = 1;
-			x = -1;
-		}
-		card.scaleAnimation.appendKeyValue(new KeyValue({
-			val:{width:dir,height:1},
-			endEpoch: frameTime+time,
-			callBack:callBack
-		}));
-		card.translationAnimation.appendKeyValue(new KeyValue({
-			val:{x:card.translationAnimation.x+card.bounds.w*x ,y:card.translationAnimation.y},
-			endEpoch: frameTime+time,
-			callBack:function (card) {}
-		}));
 	},
 	playerCharacterLeaves: function (card,callBack) {
 		card.loop = 'walk';
@@ -264,76 +225,5 @@ animations.card = {
 			}));
 		});
 	},
-	oppCharacterEnters: function (card,callBack) {
-		card.loop = 'walk';
-		card.scaleAnimation.forceUpdate({width: -1, height: 1});
-		card.translationAnimation.forceUpdate({
-			x: card.bounds.w+card.bounds.x,
-			y: -card.bounds.h * 2});
-		card.translationAnimation.appendKeyValue(new KeyValue({
-			val:{x:card.bounds.w/2,y:0},
-			endEpoch: frameTime + 800,
-			callBack: function (card) {
-				card.loop = 'idle';
-				callBack(card);
-			}
-		}));
-	},
-	characterJump: function (card,callBack) {
-		card.loop = 'attack';
-		card.scaleAnimation.appendKeyValue(new KeyValue({
-			val:{width:1,height:0.8},
-			endEpoch: frameTime+200,
-			callBack: function (card) {
-				card.scaleAnimation.appendKeyValue(new KeyValue({
-					val:{width:1,height:1.1},
-					endEpoch: frameTime+300,
-					callBack: function (card) {
-						card.scaleAnimation.appendKeyValue(new KeyValue({
-							val:{width:1,height:1.1},
-							endEpoch: frameTime+100,
-							callBack: function (card) {
-								card.scaleAnimation.appendKeyValue(new KeyValue({
-									val:{width:1,height:1},
-									endEpoch: frameTime+300,
-									callBack: function (card) {
-										card.loop = 'idle';
-										callBack(card);
-									}
-								}));
-							}
-						}));
-					}
-				}));
-			}
-		}));
-		//translations
-		let orign = {x: card.translationAnimation.x,y:card.translationAnimation.y};
-		card.translationAnimation.appendKeyValue(new KeyValue({
-			val: {x: card.translationAnimation.x, y: card.bounds.h*0.2},
-			endEpoch: frameTime + 200,
-			callBack: function (card) {
-				card.translationAnimation.appendKeyValue(new KeyValue({
-					val: {x:  card.translationAnimation.x, y: -card.bounds.h*0.5},
-					endEpoch: frameTime + 300,
-					callBack: function (card) {
-						card.translationAnimation.appendKeyValue(new KeyValue({
-							val: {x:  card.translationAnimation.x, y: -card.bounds.h*0.5},
-							endEpoch: frameTime + 50,
-							callBack: function (card) {
-								card.translationAnimation.appendKeyValue(new KeyValue({
-									val: orign,
-									endEpoch: frameTime + 300,
-									callBack: function (card) {
-										//do nothing scale is doing stuff
-									}
-								}));
-							}
-						}));
-					}
-				}));
-			}
-		}));
-	}
 
 };

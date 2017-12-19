@@ -47,7 +47,6 @@ class CardDuelOpp extends  Card {
 			this.attacks.push(a);
 			//a.show();
 		}
-
 		this.character.debug = true;
 	}
 	show() {

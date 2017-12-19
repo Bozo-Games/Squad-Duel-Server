@@ -18,32 +18,19 @@ animations.attack = {
 		}
 	},
 	attackNameSlide(attack,isLeftRight) {
-		let from = {x:-attack.bounds.w,y:0};
-		let to = {x:attack.bounds.w,y:0};
+		let from = {x:-attack.w,y:0};
+		let to = {x:attack.w,y:0};
 		if(!isLeftRight) {
-			from = {x:attack.bounds.w,y:0};
-			to = {x:-attack.bounds.w,y:0};
+			from = {x:attack.w,y:0};
+			to = {x:-attack.w,y:0};
 
 		}
-		attack.translationAnimation.forceUpdate(from);
-		attack.translationAnimation.appendKeyValue(new KeyValue({
-			val: {x:0,y:0},
-			endEpoch: frameTime + 200,
-			callBack: function (attack) {
-				attack.translationAnimation.appendKeyValue(new KeyValue({
-					val: {x:0,y:0},
-					endEpoch: frameTime + 800,
-					callBack: function (attack) {
-						attack.translationAnimation.appendKeyValue(new KeyValue({
-							val: to,
-							endEpoch: frameTime + 200,
-							callBack: function (attack) {
+		attack.moveToGlobal(from.x,from.y,function (attack) {
+			attack.moveToGlobal(0,0,function (attack) {
+				attack.moveToGlobal(to.x,to.y,function (attack) {
 
-							}
-						}));
-					}
-				}));
-			}
-		}));
+				});
+			});
+		});
 	}
 };

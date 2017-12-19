@@ -152,6 +152,13 @@ class Sprite {
 				this._animationScale.h = this._animationQueu[0].h;
 				let cb = this._animationQueu[0].callBack;
 				this._animationQueu.splice(0, 1);
+
+				x = this._animationTranslation.x;
+				y = this._animationTranslation.y;
+				w = this._animationScale.w;
+				h = this._animationScale.h;
+				this._animation = {x:x,y:y,w:w,h:h};
+
 				if(typeof cb === 'function') {
 					let shouldBreak = cb(this);
 					if(shouldBreak) {return true;}
@@ -180,22 +187,32 @@ class Sprite {
 	}
 	debugDraw() {
 		push();
-			rectMode(CORNER);
-			stroke('#00ff00');
-			strokeWeight(1);
-			noFill();
-			rect(0,0,this.w,this.h);
-			fill('#00ff00');
-			textSize(12);
-			textStyle(NORMAL);
-			textAlign(LEFT,TOP);
+		rectMode(CORNER);
+		stroke('#00ff00');
+		strokeWeight(1);
+		noFill();
+		rect(0, 0, this.w, this.h);
+		fill('#00ff00');
+		textSize(12);
+		textStyle(NORMAL);
+		textAlign(LEFT, TOP);
+		let mode = 'g';
+		if (mode === 'p') {
 			let w = this.parentSprite === undefined ? width : this.parentSprite.w;
 			let h = this.parentSprite === undefined ? height : this.parentSprite.h;
-			text(`(${((this.x+this.animation.x)/w).toFixed(2)+'%'},${((this.y+this.animation.y)/h).toFixed(2)+'%'})`,0,0);
-			textAlign(CENTER,BOTTOM);
-			text(((this.animation.w*this.w)/w).toFixed(2)+'%',this.w/2,this.h);
-			textAlign(RIGHT,CENTER);
-			text(((this.animation.h*this.h)/h).toFixed(2)+'%',this.w,this.h/2);
+			text(`(${((this.x + this.animation.x) / w).toFixed(2) + '%'},${((this.y + this.animation.y) / h).toFixed(2) + '%'})`, 0, 0);
+			textAlign(CENTER, BOTTOM);
+			text(((this.animation.w * this.w) / w).toFixed(2) + '%', this.w / 2, this.h);
+			textAlign(RIGHT, CENTER);
+			text(((this.animation.h * this.h) / h).toFixed(2) + '%', this.w, this.h / 2);
+		} else if(mode === 'g') {
+			let b = this.bounds;
+			text(`(${(b.x).toFixed(2) + 'px'},${(b.y).toFixed(2) + 'px'})`, 0, 0);
+			textAlign(CENTER, BOTTOM);
+			text((b.w).toFixed(2) + 'px', this.w / 2, this.h);
+			textAlign(RIGHT, CENTER);
+			text((b.h).toFixed(2) + 'px', this.w, this.h / 2);
+		}
 		pop();
 	}
 	drawSubSprites() {

@@ -92,18 +92,18 @@ animations.duel = {
 				armorDMGJSON.bounds.x += duel[defender+'Card'].character.bounds.x;
 				armorDMGJSON.bounds.w = duel[defender+'Card'].character.bounds.w;
 				let armorMsg = new FloatingText(armorDMGJSON);
-				animations.floatingText.floatAway(armorMsg,function (floatingText) {
+				armorMsg.floatAway(function (floatingText) {
 					floatingText.parentSprite.removeSubSprite(floatingText);
 					if(json['card'+currentGame.oppLetter].health !== duel[defender+'CurrentCard'].health) {
 						let healthMsg = new FloatingText(healthDMGJSON);
-						animations.floatingText.floatAway(healthMsg,function (floatingText) {
+						healthMsg.floatAway(function (floatingText) {
 							floatingText.parentSprite.removeSubSprite(floatingText);
 						});
 					}
-				})
+				});
 			} else if(json['card'+currentGame.oppLetter].health !== duel[defender+'CurrentCard'].health) {
 				let healthMsg = new FloatingText(healthDMGJSON);
-				animations.floatingText.floatAway(healthMsg,function (floatingText) {
+				healthMsg.floatAway(function (floatingText) {
 					floatingText.parentSprite.removeSubSprite(floatingText);
 				});
 			}
