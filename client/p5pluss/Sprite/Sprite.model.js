@@ -2,10 +2,10 @@ class Sprite {
 	constructor(json) {
 		json = json === undefined ? {} : json;
 		//sizing
-		checkJSONValue(this,json,'_origin.x',['x','origin.x'],0);
-		checkJSONValue(this,json,'_origin.y',['y','origin.y'],0);
-		checkJSONValue(this,json,'_size.w',['w','size.w','width','size.width'],100);
-		checkJSONValue(this,json,'_size.h',['h','size.h','height','size.height'],100);
+		checkJSONValue(this,json,'_root.x',['x','root.x'],0);
+		checkJSONValue(this,json,'_root.y',['y','root.y'],0);
+		checkJSONValue(this,json,'_root.w',['w','root.w','width','root.width'],100);
+		checkJSONValue(this,json,'_root.h',['h','root.h','height','root.height'],100);
 
 		//parenting
 		this._subSprites = [];
@@ -54,6 +54,17 @@ class Sprite {
 	get animation() {
 		return this._animation;
 	}
+	get root(){
+		return this._root;
+	}
+	get local(){
+		return {
+			x: this.root.x + this.animation.x,
+			y: this.root.y + this.animation.y,
+			w: this.root.w * this.animation.w,
+			h: this.root.h * this.animation.h
+		};
+	}
 	get lastAnimation() {
 		if(this._animationQueu.length > 0) {
 			return {
@@ -65,50 +76,19 @@ class Sprite {
 		}
 		return this.animation;
 	}
-	get drawSettings() {
-		return this._drawSettings;
-	}
-	get x() {
-		return this._origin.x;
-	}
-	get y() {
-		return this._origin.y;
-	}
-	get origin() {
-		return {x:this.x,y:this.y};
-	}
-	get w() {
-		return this._size.w;
-	}
-	get width() {
-		return this.w;
-	}
-	get h() {
-		return this._size.h;
-	}
-	get height() {
-		return this.h;
-	}
-	get size() {
-		return {w:this.w,width:this.w,height:this.h,h:this.h};
-	}
-	get subSprites() {
-		return this._subSprites;
-	}
-	get parentSprite() {
-		return this._parentSprite;
-	}
-	get bounds() {
+	get global() {
 		let b = {
-			x: this.x + this.animation.x,
-			y: this.y + this.animation.y,
-			w: this.w * this.animation.w,
-			h: this.h * this.animation.h
+			x:this.local.x,
+			y:this.local.y,
+			w:this.local.w,
+			h:this.local.h
 		};
 		if(this.parentSprite !== undefined) {
-			let pb = this.parentSprite.bounds;
-			b.x += pb.x;
-			b.y += pb.y;
+			let pg = this.parentSprite.global;
+			b.x += pg.x;
+			b.y += pg.y;
+			b.w *= this.parentSprite.animation.w;
+			b.h *= this.parentSprite.animation.h;
 		}
 		return b;
 	}
@@ -119,19 +99,17 @@ class Sprite {
 			return 0;
 		}
 	}
+	get drawSettings() {
+		return this._drawSettings;
+	}
+	get subSprites() {
+		return this._subSprites;
+	}
+	get parentSprite() {
+		return this._parentSprite;
+	}
 	//----------------------------------------------------------------------------------------------------------- Setter
-	set x(newX) {
-		this._origin.x = newX;
-	}
-	set y(newY) {
-		this._origin.y = newY;
-	}
-	set w(newW) {
-		this._size.w = newW;
-	}
-	set h(newH) {
-		this._size.h = newH;
-	}
+
 	set z(newZ) {
 		if(this.parentSprite !== undefined) {
 			newZ = Math.max(0,Math.min(this.parentSprite.subSprites.length-1,newZ));
@@ -176,7 +154,7 @@ class Sprite {
 				h = this._animationQueu[0].h*p+this._animationScale.h*(1-p);
 			}
 		}
-		translate(this.x,this.y);
+		translate(this.root.x,this.root.y);
 		translate(x,y);
 		scale(w,h);
 		this._animation = {x:x,y:y,w:w,h:h};
@@ -200,18 +178,18 @@ class Sprite {
 		if (mode === 'p') {
 			let w = this.parentSprite === undefined ? width : this.parentSprite.w;
 			let h = this.parentSprite === undefined ? height : this.parentSprite.h;
-			text(`(${((this.x + this.animation.x) / w).toFixed(2) + '%'},${((this.y + this.animation.y) / h).toFixed(2) + '%'})`, 0, 0);
+			text(`(${((this.local.x) / w).toFixed(2) + '%'},${((this.local.y) / h).toFixed(2) + '%'})`, 0, 0);
 			textAlign(CENTER, BOTTOM);
-			text(((this.animation.w * this.w) / w).toFixed(2) + '%', this.w / 2, this.h);
+			text(((this.local.w) / w).toFixed(2) + '%', this.root.w / 2, this.root.h);
 			textAlign(RIGHT, CENTER);
-			text(((this.animation.h * this.h) / h).toFixed(2) + '%', this.w, this.h / 2);
+			text(((this.local.h) / h).toFixed(2) + '%', this.root.w, this.root.h / 2);
 		} else if(mode === 'g') {
-			let b = this.bounds;
+			let b = this.global;
 			text(`(${(b.x).toFixed(2) + 'px'},${(b.y).toFixed(2) + 'px'})`, 0, 0);
 			textAlign(CENTER, BOTTOM);
-			text((b.w).toFixed(2) + 'px', this.w / 2, this.h);
+			text((b.w).toFixed(2) + 'px', this.root.w / 2, this.root.h);
 			textAlign(RIGHT, CENTER);
-			text((b.h).toFixed(2) + 'px', this.w, this.h / 2);
+			text((b.h).toFixed(2) + 'px', this.root.w, this.root.h / 2);
 		}
 		pop();
 	}
@@ -232,14 +210,14 @@ class Sprite {
 			return;
 		}
 		d = this;
-		rect(0,0,this.w,this.h,10);
+		rect(0,0,this.root.w,this.root.h,10);
 		this.drawSubSprites();
 		pop();
 	}
 	//------------------------------------------------------------------------------------------------- User Interaction
 	touchEnded() {
-		let didTap = ((mouseX >= this.bounds.x && mouseX <=  this.bounds.x+this.bounds.w) &&
-			(mouseY >= this.bounds.y && mouseY <= this.bounds.y+this.bounds.h));
+		let didTap = ((mouseX >= this.global.x && mouseX <=  this.global.x+this.global.w) &&
+			(mouseY >= this.global.y && mouseY <= this.global.y+this.global.h));
 		for(let i =  this.subSprites.length-1; i >=0; i--) {
 			if(this.subSprites[i] !== undefined) {
 				this.subSprites[i].touchEnded();
