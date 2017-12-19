@@ -46,13 +46,9 @@ animations.card = {
 		} else if(card instanceof CardDuelCharacter) {
 			if (currentGame.isPlayerCard(card.id)) {
 				card.loop = 'walk';
-				console.log('-------------- 0 '+card.name);
 				card.flipHorizontally(function (card) {
-					console.log('-------------- 1 '+card.name);
 					card.moveToGlobal(0, height-card.h, function (card) {
-						console.log('-------------- 2 '+card.name);
 						card.flipHorizontally(function (card) {
-							console.log('-------------- 3 '+card.name);
 							card.loop = 'idle';
 							card.currentState = 'inHand';
 							card.id = json.id;
@@ -60,9 +56,8 @@ animations.card = {
 							card.loadJSON(json);
 					  	},0);
 					}, 800); //walk time
-				},2000);//flip time
+				},200);//flip time
 			} else {
-				console.log('-------------- !!!!!');
 				card.currentState = 'inHand';
 				card.loadJSON(json);
 			}
