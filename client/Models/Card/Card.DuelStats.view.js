@@ -9,9 +9,9 @@ class CardDuelStats extends Card {
 	draw() {
 		push();
 		super.applyTransformations();
-		rect(0,0,this.bounds.w,this.bounds.h,5);
+		rect(0,0,this.global.w,this.global.h,5);
 
-		let iconSize = this.bounds.h / 5;
+		let iconSize = this.global.h / 5;
 		let y = (iconSize)/5;
 		let step = iconSize + y;
 		fill(colors.card.text);
@@ -20,8 +20,8 @@ class CardDuelStats extends Card {
 		textAlign(LEFT,TOP);
 		['health','armor','speed','power'].forEach(function (stat) {
 			tint(colors.card[stat]);
-			image(icons.card[stat],(this.bounds.w*0.5-iconSize)/2,y,iconSize,iconSize);
-			text(this[stat],this.bounds.w*0.55,y);
+			image(icons.card[stat],(this.global.w*0.5-iconSize)/2,y,iconSize,iconSize);
+			text(this[stat],this.global.w*0.55,y);
 			y += step;
 		}.bind(this));
 		super.drawSubSprites();
@@ -31,9 +31,9 @@ class CardDuelStats extends Card {
 		this.moveToLocal(0,0,callBack,time)
 	}
 	hide(callBack,time=800){
-		this.moveToGlobal(-this.w,this.bounds.y,callBack,time);
+		this.moveToGlobal(-this.w,this.global.y,callBack,time);
 	}
 	hideRight(callBack,time=800){
-		this.moveToGlobal(width,this.bounds.y,callBack,time);
+		this.moveToGlobal(width,this.global.y,callBack,time);
 	}
 }

@@ -15,13 +15,13 @@ class AttackDuelPlayer extends Attack {
 				fill(colors.attack.selected);
 			}
 		}
-		rect(0,0,this.bounds.w,this.bounds.h,5);
+		rect(0,0,this.global.w,this.global.h,5);
 
-		textSize(this.bounds.h*0.4);
+		textSize(this.global.h*0.4);
 		textAlign(CENTER,CENTER);
 		fill(colors.attack.text);
 		strokeWeight(1);
-		text(this.name,this.bounds.w/2,this.bounds.h/2);
+		text(this.name,this.global.w/2,this.global.h/2);
 		this.drawSubSprites();
 		pop();
 	}
@@ -35,9 +35,9 @@ class AttackDuelPlayer extends Attack {
 		this.moveToLocal(0,0,callBack,time);
 	}
 	hide(callBack, time = 800) {
-		this.moveToGlobal(width,this.bounds.y,callBack,time);
+		this.moveToGlobal(width,this.global.y,callBack,time);
 	}
 	hideLeft(callBack, time = 800) {
-		this.moveToGlobal(-this.w,this.bounds.y,callBack,time);
+		this.moveToGlobal(-this.w,this.global.y,callBack,time);
 	}
 }

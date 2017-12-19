@@ -16,12 +16,12 @@ class ButtonLockIn extends Sprite {
 			fill(colors.button.lockedIn.background);
 			txt = strings.button.lockedIn;
 		}
-		rect(0,0,this.bounds.w,this.bounds.h,5);
+		rect(0,0,this.global.w,this.global.h,5);
 
-		textSize(this.bounds.h * 0.4);
+		textSize(this.global.h * 0.4);
 		textAlign(CENTER, CENTER);
 		fill(colors.attack.text);
-		text(txt, this.bounds.w /2, this.bounds.h / 2);
+		text(txt, this.global.w /2, this.global.h / 2);
 		this.drawSubSprites();
 		pop();
 	}

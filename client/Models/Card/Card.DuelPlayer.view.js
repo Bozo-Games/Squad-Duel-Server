@@ -9,7 +9,7 @@ class CardDuelPlayer extends Card {
 		json.h = this.h*defaults.card.duel.player.characterScale.h;
 		json.animation = {
 			x: -json.w*2,
-			y: json.y + this.bounds.y+json.h,
+			y: json.y + this.global.y+json.h,
 		};
 		json.parentSprite = this;
 		this.character = new CardDuelCharacter(json);
@@ -47,33 +47,33 @@ class CardDuelPlayer extends Card {
 /*
 
 		this.attacks = [];
-		let h = this.bounds.h / (json.attacks.length+1.5); //1 for space,2 for lock in
-		let spaceing = (this.bounds.h - h*(json.attacks.length+1))/2;
+		let h = this.global.h / (json.attacks.length+1.5); //1 for space,2 for lock in
+		let spaceing = (this.global.h - h*(json.attacks.length+1))/2;
 		for(let i = 0; i < json.attacks.length; i++) {
 			let attackJSON = json.attacks[i];
 			let yy = spaceing*(i+1) + h*(i+1);
-			attackJSON.bounds = {
-				x: this.bounds.w*defaults.card.duel.player.attackScale.x,
+			attackJSON.global = {
+				x: this.global.w*defaults.card.duel.player.attackScale.x,
 				y: yy,
-				w: this.bounds.w*defaults.card.duel.player.attackScale.w,
+				w: this.global.w*defaults.card.duel.player.attackScale.w,
 				h: h
 			};
 			attackJSON.parentSprite = this;
 			let a = new AttackDuelPlayer(attackJSON);
-			a.translationAnimation.forceUpdate({x:a.bounds.w*1.2,y:0});
+			a.translationAnimation.forceUpdate({x:a.global.w*1.2,y:0});
 			animations.attack.showAttack(a,function (attack) {});
 			this.attacks.push(a);
 		}
 		this.lockInBtn = new ButtonLockIn({
 			bounds:{
-				x: this.bounds.w*defaults.card.duel.player.attackScale.x,
+				x: this.global.w*defaults.card.duel.player.attackScale.x,
 				y: 0,
-				w: this.bounds.w*defaults.card.duel.player.attackScale.w,
+				w: this.global.w*defaults.card.duel.player.attackScale.w,
 				h: h
 			},
 			parentSprite: this
 		});
-		this.lockInBtn.translationAnimation.forceUpdate({x:this.lockInBtn.bounds.w/2,y:h/2});
+		this.lockInBtn.translationAnimation.forceUpdate({x:this.lockInBtn.global.w/2,y:h/2});
 		this.lockInBtn.scaleAnimation.forceUpdate({width:0,height:0});
 		animations.button.lockIn.show(this.lockInBtn);*/
 	}

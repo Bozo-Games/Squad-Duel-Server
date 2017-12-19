@@ -11,7 +11,7 @@ class CardDuelOpp extends  Card {
 		json.h = this.h*defaults.card.duel.opp.characterScale.h;
 		json.animation = {
 			x: json.w*2,
-			y: json.y - this.bounds.y-json.h,
+			y: json.y - this.global.y-json.h,
 			w:-1
 		};
 		json.parentSprite = this;

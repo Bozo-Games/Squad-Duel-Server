@@ -26,10 +26,10 @@ class Hand extends Sprite{
 	_resizeCards() {
 		let w = this.w/(this.cards.length+0.5);
 		for(let i = 0; i < this.cards.length;i++) {
-			this.cards[i].x = (i+1)*(this.w-w*this.cards.length)/(this.cards.length +1) + w*i;
-			this.cards[i].y = 0;
-			this.cards[i].w = w;
-			this.cards[i].h = w;
+			this.cards[i].root.x = (i+1)*(this.w-w*this.cards.length)/(this.cards.length +1) + w*i;
+			this.cards[i].root.y = 0;
+			this.cards[i].root.w = w;
+			this.cards[i].root.h = w;
 		}
 	}
 	draw() {

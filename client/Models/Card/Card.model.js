@@ -1,7 +1,7 @@
 class Card extends Sprite {
 	constructor(json) {
 		json = json === undefined ? {} : json;
-		json.bounds = json.bounds === undefined ? {x:0,y:0,w:100,h:100} : json.bounds;
+		json.global = json.global === undefined ? {x:0,y:0,w:100,h:100} : json.global;
 		super(json);
 		this.armor = json.armor === undefined ? 1 : json.armor;
 		this.health = json.health === undefined ? 1 : json.health;

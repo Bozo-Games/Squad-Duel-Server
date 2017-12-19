@@ -13,25 +13,25 @@ class Game extends Sprite {
 		this.playerLetter = 'A';
 		this.oppLetter = 'B';
 		this.playerHand = new Hand({
-			x:this.bounds.w * defaults.hand.playerScale.x,
-			y:this.bounds.h * defaults.hand.playerScale.y,
-			w:this.bounds.w * defaults.hand.playerScale.w,
-			h:this.bounds.h * defaults.hand.playerScale.h,
+			x:this.local.w * defaults.hand.playerScale.x,
+			y:this.local.h * defaults.hand.playerScale.y,
+			w:this.local.w * defaults.hand.playerScale.w,
+			h:this.local.h * defaults.hand.playerScale.h,
 			parentSprite:this
 		});
 		this.oppHand = new Hand({
-			x:this.bounds.w * defaults.hand.oppScale.x,
-			y:this.bounds.h * defaults.hand.oppScale.y,
-			w:this.bounds.w * defaults.hand.oppScale.w,
-			h:this.bounds.h * defaults.hand.oppScale.h,
+			x:this.local.w * defaults.hand.oppScale.x,
+			y:this.local.h * defaults.hand.oppScale.y,
+			w:this.local.w * defaults.hand.oppScale.w,
+			h:this.local.h * defaults.hand.oppScale.h,
 			touchEnabled:false,
 			parentSprite:this
 		});
 		this.duel = new Duel({
-			x:this.bounds.w * defaults.duel.scale.x,
-			y:this.bounds.h * defaults.duel.scale.y,
-			w:this.bounds.w * defaults.duel.scale.w,
-			h:this.bounds.h * defaults.duel.scale.h,
+			x:this.local.w * defaults.duel.scale.x,
+			y:this.local.h * defaults.duel.scale.y,
+			w:this.local.w * defaults.duel.scale.w,
+			h:this.local.h * defaults.duel.scale.h,
 			parentSprite:this
 		});
 		this.loadJSON(json);
@@ -70,7 +70,7 @@ class Game extends Sprite {
 	draw() {
 		push();
 		this.applyTransformations();
-		rect(this.x,this.y,this.w,this.h);
+		rect(0,0,this.root.w,this.root.h);
 
 		this.duel.draw();
 		this.oppHand.draw();

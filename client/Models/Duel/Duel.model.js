@@ -4,7 +4,7 @@ class Duel extends Sprite {
 		super(json);
 		this.currentState = 'waitingForCards';
 
-		console.log('duel - '+JSON.stringify(this.bounds));
+		console.log('duel - '+JSON.stringify(this.global));
 		this.loadJSON(json);
 	}
 	loadJSON(json){
@@ -162,7 +162,7 @@ class Duel extends Sprite {
 
 		this.acceptResultsBtn = new ButtonAcceptReuslt({
 			x:this.x + (this.w- statWidth)/2 ,
-			y:(this.h-statWidth)/2,// - (this.bounds.h-statWidth)/2 ,
+			y:(this.h-statWidth)/2,// - (this.global.h-statWidth)/2 ,
 			w:statWidth,
 			h:statWidth,
 			parentSprite:this

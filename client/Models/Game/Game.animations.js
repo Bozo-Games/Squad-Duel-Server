@@ -23,8 +23,8 @@ animations.game = {
 		let countDownText = new FloatingText({
 			x:0,
 			y:0,
-			w: game.bounds.w,
-			h: game.bounds.h,
+			w: game.global.w,
+			h: game.global.h,
 			fillColor:'#ff0000',
 			text:'3',
 			parentSprite:game

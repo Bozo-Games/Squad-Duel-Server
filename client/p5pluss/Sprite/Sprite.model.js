@@ -57,6 +57,10 @@ class Sprite {
 	get root(){
 		return this._root;
 	}
+	get x(){return this.root.x;}
+	get y(){return this.root.y;}
+	get w(){return this.root.w;}
+	get h(){return this.root.h;}
 	get local(){
 		return {
 			x: this.root.x + this.animation.x,
@@ -109,7 +113,42 @@ class Sprite {
 		return this._parentSprite;
 	}
 	//----------------------------------------------------------------------------------------------------------- Setter
-
+	set x(newRootX) {
+		let old = this.x;
+		if(old !== 0 && false){ //don't think root x should move if parent's root gets moved
+			for(let sprite of this.subSprites) {
+				sprite.x = (newRootX *  sprite.x) / old;
+			}
+		}
+		this.root.x = newRootX;
+	}
+	set y(newRootY) {
+		let old = this.y;
+		if(old !== 0 && false){ //don't think root yx should move if parent's root gets moved
+			for (let sprite of this.subSprites) {
+				sprite.y = (newRootY * sprite.y) / old;
+			}
+		}
+		this.root.y = newRootY;
+	}
+	set w(newRootW) {
+		let old = this.w;
+		if(old !== 0) {
+			for (let sprite of this.subSprites) {
+				sprite.w = (newRootW * sprite.w) / old;
+			}
+		}
+		this.root.w = newRootW;
+	}
+	set h(newRootH) {
+		let old = this.h;
+		if(old !== 0) {
+			for (let sprite of this.subSprites) {
+				sprite.h = (newRootH * sprite.h) / old;
+			}
+		}
+		this.root.h = newRootH;
+	}
 	set z(newZ) {
 		if(this.parentSprite !== undefined) {
 			newZ = Math.max(0,Math.min(this.parentSprite.subSprites.length-1,newZ));
@@ -260,10 +299,10 @@ class Sprite {
 			callBack:callBack
 		}));
 	}
-	moveToGlobal(x=this.bounds.x,y=this.bounds.y,callBack,time=0){
+	moveToGlobal(x=this.global.x,y=this.global.y,callBack,time=0){
 		this.push(new AnimationValue({
-			x:-this.bounds.x+x,
-			y:-this.bounds.y+y,
+			x:-this.global.x+x,
+			y:-this.global.y+y,
 			w:this.lastAnimation.w,
 			h:this.lastAnimation.h,
 			time:time,
@@ -272,7 +311,7 @@ class Sprite {
 	}
 	moveToSprite(sprite,callBack,time=0) {
 		if(sprite !== undefined) {
-			this.moveToGlobal(sprite.bounds.x, sprite.bounds.y, callBack, time);
+			this.moveToGlobal(sprite.global.x, sprite.global.y, callBack, time);
 		}
 	}
 	//------------------------------------------------------------------------------------------------ Sprite Management

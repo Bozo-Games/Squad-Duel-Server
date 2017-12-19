@@ -12,9 +12,9 @@ class ButtonAcceptReuslt extends Sprite {
 
 		imageMode(CENTER);
 		ellipseMode(CENTER);
-		ellipse(this.bounds.w/2,this.bounds.h/2,this.bounds.w,this.bounds.h);
+		ellipse(this.global.w/2,this.global.h/2,this.global.w,this.global.h);
 		tint('#ffffff');
-		image(icons.button.acceptBtn,this.bounds.w/2,this.bounds.h/2,this.bounds.w,this.bounds.h);
+		image(icons.button.acceptBtn,this.global.w/2,this.global.h/2,this.global.w,this.global.h);
 
 		this.drawSubSprites();
 		pop();

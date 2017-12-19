@@ -7,7 +7,7 @@ class CardDuelCharacter extends Card {
 		if(this.id !== undefined) {
 			push();
 			this.applyTransformations();
-			//rect(this.bounds.x, this.bounds.y, this.bounds.h, this.bounds.h);
+			//rect(this.global.x, this.global.y, this.global.h, this.global.h);
 			let img = icons.getCharacter(this.name, this.loop);
 			image(img, 0,0, this.w, this.h);
 			this.drawSubSprites();

@@ -2,7 +2,7 @@ animations.card = {
 	"inHand->selected": function (card, json) {
 		if(card instanceof CardInHand) {
 			if(currentGame.isPlayerCard(card.id)) {
-				card.moveToGlobal(card.bounds.x,height,function (card) {
+				card.moveToGlobal(card.global.x,height,function (card) {
 					card.currentState = 'selected';
 					card.loadJSON(json);
 				},400);
@@ -160,7 +160,7 @@ animations.card = {
 	characterAttackCharacter(attacker,defender,turn,rise,run,callBack) {
 		attacker.debug = true;
 		attacker.loop = 'run';
-		attacker.moveToGlobal(defender.bounds.x - run*defender.w,defender.bounds.y,function (attacker) {
+		attacker.moveToGlobal(defender.global.x - run*defender.w,defender.global.y,function (attacker) {
 			attacker.loop = 'attack';
 			attacker.push(new AnimationValue({
 				x: attacker.animation.x,
@@ -197,7 +197,7 @@ animations.card = {
 		card.translationAnimation.forceUpdate({x:0,y:0});
 		animations.card.flipCharacterHorizonaly(card,function(card){
 			card.translationAnimation.appendKeyValue(new KeyValue({
-				val:{x: -card.bounds.w-card.bounds.x, y: card.bounds.h * 2},
+				val:{x: -card.global.w-card.global.x, y: card.global.h * 2},
 				endEpoch:frameTime + 800,
 				callBack:function(card){
 					card.loop = 'idle';
@@ -210,12 +210,12 @@ animations.card = {
 	oppCharacterLeaves: function (card,callBack) {
 		card.loop = 'walk';
 		card.scaleAnimation.forceUpdate({width: -1, height: 1});
-		card.translationAnimation.forceUpdate({x:card.bounds.w/2,y:0});
+		card.translationAnimation.forceUpdate({x:card.global.w/2,y:0});
 		animations.card.flipCharacterHorizonaly(card,function(card){
 			card.translationAnimation.appendKeyValue(new KeyValue({
 				val:{
-					x: card.bounds.w+card.bounds.x,
-					y: -card.bounds.h * 2
+					x: card.global.w+card.global.x,
+					y: -card.global.h * 2
 				},
 				endEpoch:frameTime + 800,
 				callBack:function(card){
