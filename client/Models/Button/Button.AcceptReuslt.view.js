@@ -8,7 +8,7 @@ class ButtonAcceptReuslt extends Sprite {
 
 	draw() {
 		push();
-		this.applyAnimations();
+		this.applyTransformations();
 
 		imageMode(CENTER);
 		ellipseMode(CENTER);
@@ -16,16 +16,14 @@ class ButtonAcceptReuslt extends Sprite {
 		tint('#ffffff');
 		image(icons.button.acceptBtn,this.bounds.w/2,this.bounds.h/2,this.bounds.w,this.bounds.h);
 
-		this.drawSubViews();
+		this.drawSubSprites();
 		pop();
 	}
 
 	touchEnded() {
-		pushMouse();
 		let didTap = super.touchEnded();
 		if(didTap && currentGame.iAmPrimaryPlayer) {
 			network.acceptResults();
 		}
-		popMouse();
 	}
 }

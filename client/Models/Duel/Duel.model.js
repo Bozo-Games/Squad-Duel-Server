@@ -104,71 +104,67 @@ class Duel extends Sprite {
 	}
 
 	showDuelResults() {
-		let statHeight = this.playerCard.bounds.h*defaults.card.duel.player.statBoxScale.h;
-		let statWidth = this.playerCard.bounds.w*defaults.card.duel.player.statBoxScale.w;
+		let statHeight = this.playerCard.h*defaults.card.duel.player.statBoxScale.h;
+		let statWidth = this.playerCard.w*defaults.card.duel.player.statBoxScale.w;
 
-		this.playerStartCard.bounds = {
-			x: this.playerCard.character.bounds.x + this.playerCard.character.bounds.w,
-			y: this.playerCard.bounds.y+(this.playerCard.bounds.h-statHeight)/2,
-			w: statWidth,
-			h: statHeight
-		};
+		this.playerStartCard.x = this.playerCard.character.x + this.playerCard.character.w;
+		this.playerStartCard.y = this.playerCard.y+(this.playerCard.h-statHeight)/2;
+		this.playerStartCard.w = statWidth;
+		this.playerStartCard.h = statHeight;
 		this.playerStartCard.parentSprite = this;
-		this.playerCurrentCard.bounds = {
-			x: this.playerCard.character.bounds.x+this.playerCard.character.bounds.w+statWidth+30,
-			y: this.playerCard.bounds.y+(this.playerCard.bounds.h-statHeight)/2,
-			w: statWidth,
-			h: statHeight
-		};
+
+		this.playerCurrentCard.x = this.playerCard.character.x+this.playerCard.character.w+statWidth+30;
+		this.playerCurrentCard.y = this.playerCard.y+(this.playerCard.h-statHeight)/2;
+		this.playerCurrentCard.w = statWidth;
+		this.playerCurrentCard.h = statHeight;
 		this.playerCurrentCard.parentSprite = this;
+
 		this.playerStartResults = new CardDuelStats(this.playerStartCard);
 		this.playerEndResults = new CardDuelStats(this.playerCurrentCard);
+
 		this.playerArrowResults = new FloatingText({
-			bounds: {
-				x:this.playerCard.character.bounds.x+this.playerCard.character.bounds.w+statWidth,
-				y:this.playerCard.bounds.y+(this.playerCard.bounds.h-20)/2,
-				w:30,
-				h:20
-			},
+			x:this.playerCard.character.x+this.playerCard.character.w+statWidth,
+			y:this.playerCard.y+(this.playerCard.h-20)/2,
+			w:30,
+			h:20,
 			text:"=>",
+			color:'#000',
 			parentSprite:this
 		});
 
 
-		this.oppStartCard.bounds = {
-			x: this.oppCard.character.bounds.x - this.oppCard.character.bounds.w - statWidth - 30,
-			y: this.oppCard.bounds.y+(this.oppCard.bounds.h-statHeight)/2,
-			w: statWidth,
-			h: statHeight
-		};
+		this.oppStartCard.x = this.oppCard.character.x - this.oppCard.character.w - statWidth - 30;
+		this.oppStartCard.y = this.oppCard.y+(this.oppCard.h-statHeight)/2;
+		this.oppStartCard.w = statWidth;
+		this.oppStartCard.h = statHeight;
 		this.oppStartCard.parentSprite = this;
-		this.oppCurrentCard.bounds = {
-			x: this.oppCard.character.bounds.x-this.oppCard.character.bounds.w,
-			y: this.oppCard.bounds.y+(this.oppCard.bounds.h-statHeight)/2,
-			w: statWidth,
-			h: statHeight
-		};
+
+		this.oppCurrentCard.x = this.oppCard.character.x-this.oppCard.character.w;
+		this.oppCurrentCard.y = this.oppCard.y+(this.oppCard.h-statHeight)/2;
+		this.oppCurrentCard.w = statWidth;
+		this.oppCurrentCard.h = statHeight;
 		this.oppCurrentCard.parentSprite = this;
+
 		this.oppStartResults = new CardDuelStats(this.oppStartCard);
 		this.oppEndResults = new CardDuelStats(this.oppCurrentCard);
+
 		this.oppArrowResults = new FloatingText({
 			bounds: {
-				x:this.oppCard.character.bounds.x-this.oppCard.character.bounds.w - 30,
-				y:this.oppCard.bounds.y+(this.oppCard.bounds.h-20)/2,
+				x:this.oppCard.character.x-this.oppCard.character.w - 30,
+				y:this.oppCard.y+(this.oppCard.h-20)/2,
 				w:30,
 				h:20
 			},
 			text:"=>",
+			color:'#000',
 			parentSprite:this
 		});
 
 		this.acceptResultsBtn = new ButtonAcceptReuslt({
-			bounds: {
-				x:this.bounds.x + (this.bounds.w- statWidth)/2 ,
-				y:(this.bounds.h-statWidth)/2,// - (this.bounds.h-statWidth)/2 ,
-				w:statWidth,
-				h:statWidth
-			},
+			x:this.x + (this.w- statWidth)/2 ,
+			y:(this.h-statWidth)/2,// - (this.bounds.h-statWidth)/2 ,
+			w:statWidth,
+			h:statWidth,
 			parentSprite:this
 		});
 
