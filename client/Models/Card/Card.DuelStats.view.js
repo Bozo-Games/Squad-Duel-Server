@@ -33,4 +33,7 @@ class CardDuelStats extends Card {
 	hide(callBack,time=800){
 		this.moveToGlobal(-this.w,this.bounds.y,callBack,time);
 	}
+	hideRight(callBack,time=800){
+		this.moveToGlobal(width,this.bounds.y,callBack,time);
+	}
 }

@@ -7,12 +7,12 @@ class AttackComat extends Attack {
 
 	draw(){
 		push();
-		this.applyAnimations();
+		this.applyTransformations();
 		textAlign(CENTER,CENTER);
-		rect(0,this.bounds.h/2,(this.bounds.w - textWidth(this.name)) / 2.1,2);
-		rect(this.bounds.w - (this.bounds.w - textWidth(this.name)) / 2.1,this.bounds.h/2,(this.bounds.w - textWidth(this.name)) / 2.1,2);
-		text(this.name,this.bounds.w/2,this.bounds.h/2);
-		this.drawSubViews();
+		rect(0,this.h/2,(this.w - textWidth(this.name)) / 2.1,2);
+		rect(this.w - (this.w - textWidth(this.name)) / 2.1,this.h/2,(this.w - textWidth(this.name)) / 2.1,2);
+		text(this.name,this.w/2,this.h/2);
+		this.drawSubSprites();
 		pop();
 	}
 }

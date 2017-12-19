@@ -2,11 +2,16 @@ animations.attack = {
 
 	swapAttack: function (attack,json) {
 		if(attack instanceof AttackDuelPlayer) {
-			attack.hide(function (attack) {
+			if(attack.parentSprite instanceof CardDuelPlayer) {
+				attack.hide(function (attack) {
+					attack.id = json.id;
+					attack.loadJSON(json);
+					attack.show(undefined, 1000);
+				})
+			} else {
 				attack.id = json.id;
 				attack.loadJSON(json);
-				attack.show(undefined,1000);
-			})
+			}
 		} else {
 			attack.id = json.id;
 			attack.loadJSON(json);

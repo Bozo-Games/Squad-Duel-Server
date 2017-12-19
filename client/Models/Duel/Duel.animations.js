@@ -22,6 +22,7 @@ animations.duel = {
 		duel.currentState = json.currentState;
 		duel.loadJSON(json);
 		duel.playerCard.hideUI();
+		duel.oppCard.hideUI();
 	},
 	"ready->newAttack":function (duel,json) {
 		duel.saveCardStartStats(json);

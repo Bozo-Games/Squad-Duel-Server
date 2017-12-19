@@ -290,5 +290,12 @@ class Sprite {
 			subSprite._parentSprite = this;
 		}
 	}
+	removeSubSprite(subSprite) {
+		let index = this._subSprites.indexOf(subSprite);
+		if(index >= 0 ) {
+			subSprite._parentSprite = undefined;
+			this._subSprites.splice(index,1);
+		}
+	}
 }
 

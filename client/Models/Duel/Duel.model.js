@@ -44,16 +44,16 @@ class Duel extends Sprite {
 				}
 				let playerAttackJSON = json[`attack${currentGame.playerLetter}`];
 				if(playerAttackJSON !== undefined) {
-					if(this.playerAttack === undefined) {
-						playerAttackJSON.bounds = {
-							x:0,
-							y:0,
-							w:this.bounds.w,
-							h:this.bounds.h
+					if(this.playerAttack === undefined) { //TODO move sizing to setting
+						playerAttackJSON.x = 0;
+						playerAttackJSON.y = 0;
+						playerAttackJSON.w = this.w;
+						playerAttackJSON.h = this.h;
+						playerAttackJSON.animation = {
+							x:-this.w
 						};
 						playerAttackJSON.parentSprite = this;
 						this.playerAttack = new AttackComat(playerAttackJSON);
-						this.playerAttack.translationAnimation.forceUpdate({x:-this.bounds.w,y:0});
 					} else {
 						this.playerAttack.loadJSON(playerAttackJSON);
 					}
@@ -75,15 +75,15 @@ class Duel extends Sprite {
 				let oppAttackJSON = json[`attack${currentGame.oppLetter}`];
 				if(oppAttackJSON !== undefined) {
 					if(this.oppAttack === undefined) {
-						oppAttackJSON.bounds = {
-							x:0,
-							y:0,
-							w:this.bounds.w,
-							h:this.bounds.h
+						oppAttackJSON.x = 0;
+						oppAttackJSON.y = 0;
+						oppAttackJSON.w = this.w;
+						oppAttackJSON.h = this.h;
+						oppAttackJSON.animation = {
+							x:-this.w
 						};
 						oppAttackJSON.parentSprite = this;
 						this.oppAttack = new AttackComat(oppAttackJSON);
-						this.oppAttack.translationAnimation.forceUpdate({x:-this.bounds.w,y:0})
 					} else {
 						this.oppAttack.loadJSON(oppAttackJSON);
 					}

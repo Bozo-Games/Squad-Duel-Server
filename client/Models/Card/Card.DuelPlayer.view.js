@@ -80,7 +80,6 @@ class CardDuelPlayer extends Card {
 	hideUI() {
 		this.attacks.forEach(function (attack) {
 			attack.hide();
-			animations.attack.hideAttack(attack);
 		});
 		this.statsBox.hide();
 	}

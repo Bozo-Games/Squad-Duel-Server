@@ -21,32 +21,30 @@ animations.game = {
 	},
 	"attackSelectStage->readyToDuel": function (game, json) {
 		let countDownText = new FloatingText({
-			bounds: {
-				x:0,
-				y:0,
-				w: game.bounds.w,
-				h: game.bounds.h
-			},
+			x:0,
+			y:0,
+			w: game.bounds.w,
+			h: game.bounds.h,
 			fillColor:'#ff0000',
-			text:'3'
+			text:'3',
+			parentSprite:game
 		});
-		animations.floatingText.shrinkCenter(countDownText,function (floatingText) {
+		countDownText.shrinkCenter(function (floatingText) {
 			floatingText.text = '2';
-			floatingText.filColor = '#ff8400';
-			animations.floatingText.shrinkCenter(countDownText,function (floatingText) {
+			floatingText.drawSettings.filColor = '#ff8400';
+			floatingText.shrinkCenter(function (floatingText) {
 				floatingText.text = '1';
-				floatingText.filColor = '#448400';
-				animations.floatingText.shrinkCenter(countDownText,function (floatingText) {
+				floatingText.drawSettings.filColor = '#448400';
+				floatingText.shrinkCenter(function (floatingText) {
 					floatingText.text = 'DUEL!';
-					floatingText.filColor = '#00ff45';
-					animations.floatingText.shrinkCenter(countDownText,function (floatingText) {
+					floatingText.drawSettings.filColor = '#00ff45';
+					floatingText.shrinkCenter(function (floatingText) {
 						game.removeSubSprite(floatingText);
 						network.processDuel();
 					});
 				});
 			});
 		});
-		game.addSubSprite(countDownText);
 		game.currentState = json.currentState;
 		game.loadJSON(json)
 	}

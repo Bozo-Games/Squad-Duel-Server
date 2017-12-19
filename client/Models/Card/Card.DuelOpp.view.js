@@ -63,6 +63,13 @@ class CardDuelOpp extends  Card {
 		//animations.card.oppCharacterEnters(this.character,function (card) {});
 	}
 
+	hideUI() {
+		this.attacks.forEach(function (attack) {
+			attack.hideLeft();
+		});
+		this.statsBox.hideRight();
+	}
+
 	draw() {
 		if(this.id !== undefined) {
 			push();

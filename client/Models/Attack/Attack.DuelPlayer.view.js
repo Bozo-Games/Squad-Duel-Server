@@ -37,4 +37,7 @@ class AttackDuelPlayer extends Attack {
 	hide(callBack, time = 800) {
 		this.moveToGlobal(width,this.bounds.y,callBack,time);
 	}
+	hideLeft(callBack, time = 800) {
+		this.moveToGlobal(-this.w,this.bounds.y,callBack,time);
+	}
 }
