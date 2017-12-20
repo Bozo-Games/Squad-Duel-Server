@@ -8,8 +8,8 @@ class CardDuelPlayer extends Card {
 		json.w = this.h*defaults.card.duel.player.characterScale.h;
 		json.h = this.h*defaults.card.duel.player.characterScale.h;
 		json.animation = {
-			x: -json.w*2,
-			y: json.y + this.global.y+json.h,
+			x: -json.x-json.w,
+			y: json.h,
 		};
 		json.parentSprite = this;
 		this.character = new CardDuelCharacter(json);
@@ -43,52 +43,6 @@ class CardDuelPlayer extends Card {
 			this.attacks.push(a);
 			a.show();
 		}
-
-/*
-
-		this.attacks = [];
-		let h = this.global.h / (json.attacks.length+1.5); //1 for space,2 for lock in
-		let spaceing = (this.global.h - h*(json.attacks.length+1))/2;
-		for(let i = 0; i < json.attacks.length; i++) {
-			let attackJSON = json.attacks[i];
-			let yy = spaceing*(i+1) + h*(i+1);
-			attackJSON.global = {
-				x: this.global.w*defaults.card.duel.player.attackScale.x,
-				y: yy,
-				w: this.global.w*defaults.card.duel.player.attackScale.w,
-				h: h
-			};
-			attackJSON.parentSprite = this;
-			let a = new AttackDuelPlayer(attackJSON);
-			a.translationAnimation.forceUpdate({x:a.global.w*1.2,y:0});
-			animations.attack.showAttack(a,function (attack) {});
-			this.attacks.push(a);
-		}
-		this.lockInBtn = new ButtonLockIn({
-			bounds:{
-				x: this.global.w*defaults.card.duel.player.attackScale.x,
-				y: 0,
-				w: this.global.w*defaults.card.duel.player.attackScale.w,
-				h: h
-			},
-			parentSprite: this
-		});
-		this.lockInBtn.translationAnimation.forceUpdate({x:this.lockInBtn.global.w/2,y:h/2});
-		this.lockInBtn.scaleAnimation.forceUpdate({width:0,height:0});
-		animations.button.lockIn.show(this.lockInBtn);*/
-	}
-	hideUI() {
-		this.attacks.forEach(function (attack) {
-			attack.hide();
-		});
-		this.statsBox.hide();
-	}
-	showUI() {
-		this.attacks.forEach(function (attack) {
-			attack.show();
-			animations.attack.showAttack(attack);
-		});
-		this.statsBox.show();
 	}
 
 	loadJSON(json) {
@@ -127,5 +81,23 @@ class CardDuelPlayer extends Card {
 	}
 	touchEnded() {
 		let didTap = super.touchEnded();
+	}
+	//-------------------------------------------------------------------------- animations
+	stateChangeAnimation(from,to,json) {
+		return super.stateChangeAnimation(from, to, json);
+	}
+
+	hideUI() {
+		this.attacks.forEach(function (attack) {
+			attack.hide();
+		});
+		this.statsBox.hide();
+	}
+	showUI() {
+		this.attacks.forEach(function (attack) {
+			attack.show();
+			animations.attack.showAttack(attack);
+		});
+		this.statsBox.show();
 	}
 }

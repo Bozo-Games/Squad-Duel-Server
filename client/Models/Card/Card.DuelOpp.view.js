@@ -10,9 +10,8 @@ class CardDuelOpp extends  Card {
 		json.w = this.h*defaults.card.duel.opp.characterScale.h;
 		json.h = this.h*defaults.card.duel.opp.characterScale.h;
 		json.animation = {
-			x: json.w*2,
-			y: json.y - this.global.y-json.h,
-			w: -1
+			x: this.w - json.x,
+			y: -json.h
 		};
 		json.parentSprite = this;
 		this.character = new CardDuelCharacter(json);
@@ -48,24 +47,17 @@ class CardDuelOpp extends  Card {
 			//a.show();
 		}
 	}
-	show() {
-		this.character.loop = 'walk';
-		this.character.moveToLocal(this.character.w,0,function (card) {
-			card.loop = 'idle';
-		},800);
-		for(let attack of this.attacks) {
-			attack.show();
+
+	loadJSON(json) {
+		let didLoad = super.loadJSON(json);
+		if(didLoad) {
+			if (this.character !== undefined) {
+				this.character.loadJSON(json);
+			}
+			if(this.statsBox !== undefined) {
+				this.statsBox.loadJSON(json);
+			}
 		}
-		this.statsBox.show();
-
-		//animations.card.oppCharacterEnters(this.character,function (card) {});
-	}
-
-	hideUI() {
-		this.attacks.forEach(function (attack) {
-			attack.hideLeft();
-		});
-		this.statsBox.hideRight();
 	}
 
 	draw() {
@@ -74,7 +66,6 @@ class CardDuelOpp extends  Card {
 			this.applyTransformations();
 			this.character.draw();
 			this.statsBox.draw();
-			//this.lockInBtn.draw();
 
 			this.attacks.forEach(function (attack) {
 				attack.draw();
@@ -92,5 +83,23 @@ class CardDuelOpp extends  Card {
 			if(this.debug) {this.debugDraw()}
 			pop();
 		}
+	}
+	//-------------------------------------------------------------------------- animations
+	show() {
+		this.character._playerWalkIn();
+
+		for(let attack of this.attacks) {
+			attack.show();
+		}
+		this.statsBox.show();
+
+		//animations.card.oppCharacterEnters(this.character,function (card) {});
+	}
+
+	hideUI() {
+		this.attacks.forEach(function (attack) {
+			attack.hideLeft();
+		});
+		this.statsBox.hideRight();
 	}
 }

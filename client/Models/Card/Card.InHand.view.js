@@ -106,4 +106,36 @@ class CardInHand extends Card {
 			}
 		}
 	}
+	//-------------------------------------------------------------------------- animations
+	stateChangeAnimation(from,to,json) {
+		if(from === 'inHand' && to === 'selected' && this.isPlayerCard) {
+			this._moveOffDown(json);
+			return false; //json was not loaded
+		} else if(from === 'selected' && to === 'inHand' && this.isPlayerCard) {
+			this._moveIn(json);
+			return false; //json was not loaded
+		} else if(from === 'dueling' && to === 'inHand') {
+			this._moveIn(json);
+			return false; //json was not loaded
+		} else {
+			return super.stateChangeAnimation(from,to,json);
+		}
+	}
+	_moveIn(json) {
+		this.moveToLocal(0,0,function (card) {
+			card.currentState = json.currentState;
+			card.loadJSON(json);
+		},defaults.card.inHand.animationTimes.moveIn);
+	}
+	_moveOffDown(json) {
+		this.moveToGlobal(this.global.x,height,function (card) {
+			card.currentState = json.currentState;
+			card.loadJSON(json);
+		},defaults.card.inHand.animationTimes.moveOff);
+	}
+	moveOffUp() {
+		this.moveToGlobal(this.global.x,-this.local.h,function (card) {
+
+		},defaults.card.inHand.animationTimes.moveOff);
+	}
 }

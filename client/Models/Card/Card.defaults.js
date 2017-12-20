@@ -2,7 +2,29 @@ defaults.card = {
 	inHand: {
         iconScale:0.4,
 		strokeWeight: 3,
+		animationTimes: {
+        	moveOff:400,
+			moveIn:400
+		}
 	},
+	duelCharacter: {
+		animationTimes: {
+			walkIn:800,
+			turn:200,
+			walkOut:800,
+			jump:1200,
+			runToAttack:700,
+			attackHoldTimeRoot: 500,
+		}
+	},
+	duelStats: {
+		animationTimes: {
+			show:800,
+			hide:400,
+			pauseTime: 600,
+		}
+	},
+	//TODO clean this up and make better
 	duel: {
 		player: {
 			statBoxScale: {

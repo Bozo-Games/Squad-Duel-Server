@@ -314,6 +314,26 @@ class Sprite {
 			this.moveToGlobal(sprite.global.x, sprite.global.y, callBack, time);
 		}
 	}
+	holdAnimation(callBack,time=0) {
+		this.push(new AnimationValue({
+			x:this.animation.x,
+			y:this.animation.y,
+			w:this.animation.w,
+			h:this.animation.h,
+			time:time,
+			callBack:callBack
+		}));
+	}
+	shrinkToNothing(time = 200,callBack) {
+		this.push(new AnimationValue({
+			x:this.local.x + this.w/2,
+			y:this.local.y + this.h/2,
+			w:0,
+			h:0,
+			time: time,
+			callBack:callBack
+		}));
+	}
 	//------------------------------------------------------------------------------------------------ Sprite Management
 	addSubSprite(subSprite) {
 		let length = this._subSprites.length;

@@ -27,11 +27,40 @@ class CardDuelStats extends Card {
 		super.drawSubSprites();
 		pop();
 	}
+
+	//-------------------------------------------------------------------------- animations
+	stateChangeAnimation(from,to,json) {
+		if(from === 'inHand' && to === 'selected' && this.isPlayerCard) {
+			this.show(function (card) {
+				card.currentState = 'selected';
+				card.loadJSON(json);
+			},defaults.card.duelStats.animationTimes.show);
+			return false; //json was not loaded
+		} else {
+			return super.stateChangeAnimation(from,to,json);
+		}
+	}
+	swapCard(json) {
+		if(this.currentState === 'selected' && this.isPlayerCard) {
+			this.hide(function (card) {
+				card.currentState = 'inHand';
+				for(let key of ['id','health','armor','speed','power']) {
+					card[key] = json[key];
+				}
+				card.holdAnimation(function (card) {
+					card.loadJSON(json);
+				},defaults.card.duelStats.animationTimes.pauseTime)
+			},defaults.card.duelStats.animationTimes.hide);
+			return false; //json was not loaded
+		} else {
+			return super.swapCard(json);
+		}
+	}
 	show(callBack,time=800){
 		this.moveToLocal(0,0,callBack,time)
 	}
 	hide(callBack,time=800){
-		this.moveToGlobal(-this.w,this.global.y,callBack,time);
+		this.moveToGlobal(-this.w*1.1,this.global.y,callBack,time);
 	}
 	hideRight(callBack,time=800){
 		this.moveToGlobal(width,this.global.y,callBack,time);

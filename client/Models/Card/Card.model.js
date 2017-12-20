@@ -15,31 +15,12 @@ class Card extends Sprite {
 		this.loadJSON(json);
 	}
 	loadJSON(json) {
-		if(this instanceof CardDuelCharacter) {
-			console.log('loading json called  '+this.name +' vs '+json.name);
-		}
 		if(this.id !== json.id) {
-			if(this instanceof CardDuelCharacter) {
-				console.log('swaping card');
-			}
-			animations.card.swapCard(this,json);
-			return false;
+			return this.swapCard(json);
 		} else {
 			if (this.currentState !== json.currentState) {
-				if(this instanceof CardDuelCharacter) {
-					console.log('handling state change');
-				}
-				if (animations.card[this.currentState + '->' + json.currentState] !== undefined) {
-					animations.card[this.currentState + '->' + json.currentState](this, json);
-					return false;
-				} else {
-					this.currentState = json.currentState;
-					return this.loadJSON(json);
-				}
+				return this.stateChangeAnimation(this.currentState,json.currentState,json);
 			} else {
-				if(this instanceof CardDuelCharacter) {
-					console.log('actual load');
-				}
 				this.name = json.name === undefined ? 'Adventuring_Barbarian' : json.name;
 				this.armor = json.armor === undefined ? 1 : json.armor;
 				this.health = json.health === undefined ? 1 : json.health;
@@ -64,5 +45,24 @@ class Card extends Sprite {
 		}
 		return false;
 	}
+	get isPlayerCard() {
+		return currentGame.isPlayerCard(this.id);
+	}
+	get isOppCard() {
+		return currentGame.isOppCard(this.id);
+	}
+	//-------------------------------------------------------------------------- animations
+	stateChangeAnimation(from,to,json) {
+		console.log(this.constructor.name + ' is changing state from ('+from+') to ('+to+') without animation');
+		this.currentState = to;
+		return this.loadJSON(json);
+	}
+	swapCard(json) {
+		console.log(this.constructor.name + ' is changing from ('+this.name+') to ('+json.name+') without animation');
+		this.id = json.id;
+		this.currentState = json.currentState;
+		return this.loadJSON(json);
+	}
+
 
 }
