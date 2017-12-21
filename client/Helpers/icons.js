@@ -1,8 +1,8 @@
 let icons = {
 	loading: undefined,
 	loadedCount: 0,
-	getCharacter: function (name,loop) {
-		let img = icons.card[name][loop][frameCount % icons.card[name][loop].length];
+	getCharacter: function (name,loop,offset = 0) {
+		let img = icons.card[name][loop][(frameCount+offset) % icons.card[name][loop].length];
 		if (img.name !== 'p5.Image') {
 			loadCharacterAssets(icons.card[name]);
 			img = icons.loading;

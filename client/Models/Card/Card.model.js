@@ -51,6 +51,15 @@ class Card extends Sprite {
 	get isOppCard() {
 		return currentGame.isOppCard(this.id);
 	}
+	get loop(){
+		return this._loop;
+	}
+	set loop(newLoop) {
+		this._loop = newLoop;/*
+		if(this.currentState === 'dead') {
+			this._loop = 'die';
+		}*/
+	}
 	//-------------------------------------------------------------------------- animations
 	stateChangeAnimation(from,to,json) {
 		console.log(this.constructor.name + ' is changing state from ('+from+') to ('+to+') without animation');

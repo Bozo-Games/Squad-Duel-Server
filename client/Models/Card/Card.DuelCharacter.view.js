@@ -2,13 +2,33 @@ class CardDuelCharacter extends Card {
 	constructor(json) {
 		json = json === undefined ? {} : json;
 		super(json);
+		this.loopOffSet = 0;
+		this.framesToEnd = -1;
+	}
+	get loop(){
+		return this._loop;
+	}
+	set loop(newLoop) {
+		this._loop = newLoop;
+		if(newLoop === 'die') {
+			this.loopOffSet = 12 - frameCount % 12; //12 is the number of frames in the animation
+			this.framesToEnd = 11;
+		}
 	}
 	draw() {
 		if(this.id !== undefined) {
 			push();
 			this.applyTransformations();
 			//rect(this.global.x, this.global.y, this.global.h, this.global.h);
-			let img = icons.getCharacter(this.name, this.loop);
+
+			let img = icons.getCharacter(this.name, this.loop,this.loopOffSet);
+			if(this.loop === 'die') {
+				if(this.framesToEnd >= 0) {
+					this.framesToEnd--;
+				} else {
+					img = icons.card[this.name].dead;
+				}
+			}
 			push();
 			if(this.isOppCard) {
 				if(this.animation.w > 0) {
@@ -36,6 +56,10 @@ class CardDuelCharacter extends Card {
 				card.loadJSON(json);
 			},defaults.card.duelCharacter.animationTimes.jump);
 			return false;
+		} else if(to === 'dead') {
+			this.loop = 'die';
+			this.currentState = 'dead';
+			this.loadJSON(json);
 		} else {
 			return super.stateChangeAnimation(from, to, json);
 		}
@@ -55,7 +79,7 @@ class CardDuelCharacter extends Card {
 			y: this.global.y+this.h
 		};
 		if(this.isOppCard) {
-			outLoc.x = width;
+			outLoc.x = width+this.w*2;
 			outLoc.y = this.global.y - this.h;
 		}
 		this.flipHorizontally(function (card) {

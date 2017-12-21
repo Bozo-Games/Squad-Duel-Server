@@ -117,6 +117,9 @@ class CardInHand extends Card {
 		} else if(from === 'dueling' && to === 'inHand') {
 			this._moveIn(json);
 			return false; //json was not loaded
+		} else if(from === 'dueling' && to === 'dead') {
+			this._moveIn(json);
+			return false; //json was not loaded
 		} else {
 			return super.stateChangeAnimation(from,to,json);
 		}

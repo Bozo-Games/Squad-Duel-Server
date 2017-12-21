@@ -119,10 +119,11 @@ class Duel extends Sprite {
 			this.saveCardCurrentStats(json);
 			this.loadJSON(json);
 		} else if(from === 'newAttack' && to === 'attackFinished') {
-			this.showAttackHappening(json);
-			this.currentState = json.currentState;
-			this.saveCardCurrentStats(json);
-			this.loadJSON(json);
+			this.showAttackHappening(json,function (duel) {
+				duel.currentState = json.currentState;
+				duel.saveCardCurrentStats(json);
+				duel.loadJSON(json);
+			});
 		} else if(from === 'attackFinished' && to === 'newAttack') {
 			this.currentState = json.currentState;
 			this.saveCardCurrentStats(json);
@@ -130,11 +131,11 @@ class Duel extends Sprite {
 			if(currentGame.iAmPrimaryPlayer) {
 				network.processDuel();
 			}
-		} else if(from === 'attackFinished' && to === 'displayResults') {
+		} else if(to === 'displayResults') {
 			this.showDuelResults();
 			this.currentState = to;
 			return this.loadJSON(json);
-		}else if(from === 'displayResults' && to === 'waitingForCards') {
+		}else if((from === 'displayResults' || from === 'attackFinished') && to === 'waitingForCards') {
 			this.hideDuelResultsAndReset(json);
 			return false;
 		} else {
@@ -164,6 +165,7 @@ class Duel extends Sprite {
 				h:currentGame.local.h * defaults.duel.scale.h,
 				parentSprite:currentGame
 			});
+			console.log('clearing the duel for reset');
 			currentGame.duel.loadJSON(json);
 		},1000);
 
@@ -181,13 +183,17 @@ class Duel extends Sprite {
 			attack.touchEnabled = true;
 		});
 	}
-	showAttackHappening(json) {
+	showAttackHappening(json,callBack) {
 		if(this.turns.length >0) {
 			let turn = this.turns[0];
 			this.turns.splice(0,1);
 			let armorDMGJSON = {x: 0,y: 0,w: 100,h: 40,fillColor: colors.card.armor};
 			let healthDMGJSON = {x: 0,y: 0,w: 100,h: 40,fillColor: colors.card.health};
+			let duel = this;
 			let attackAnimationCallBack = function (attacker,defender) {
+				if(typeof callBack === 'function') {
+					callBack(duel);
+				}
 				if(currentGame.iAmPrimaryPlayer) {
 					network.processDuel();
 				}
@@ -206,7 +212,6 @@ class Duel extends Sprite {
 				defenderLetter = currentGame.playerLetter;
 			}
 
-			let duel = this;
 			if(json['card'+currentGame.oppLetter].health !== this[defender+'CurrentCard'].health) {
 				healthDMGJSON.text = json['card' + defenderLetter].health - this[defender+'CurrentCard'].health;
 				healthDMGJSON.parentSprite = this[defender+'Card'];

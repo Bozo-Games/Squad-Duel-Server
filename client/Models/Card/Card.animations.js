@@ -1,32 +1,5 @@
 animations.card = {
-	"inHand->selected": function (card, json) {
-		if(card instanceof CardDuelCharacter) {
-			if(currentGame.isPlayerCard(card.id)) {
-				card.loop = 'walk';
-				card.moveToLocal(0,0,function (card) {
-					card.loop = 'idle';
-					card.currentState = 'selected';
-					card.loadJSON(json);
-				},800);
-			} else {
-				card.currentState = 'selected';
-				card.loadJSON(json);
-			}
-		} else if(card instanceof CardDuelStats) {
-			if(currentGame.isPlayerCard(card.id)) {
-				card.show(function (card) {
-					card.currentState = 'selected';
-					card.loadJSON(json);
-				},800);
-			} else {
-				card.currentState = 'selected';
-				card.loadJSON(json);
-			}
-		} else {
-			card.currentState = 'selected';
-			card.loadJSON(json);
-		}
-	},
+
 	"selected->inHand": function (card, json) {
 		if(card instanceof CardDuelCharacter) {
 			if (currentGame.isPlayerCard(card.id)) {

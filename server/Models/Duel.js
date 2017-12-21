@@ -45,6 +45,7 @@ class Duel {
 			    onBeforeFinishDuel:this._onBeforeFinishDuel,
 			    onBeforeNextAttack:this._onBeforeNextAttack,
 			    onEnterWaitingForCards:this._onEnterWaitingForCards,
+			    onEnterAttackFinished:this._onEnterAttackFinished,
 			    //All state changes globally
 			    onBeforeTransition: this._onBeforeTransition,
 			    onAfterTransition:  this._onAfterTransition,
@@ -186,6 +187,12 @@ class Duel {
 		logs.log(E.logs.duel,'attack '+letter +' selected '+ attack.id);
 		this['attack'+letter] = attack;
 		return (this.attackA !== undefined && this.attackB !== undefined);
+	}
+	_onEnterAttackFinished(lifecyle) {
+    	if(this.cardA.health <= 0 ||this.cardB.health <= 0) {
+    		this.turns = [];
+	    }
+	    return true;
 	}
 	_onEnterInitiativeDone(lifecycle) {
     	this.cardA.duel();
