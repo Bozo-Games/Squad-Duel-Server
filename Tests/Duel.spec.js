@@ -1,10 +1,10 @@
 
 const assert = require('assert');
 const seedrandom = require('seedrandom');
-const defaults = require('../server/Helpers/defaults.js');
-const logger = require('../server/Helpers/logger.js');
-const Duel = require('../server/Models/Duel.js');
-const Card = require('../server/Models/Card.js');
+const defaults = require('../server/Old/Helpers/defaults.js');
+const logger = require('../server/Old/Helpers/logger.js');
+const Duel = require('../server/Old/Models/Duel.js');
+const Card = require('../server/Old/Models/Card.js');
 describe('Duel Model', function () {
 	before(function () {
 		logger.on = false;

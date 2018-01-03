@@ -1,7 +1,7 @@
 
 const assert = require('assert');
-const Player = require('../server/Models/Player.js');
-const logger = require('../server/Helpers/logger.js');
+const Player = require('../server/Old/Models/Player.js');
+const logger = require('../server/Old/Helpers/logger.js');
 describe('Player Model', function () {
 	before(function() {
 		logger.on = false;

@@ -1,4 +1,0 @@
-let animations = {
-
-};
-let animationDebug;

@@ -1,7 +1,7 @@
 
 const assert = require('assert');
-const Attack = require('../server/Models/Attack.js');
-const logger = require('../server/Helpers/logger.js');
+const Attack = require('../server/Old/Models/Attack.js');
+const logger = require('../server/Old/Helpers/logger.js');
 describe('Attack Model', function () {
 	before(function() {
 		logger.on = false;

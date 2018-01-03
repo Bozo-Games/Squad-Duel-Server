@@ -1,8 +1,8 @@
 
 const assert = require('assert');
-const defaults = require('../server/Helpers/defaults.js');
-const logger = require('../server/Helpers/logger.js');
-const Card = require('../server/Models/Card.js');
+const defaults = require('../server/Old/Helpers/defaults.js');
+const logger = require('../server/Old/Helpers/logger.js');
+const Card = require('../server/Old/Models/Card.js');
 describe('Card Model', function () {
 	before(function() {
 		logger.on = false;
