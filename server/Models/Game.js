@@ -29,10 +29,10 @@ class Game {
 		this.draftB = new Draft();
 	}
 	playerDraftsArchetype(socketID,ArchetypeID) {
-		if(this.playerA.socketID == socketID) {
+		if(this.playerA.socketID === socketID) {
 			this.draftA.selectOption(ArchetypeID);
-		}else if(this.playerB.socketID == socketID) {
-
+		}else if(this.playerB.socketID === socketID) {
+			this.draftB.selectOption(ArchetypeID);
 		}
 		this.updatePlayers();
 	}

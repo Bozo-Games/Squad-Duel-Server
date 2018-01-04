@@ -38,6 +38,12 @@ Array.prototype.inArray = function(comparer) {
 	}
 	return false;
 };
+Array.prototype.findIndex = function(comparer) {
+	for(var i=0; i < this.length; i++) {
+		if(comparer(this[i])) return true;
+	}
+	return false;
+};
 
 // adds an element to the array if it does not already exist using a comparer
 // function
