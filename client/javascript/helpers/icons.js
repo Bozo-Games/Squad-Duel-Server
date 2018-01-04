@@ -10,7 +10,9 @@ let icons = {
 		return img;
 	},
 	field: {
-		grass: './Assets/field/grass.png'
+		grass: './Assets/field/grass.png',
+		sand: './Assets/field/sand.png',
+		dirt: './Assets/field/dirt.png',
 	}
 };
 

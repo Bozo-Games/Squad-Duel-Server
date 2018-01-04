@@ -16,6 +16,7 @@ class Sprite {
 
 		//animations
 		this.animation = {};//defaults to nothing but filles in the value so no undefineds later
+		this.lastAnimationData = {x:0,y:0,w:1,h:1};
 		//touch
 		checkJSONValue(this,json,'touchEnabled',['touchEnabled'],false);
 
@@ -117,6 +118,7 @@ class Sprite {
 		if(old !== 0) {
 			for (let sprite of this.subSprites) {
 				sprite.w = (newRootW * sprite.w) / old;
+				sprite.x = (newRootW * sprite.x) / old;
 			}
 		}
 		this.root.w = newRootW;
@@ -126,6 +128,7 @@ class Sprite {
 		if(old !== 0) {
 			for (let sprite of this.subSprites) {
 				sprite.h = (newRootH * sprite.h) / old;
+				sprite.y = (newRootH * sprite.y) / old;
 			}
 		}
 		this.root.h = newRootH;
@@ -149,9 +152,24 @@ class Sprite {
 		this._animation = newAnimation;
 		this._onAnimationEnd = Animation.on("animationDone",function (data) {
 			if(data.instance.id === this.animation.id) {
-				//this is an example
+				if(typeof this.animation.callBack === 'function'){
+					this.animation.callBack();
+				}
 			}
 		}.bind(this))
+	}
+	//-------------------------------------------------------------------------------------------------- Data Management
+	loadJSON(json) {
+		Client.loadJSON(this,json);
+	}
+	animate(json) {
+		this.animation =  {
+			startFrame:{t:500},
+			keyFrames:[
+				{w:0.8,h:.8,t:250},
+				{w:1.2,h:1.2,t:250},
+				{w:1,h:1,t:250}
+			]};
 	}
 	//---------------------------------------------------------------------------------------------------------- Drawing
 
@@ -233,20 +251,6 @@ class Sprite {
 			}
 		}
 		return didTap;
-	}
-	//-------------------------------------------------------------------------------------------------- Data Management
-	loadJSON(json) {
-		Client.loadJSON(this,json);
-	}
-	animate(json) {
-		this.animation =  {
-			startFrame:{t:500},
-			keyFrames:[
-				{x:100,t:500},
-				{x:100,y:100,t:1000},
-				{w:2,h:3,t:1000},
-				{w:1,h:1,t:1000},
-				{x:0,y:0,t:500},]};
 	}
 	//------------------------------------------------------------------------------------------------ Sprite Management
 	addSubSprite(subSprite) {

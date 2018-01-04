@@ -2,18 +2,20 @@ class BiomeView extends Sprite {
 	constructor(json) {
 		json = json === undefined ? {} : json;
 		super(json);
-		this.biome = json.biome === undefined ? 'grass' : json.biome;
-		this.number = json.number
+		this.biome = json.biome;
+		this.number = json.number === undefined ? -1 : json.number;
 	}
 
 
 	draw() {
 		push();
 		super.applyTransformations();
-		imageMode(CENTER,CENTER);
-		image(icons.field[this.biome],0,0,this.w,this.h);
-		textAlign(CENTER,CENTER);
-		text(this.number,0,0);
+		if(this.biome !== undefined) {
+			imageMode(CENTER, CENTER);
+			image(icons.field[this.biome], 0, 0, this.w, this.h);
+			textAlign(CENTER, CENTER);
+			text(this.number, 0, 0);
+		}
 		super.drawSubSprites();
 		pop();
 	}
@@ -34,8 +36,16 @@ class BiomeView extends Sprite {
 				],
 				endFrame: {x:0,y:0}
 			};
-		} else if(this.number === 32) {
-			console.log(mouseY-this.global.y +' >= ' +((-this.global.h/4) / (this.global.w/2)) * (mouseX-this.global.x) + 0 )
+		}
+	}
+
+	animate(json) {
+		if(this.biome === undefined) {
+			this.biome = json.biome;
+			this.animation = {
+				startFrame: {x: 0, y: -height*2,t:random(200,2000)},
+				keyFrames: [{x:0,y:0}]
+			}
 		}
 	}
 }

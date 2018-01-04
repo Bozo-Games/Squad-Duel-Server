@@ -5,9 +5,9 @@ class Field {
 		json = json === undefined ? {} : json;
 		this.benchA = new FieldSection(json.benchA);
 		this.sideA = new FieldSection(json.sideA);
-		this.middle = new FieldSection(json.middle);
-		this.sideB = new FieldSection(json.sideB);
-		this.benchB = new FieldSection(json.sideB);
+		this.middle = new FieldSection({biome:'sand'});//json.middle);
+		this.sideB = new FieldSection({biome:'dirt'});//json.sideB);
+		this.benchB = new FieldSection({biome:'dirt'});//json.benchB);
 	}
 	get json() {
 		return {

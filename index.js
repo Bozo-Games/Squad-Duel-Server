@@ -24,12 +24,11 @@ io.on('connection', function(socket) {
 	socket.on('debug',function (msg) {
 		console.log('debug msg - '+msg);
 	});
-	socket.on('give input',function (data) {
-		data.socketID = socket.id;
-		serverFSM.handleInput(game,data);
-	});
 	socket.on('disconnect',function (reason) {
 		currentGame.playerLeave(socket);
+	});
+	socket.on('draft archetype',function (archetypeID) {
+		currentGame.playerDraftsArchetype(socket.id,archetypeID);
 	});
 });
 
