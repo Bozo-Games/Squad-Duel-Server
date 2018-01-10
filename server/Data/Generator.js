@@ -32,6 +32,12 @@ let generator = {
 		{name:'Smash 3'     ,power:5    ,speed:5    ,stamina:1  ,category:'crush'   ,availability:['*']},
 		{name:'Stab 3'      ,power:5    ,speed:5    ,stamina:1  ,category:'pierce'  ,availability:['*']},
 	],
+	benchAbilities: [
+		{name:'recover'     ,power:5    ,speed:5    ,stamina:1  ,availability:['*']},
+		{name:'distract'    ,power:5    ,speed:5    ,stamina:1  ,availability:['*']},
+		{name:'shoot'       ,power:5    ,speed:5    ,stamina:1  ,availability:['*']},
+
+	],
 	guid: function() {
 		function s4() {
 			return Math.floor((1 + Math.random()) * 0x10000)
@@ -41,12 +47,25 @@ let generator = {
 		return s4() + s4() + '-' + s4();
 	}
 };
-
+//TODO move these array extensions into a better place in the code base
 Array.prototype.inArray = function(comparer) {
 	for(var i=0; i < this.length; i++) {
 		if(comparer(this[i])) return true;
 	}
 	return false;
+};
+Array.prototype.toJSON = function() {
+	let json = [];
+	for(let e of this) {
+		if(e.hasOwnProperty('json')) {
+			json.push(e.json);
+		} else if (Array.isArray(e)) {
+			json.push(e.toJSON());
+		} else {
+			json.push(JSON.stringify(e))
+		}
+	}
+	return json;
 };
 
 // adds an element to the array if it does not already exist using a comparer

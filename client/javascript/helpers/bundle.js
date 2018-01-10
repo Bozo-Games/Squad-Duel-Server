@@ -13099,8 +13099,6 @@ function validateAnimationFrame(frameData, refrence = {x:0,y:0,w:1,h:1,t:0,loop:
 	//mode options
 	// p - relative to parent
 	// g - relative to global
-	// f - a fixed value relative to global
-	// r - relative to starting Value
 
 	//timing modes
 	// l - linear
@@ -13219,15 +13217,24 @@ let AnimationFSM = new machina.BehavioralFsm({
 		instance.endFrame = validateAnimationFrame(instance.endFrame, d);
 		this.handle(instance,'*');
 	},
-	animationData: function (instance) {
+	animationData: function (instance,sprite) {
 		let data = {};
 		let p = 1;
 		if(instance.fromFrame.t > 0) {
 			//TODO calculate p based on time mode
 			p = Math.max(0,Math.min(1,((new Date()).getTime() - instance.startEpoch) / instance.fromFrame.t));
 		}
-		//TODO change calulations based on modes
-		for(let v of ['x','y','w','h']) {
+		//TODO change calulations based on modes (done?)
+		for(let v of ['x','y']){
+			data[v] =  instance.fromFrame[v] * (1-p) + instance.toFrame[v] * (p);
+			if(instance.fromFrame.mode[v] === 'g' && sprite !== undefined) {
+				data[v] = -1*sprite.root[v] + data[v];
+				if(sprite.parentSprite !== undefined) {
+					data[v] -= sprite.parentSprite.global[v];
+				}
+			}
+		}
+		for(let v of ['w','h']) {
 			data[v] =  instance.fromFrame[v] * (1-p) + instance.toFrame[v] * (p);
 		}
 		data.loop = instance.fromFrame.loop;
@@ -13318,7 +13325,6 @@ module.exports = ClientFSM;
 machina = require('machina');
 Animation = require('./StateMachines/AnimationFSM.js');
 Client = require('./StateMachines/ClientFSM.js');
-
 },{"./StateMachines/AnimationFSM.js":3,"./StateMachines/ClientFSM.js":4,"machina":2}],6:[function(require,module,exports){
 
 const helpers =  {

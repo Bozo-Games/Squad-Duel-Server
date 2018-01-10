@@ -30,5 +30,17 @@ io.on('connection', function(socket) {
 	socket.on('draft archetype',function (archetypeID) {
 		currentGame.playerDraftsArchetype(socket.id,archetypeID);
 	});
+	socket.on('draft title',function (titleID) {
+		currentGame.playerDraftsTitle(socket.id,titleID);
+	});
+	socket.on('draft ability',function (abilityID) {
+		currentGame.playerDraftsAbility(socket.id,abilityID);
+	});
+	socket.on('draft bench ability',function (abilityID) {
+		currentGame.playerDraftsBenchAbility(socket.id,abilityID);
+	});
+	socket.on('next draft',function (abilityID) {
+		currentGame.playerRequestsNextDraft(socket.id);
+	});
 });
 

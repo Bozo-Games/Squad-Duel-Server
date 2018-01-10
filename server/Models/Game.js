@@ -2,6 +2,7 @@
 const Field = require('./Field.js');
 const Player = require('./Player.js');
 const Generator = require('../Data/Generator.js');
+const Character = require('./Character/Character.js');
 const Draft = require('./Draft.js');
 class Game {
 	constructor(json) {
@@ -10,16 +11,30 @@ class Game {
 		this.playerA = new Player(json.playerA);
 		this.playerB = new Player(json.playerB);
 		this.state = 'newGame';
+		this.id = Generator.guid();
+		this.charactersA = [];
+		this.charactersB = [];
 		//ServerFSM.initialize(this);
 	}
 	get json() {
+		let charactersAJSON = [];
+		let charactersBJSON = [];
+		for(let c of this.charactersA) {
+			charactersAJSON.push(c.json);
+		}
+		for(let c of this.charactersB) {
+			charactersBJSON.push(c.json);
+		}
 		return  {
+			id:this.id,
 			playerA:this.playerA.json,
 			playerB:this.playerB.json,
 			field: this.field.json,
 			state:this.state,
 			draftA:this.draftA === undefined ? undefined : this.draftA.json,
 			draftB:this.draftB === undefined ? undefined : this.draftB.json,
+			charactersA:charactersAJSON,
+			charactersB:charactersBJSON
 		}
 	}
 	// ------------------------------------------------------------------------------------------------------- Drafting
@@ -29,10 +44,47 @@ class Game {
 		this.draftB = new Draft();
 	}
 	playerDraftsArchetype(socketID,ArchetypeID) {
-		if(this.playerA.socketID === socketID) {
-			this.draftA.selectOption(ArchetypeID);
-		}else if(this.playerB.socketID === socketID) {
-			this.draftB.selectOption(ArchetypeID);
+		let key = this.playerA.socketID === socketID ? 'A' : this.playerB.socketID === socketID ? 'B' : undefined;
+		if(key !== undefined) {
+			this['draft'+key].selectOption(ArchetypeID);
+		}
+		this.updatePlayers();
+	}
+	playerDraftsTitle(socketID,TitleID) {
+		let key = this.playerA.socketID === socketID ? 'A' : this.playerB.socketID === socketID ? 'B' : undefined;
+		if(key !== undefined) {
+			this['draft'+key].selectOption(TitleID);
+		}
+		this.updatePlayers();
+	}
+	playerDraftsAbility(socketID,AbilityID) {
+		let key = this.playerA.socketID === socketID ? 'A' : this.playerB.socketID === socketID ? 'B' : undefined;
+		if(key !== undefined) {
+			this['draft'+key].selectOption(AbilityID);
+		}
+		this.updatePlayers();
+	}
+	playerDraftsBenchAbility(socketID,BenchAbilityID) {
+		let key = this.playerA.socketID === socketID ? 'A' : this.playerB.socketID === socketID ? 'B' : undefined;
+		if(key !== undefined) {
+			this['draft'+key].selectOption(BenchAbilityID);
+		}
+		this.updatePlayers();
+	}
+	playerRequestsNextDraft(socketID) {
+		let key = this.playerA.socketID === socketID ? 'A' : this.playerB.socketID === socketID ? 'B' : undefined;
+		if(key !== undefined) {
+			let abilitiesJSON = [];
+			for(let a of this['draft'+key].abilites) {
+				abilitiesJSON.push(a.json);
+			}
+			this.charactersA.push(new Character({
+				archetypes:this['draft'+key].archetype.json,
+				title:this['draft'+key].title.json,
+				abilities: abilitiesJSON,
+				benchAbility: this['draft'+key].benchAbility.json
+			}));
+			this['draft'+key] = new Draft();
 		}
 		this.updatePlayers();
 	}
@@ -60,6 +112,7 @@ class Game {
 	}
 	updatePlayers() {
 		console.log('updating players');
+		console.log(JSON.stringify(this.json,null,'\t'))
 		if(this.playerA.isFilled) {
 			this.io.sockets.connected[this.playerA.socketID].emit('game update',this.json);
 		}

@@ -1,6 +1,8 @@
 let currentGame;
+
 function preload() {
 	icons.loading = loadImage('./Assets/icons/uncertainty.svg');
+	icons.getCharacter('Knight','idle');
 }
 
 function setup() {

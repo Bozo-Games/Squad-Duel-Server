@@ -1,3 +1,4 @@
+let debugMode = 'g';
 class Sprite {
 	constructor(json) {
 		json = json === undefined ? {} : json;
@@ -17,7 +18,9 @@ class Sprite {
 		//animations
 		this.animation = {};//defaults to nothing but filles in the value so no undefineds later
 		this.lastAnimationData = {x:0,y:0,w:1,h:1};
+		this._isAnimating = false;
 		//touch
+		this.touchEnabled = true;
 		checkJSONValue(this,json,'touchEnabled',['touchEnabled'],false);
 
 		//debug;
@@ -140,6 +143,7 @@ class Sprite {
 		}
 	}
 	set animation(newAnimation) {
+		this._isAnimating = true;
 		let la; //last animation value
 		if(this.animation !== undefined) {
 			if(this._onAnimationEnd !== undefined) {
@@ -148,10 +152,12 @@ class Sprite {
 			la = Animation.animationData(this.animation);
 			Animation.forceEnd(this.animation);
 		}
+		newAnimation.sprite = this;
 		Animation.initialize(newAnimation,la);
 		this._animation = newAnimation;
 		this._onAnimationEnd = Animation.on("animationDone",function (data) {
 			if(data.instance.id === this.animation.id) {
+				this._isAnimating = false;
 				if(typeof this.animation.callBack === 'function'){
 					this.animation.callBack();
 				}
@@ -170,13 +176,20 @@ class Sprite {
 				{w:1.2,h:1.2,t:250},
 				{w:1,h:1,t:250}
 			]};
+		return this.animation;
+	}
+	get isAnimating() {
+		return this._isAnimating;
+	}
+	get animationID() {
+		return this.animation.id;
 	}
 	//---------------------------------------------------------------------------------------------------------- Drawing
 
 	applyTransformations() {
 		let ad = {x:0,y:0,w:1,h:1};
 		if(this.animation !== undefined) {
-			ad = Animation.animationData(this.animation);
+			ad = Animation.animationData(this.animation,this);
 		}
 		rectMode(CENTER);
 		translate(this.root.x,this.root.y);
@@ -200,8 +213,7 @@ class Sprite {
 		textSize(8);
 		textStyle(NORMAL);
 		textAlign(LEFT, TOP);
-		let mode = 'g';
-		if (mode === 'p') {
+		if (debugMode === 'p') {
 			let w = this.parentSprite === undefined ? width : this.parentSprite.w;
 			let h = this.parentSprite === undefined ? height : this.parentSprite.h;
 			textAlign(CENTER, CENTER);
@@ -210,7 +222,7 @@ class Sprite {
 			text(((this.local.h) / w).toFixed(2) + '%', this.root.w / 2,0);
 			textAlign(CENTER, BOTTOM);
 			text(((this.local.w) / h).toFixed(2) + '%', 0, this.root.h / 2);
-		} else if(mode === 'g') {
+		} else if(debugMode === 'g') {
 			let b = this.global;
 			textAlign(CENTER, CENTER);
 			text(`(${(b.x).toFixed(2) + 'px'},${(b.y).toFixed(2) + 'px'})`, 0, 0);
@@ -243,14 +255,17 @@ class Sprite {
 	}
 	//------------------------------------------------------------------------------------------------- User Interaction
 	touchEnded() {
-		let didTap = ((mouseX >= this.global.x -this.global.w/2 && mouseX <=  this.global.x+this.global.w/2) &&
-			(mouseY >= this.global.y-this.global.h/2 && mouseY <= this.global.y+this.global.h/2));
-		for(let i =  this.subSprites.length-1; i >=0; i--) {
-			if(this.subSprites[i] !== undefined) {
-				this.subSprites[i].touchEnded();
+		if(this.touchEnabled) {
+			let didTap = ((mouseX >= this.global.x - this.global.w / 2 && mouseX <= this.global.x + this.global.w / 2) &&
+				(mouseY >= this.global.y - this.global.h / 2 && mouseY <= this.global.y + this.global.h / 2));
+			for (let i = this.subSprites.length - 1; i >= 0; i--) {
+				if (this.subSprites[i] !== undefined) {
+					this.subSprites[i].touchEnded();
+				}
 			}
+			return didTap;
 		}
-		return didTap;
+		return false;
 	}
 	//------------------------------------------------------------------------------------------------ Sprite Management
 	addSubSprite(subSprite) {

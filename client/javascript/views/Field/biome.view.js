@@ -3,7 +3,6 @@ class BiomeView extends Sprite {
 		json = json === undefined ? {} : json;
 		super(json);
 		this.biome = json.biome;
-		this.number = json.number === undefined ? -1 : json.number;
 	}
 
 
@@ -14,7 +13,6 @@ class BiomeView extends Sprite {
 			imageMode(CENTER, CENTER);
 			image(icons.field[this.biome], 0, 0, this.w, this.h);
 			textAlign(CENTER, CENTER);
-			text(this.number, 0, 0);
 		}
 		super.drawSubSprites();
 		pop();

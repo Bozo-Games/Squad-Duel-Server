@@ -34,12 +34,29 @@ class Network {
 	_gameUpdate(json) {
 		gd = json;
 		if(currentGame !== undefined) {
-			console.log('new game update '+JSON.stringify(json));
-			currentGame.loadJSON(json);
+			//console.log('new game update '+JSON.stringify(json));
+			if(json.id === currentGame.id || currentGame.id === undefined) {
+				currentGame.loadJSON(json);
+			} else {
+				currentGame = new GameView({x:width/2,y:height/2,w:width,h:height});
+				currentGame.loadJSON(json);
+			}
 		}
 	}
 	//------------------------------------------------------------------------------------------------------------- POST
 	draftArchetype(archetypeID) {
 		this.socket.emit('draft archetype',archetypeID)
+	}
+	draftTitle(titleID) {
+		this.socket.emit('draft title',titleID)
+	}
+	draftAbility(abilityID) {
+		this.socket.emit('draft ability',abilityID)
+	}
+	draftBenchAbility(abilityID) {
+		this.socket.emit('draft bench ability',abilityID)
+	}
+	nextDraft() {
+		this.socket.emit('next draft');
 	}
 }

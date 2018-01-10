@@ -5,8 +5,8 @@ class GameView extends Sprite {
 		super(json);
 		this.field = new FieldView({parentSprite:this,w:this.w,h:this.h});
 		this.draft = new DraftView({parentSprite:this,w:this.w,h:this.h});
-		this.state = json.sate === undefined ? 'newGame' : json.state;
-
+		this.state = json.state === undefined ? 'newGame' : json.state;
+		this.playerCharacters = [];
 		this.player = {};
 		this.opp = {};
 	}
@@ -15,8 +15,11 @@ class GameView extends Sprite {
 		super.loadJSON(json);
 	}
 	animate(json) {
+		this.id = json.id;
 		this.player = json['player'+network.playerLetter];
 		this.opp = json['player'+network.oppLetter];
+		console.log(JSON.stringify(json));
+		json.playerCharacters = json.playerCharacters === undefined ? [] : json.playerCharacters;
 		if(this.state === 'newGame' && json.state !== this.state) {
 			this.animation = {
 				startFrame: {t:300},
@@ -29,10 +32,32 @@ class GameView extends Sprite {
 					this.loadJSON(json);
 				}.bind(this)
 			}
-		} if(this.state === 'drafting') {
+		} else if(this.state === 'drafting' && json['characters'+network.playerLetter].length < 3) {
 			this.draft.loadJSON(json['draft'+network.playerLetter]);
-		} else  {
-			//this.field.loadJSON(json.field);
+		} else {
+			this.field.loadJSON(json.field);
+			this.animateCharacters(json,'player');
+		}
+	}
+
+	animateCharacters(json, isPlayer = true) {
+		let key = isPlayer ? 'player' : 'opp';
+		for(let c of json['characters'+network[key+'Letter']]) {
+			let shouldPush = true;
+			for(let pc of this[key +'Characters']) {
+				if(pc.id === c.id) {
+					pc.loadJSON(c);
+					shouldPush = false;
+					break;
+				}
+			}
+			if(shouldPush) {
+				let char = new CharacterView({
+					parentSprite: this
+				});
+				this[key +'Characters'].push(char);
+				char.loadJSON(c);
+			}
 		}
 	}
 
@@ -49,8 +74,15 @@ class GameView extends Sprite {
 				connectedPlayers++;
 			}
 			text('Waiting For Players ' + connectedPlayers + '/2',0,0);
+		} else if(this.state === 'drafting' && this.playerCharacters.length < 3) {
+			//super.drawSubSprites();
+			this.draft.draw();
+			textAlign(CENTER,TOP);
+			fill('#000');
+			text('Drafting Character '+(this.playerCharacters.length+1) + '/3',0,-this.h/2);
 		} else {
-			super.drawSubSprites();
+			this.field.draw();
+			//super.drawSubSprites();
 		}
 		pop();
 	}
