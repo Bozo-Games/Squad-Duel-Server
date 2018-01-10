@@ -54,20 +54,20 @@ Array.prototype.inArray = function(comparer) {
 	}
 	return false;
 };
-/*
-Array.prototype.toJSON = function() {
+
+Array.prototype.toBozoJSON = function() {
 	let json = [];
 	for(let e of this) {
-		if(e.hasOwnProperty('json')) {
+		if(e.json !== undefined) {
 			json.push(e.json);
 		} else if (Array.isArray(e)) {
-			json.push(e.toJSON());
+			json.push(e.toBozoJSON());
 		} else {
 			json.push(JSON.stringify(e))
 		}
 	}
 	return json;
-};*/
+};
 
 // adds an element to the array if it does not already exist using a comparer
 // function

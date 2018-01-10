@@ -17,14 +17,6 @@ class Game {
 		//ServerFSM.initialize(this);
 	}
 	get json() {
-		let charactersAJSON = [];
-		let charactersBJSON = [];
-		for(let c of this.charactersA) {
-			charactersAJSON.push(c.json);
-		}
-		for(let c of this.charactersB) {
-			charactersBJSON.push(c.json);
-		}
 		return  {
 			id:this.id,
 			playerA:this.playerA.json,
@@ -33,8 +25,8 @@ class Game {
 			state:this.state,
 			draftA:this.draftA === undefined ? undefined : this.draftA.json,
 			draftB:this.draftB === undefined ? undefined : this.draftB.json,
-			charactersA:charactersAJSON,
-			charactersB:charactersBJSON
+			charactersA:this.charactersA.toBozoJSON(),
+			charactersB:this.charactersB.toBozoJSON()
 		}
 	}
 	// ------------------------------------------------------------------------------------------------------- Drafting
