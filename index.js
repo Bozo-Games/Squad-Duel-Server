@@ -20,9 +20,12 @@ let currentGame = new Game();
 currentGame.io = io;
 io.on('connection', function(socket) {
 	currentGame.newPlayer(socket);
-
 	socket.on('debug',function (msg) {
 		console.log('debug msg - '+msg);
+		console.log(socket.id);
+		let r = socket.emit('debug',msg + ' back');
+		console.log(r.connected);
+		socket.broadcast.emit('debug', 'hello friends!');
 	});
 	socket.on('disconnect',function (reason) {
 		currentGame.playerLeave(socket);
@@ -39,7 +42,7 @@ io.on('connection', function(socket) {
 	socket.on('draft bench ability',function (abilityID) {
 		currentGame.playerDraftsBenchAbility(socket.id,abilityID);
 	});
-	socket.on('next draft',function (abilityID) {
+	socket.on('next draft',function () {
 		currentGame.playerRequestsNextDraft(socket.id);
 	});
 });

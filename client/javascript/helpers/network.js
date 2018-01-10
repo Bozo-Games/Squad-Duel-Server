@@ -2,6 +2,7 @@ let gd;
 class Network {
 	constructor() {
 		this.socket = io();
+		console.log(this.socket);
 		this.socket.on('debug',this._debug.bind(this));
 		this.socket.on('letter assign',this._letterAssign.bind(this));
 		this.socket.on('game update',this._gameUpdate.bind(this));
@@ -33,8 +34,9 @@ class Network {
 	}
 	_gameUpdate(json) {
 		gd = json;
+		console.log('game update');
 		if(currentGame !== undefined) {
-			//console.log('new game update '+JSON.stringify(json));
+			console.log('new game update '+JSON.stringify(json));
 			if(json.id === currentGame.id || currentGame.id === undefined) {
 				currentGame.loadJSON(json);
 			} else {

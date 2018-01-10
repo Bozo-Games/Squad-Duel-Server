@@ -12,6 +12,7 @@ class GameView extends Sprite {
 	}
 
 	loadJSON(json) {
+		console.log('load called');
 		super.loadJSON(json);
 	}
 	animate(json) {

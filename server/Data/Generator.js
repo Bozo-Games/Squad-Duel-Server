@@ -47,13 +47,14 @@ let generator = {
 		return s4() + s4() + '-' + s4();
 	}
 };
-//TODO move these array extensions into a better place in the code base
+
 Array.prototype.inArray = function(comparer) {
 	for(var i=0; i < this.length; i++) {
 		if(comparer(this[i])) return true;
 	}
 	return false;
 };
+
 Array.prototype.toJSON = function() {
 	let json = [];
 	for(let e of this) {

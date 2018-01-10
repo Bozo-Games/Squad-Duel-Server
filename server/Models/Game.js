@@ -112,8 +112,10 @@ class Game {
 	}
 	updatePlayers() {
 		console.log('updating players');
-		console.log(JSON.stringify(this.json,null,'\t'))
+
 		if(this.playerA.isFilled) {
+			console.log(JSON.stringify(this.json,null,'\t'));
+			this.io.sockets.connected[this.playerA.socketID].emit('debug','test');
 			this.io.sockets.connected[this.playerA.socketID].emit('game update',this.json);
 		}
 		if(this.playerB.isFilled) {

@@ -11,8 +11,8 @@
     "machina": "^2.0.0"
   },
   "devDependencies": {
-    "mocha": "^4.0.1",
-    "nodemon": "^1.14.0",
+    "mocha": "^4.1.0",
+    "nodemon": "^1.14.10",
     "nyc": "^11.4.1",
     "seedrandom": "^2.4.3"
   },
