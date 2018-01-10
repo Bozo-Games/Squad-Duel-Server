@@ -54,7 +54,7 @@ Array.prototype.inArray = function(comparer) {
 	}
 	return false;
 };
-
+/*
 Array.prototype.toJSON = function() {
 	let json = [];
 	for(let e of this) {
@@ -67,7 +67,7 @@ Array.prototype.toJSON = function() {
 		}
 	}
 	return json;
-};
+};*/
 
 // adds an element to the array if it does not already exist using a comparer
 // function
