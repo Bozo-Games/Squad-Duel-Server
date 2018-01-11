@@ -207,7 +207,7 @@ class DraftView extends Sprite {
 							parentSprite: this
 						});
 						this.character.loadJSON({id:'draftCharacter',name: this.title.name +' '+this.archetype.name});
-						this.endCharacterWalkOffAnimation = Animation.on("animationDone",function (data) {
+						this.endCharacterWalkOffAnimation = AnimationFSM.on("animationDone",function (data) {
 							if(data.instance.sprite.id === this.character.id) {
 								this.endCharacterWalkOffAnimation.off();
 								this.removeSubSprite(this.character);

@@ -19,6 +19,7 @@ class Sprite {
 		this.animation = {};//defaults to nothing but filles in the value so no undefineds later
 		this.lastAnimationData = {x:0,y:0,w:1,h:1};
 		this._isAnimating = false;
+		this._animationFinishedCallBacks = [];
 		//touch
 		this.touchEnabled = true;
 		checkJSONValue(this,json,'touchEnabled',['touchEnabled'],false);
@@ -44,7 +45,7 @@ class Sprite {
 		],'#000000');
 
 		//client / data manangment
-		Client.initialize(this)
+		SpriteFSM.initialize(this)
 	}
 	//---------------------------------------------------------------------------------------------------------- Getters
 	get animation() {
@@ -142,6 +143,7 @@ class Sprite {
 			this.parentSprite.subSprites.move(this.z,newZ);
 		}
 	}
+	//--------------------------------------------------------------------------------------------- Animation Management
 	set animation(newAnimation) {
 		this._isAnimating = true;
 		let la; //last animation value
@@ -149,24 +151,35 @@ class Sprite {
 			if(this._onAnimationEnd !== undefined) {
 				this._onAnimationEnd.off();
 			}
-			la = Animation.animationData(this.animation);
-			Animation.forceEnd(this.animation);
+			la = AnimationFSM.animationData(this.animation);
+			AnimationFSM.forceEnd(this.animation);
 		}
 		newAnimation.sprite = this;
-		Animation.initialize(newAnimation,la);
+		AnimationFSM.initialize(newAnimation,la);
 		this._animation = newAnimation;
-		this._onAnimationEnd = Animation.on("animationDone",function (data) {
+		this._onAnimationEnd = AnimationFSM.on("animationDone",function (data) {
 			if(data.instance.id === this.animation.id) {
 				this._isAnimating = false;
 				if(typeof this.animation.callBack === 'function'){
 					this.animation.callBack();
 				}
+				for(let callBack of this._animationFinishedCallBacks) {
+					callBack();
+				}
+				this._animationFinishedCallBacks = [];
 			}
 		}.bind(this))
 	}
+	addAnimationDoneCallBack(callBack) { //these will be removed once called
+		if(this.isAnimating) {
+			callBack();
+		} else {
+			this._animationFinishedCallBacks.push(callBack);
+		}
+	}
 	//-------------------------------------------------------------------------------------------------- Data Management
 	loadJSON(json) {
-		Client.loadJSON(this,json);
+		SpriteFSM.loadJSON(this,json);
 	}
 	animate(json) {
 		this.animation =  {
@@ -179,17 +192,20 @@ class Sprite {
 		return this.animation;
 	}
 	get isAnimating() {
-		return this._isAnimating;
+		let isAnimating = (AnimationFSM.currentState(this.animation) !== 'endFrame');
+		for(let sprite of this.subSprites) {
+			isAnimating = isAnimating || sprite.isAnimating;
+		}
+		return isAnimating;
 	}
 	get animationID() {
 		return this.animation.id;
 	}
 	//---------------------------------------------------------------------------------------------------------- Drawing
-
 	applyTransformations() {
 		let ad = {x:0,y:0,w:1,h:1};
 		if(this.animation !== undefined) {
-			ad = Animation.animationData(this.animation,this);
+			ad = AnimationFSM.animationData(this.animation,this);
 		}
 		rectMode(CENTER);
 		translate(this.root.x,this.root.y);

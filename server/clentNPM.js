@@ -1,4 +1,4 @@
 
 machina = require('machina');
-Animation = require('./StateMachines/AnimationFSM.js');
-Client = require('./StateMachines/ClientFSM.js');
+AnimationFSM = require('./StateMachines/AnimationFSM.js');
+SpriteFSM = require('./StateMachines/SpriteFSM.js');

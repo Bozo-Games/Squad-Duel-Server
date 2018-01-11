@@ -2,13 +2,13 @@ const machina = require('machina');
 const helpers = require('../helpers.js');
 const Animation = require('./AnimationFSM.js');
 
-let ClientFSM = new machina.BehavioralFsm({
+let SpriteFSM = new machina.BehavioralFsm({
 	nameSpace: 'client',
 	initialState: 'uninitialized',
 	states: {
 		uninitialized: {
 			"*": function (instance) {
-				instance.clientFSMid = helpers.guid();
+				instance.SpriteFSMid = helpers.guid();
 				this.deferUntilTransition(instance);
 				this.transition(instance, "readyForData");
 			}
@@ -43,9 +43,34 @@ let ClientFSM = new machina.BehavioralFsm({
 				this.deferUntilTransition(instance,"readyForData");
 			}
 		},
+		waitingOnSubSprites: {
+			_onEnter: function(instance) {
+				instance.waitingOnSubeSpritesToFinish = Animation.on("animationDone",function (data) {
+					let stillAnimating = false;
+					for(let sprite of instance.subSprites) {
+						stillAnimating = stillAnimating || sprite.isAnimating;
+					}
+					if(!stillAnimating) {
+						this.transition(instance,'readyForData');
+					}}.bind(this));
+			},
+			_onExit: function (instance) {
+				instance.waitingOnSubeSpritesToFinish.off();
+				instance.waitingOnSubeSpritesToFinish = undefined;
+			},
+			loadJSON: function (instance,json) {
+				this.deferUntilTransition(instance,"readyForData");
+			}
+		},
 		syncingData: {
 			_onEnter:function (instance) {
 				instance.currentJSON = instance.nextJSON;
+				for(let sprite of instance.subSprites) {
+					if(sprite.isAnimating) {
+						this.transition(instance,'waitingOnSubSprites');
+						return;
+					}
+				}
 				this.transition(instance,'readyForData');
 			},
 			loadJSON: function (instance,json) {
@@ -58,9 +83,12 @@ let ClientFSM = new machina.BehavioralFsm({
 		this.handle(instance,'*');
 	},
 	loadJSON(instance,json) {
-		ClientFSM.handle(instance,'loadJSON',json);
+		this.handle(instance,'loadJSON',json);
+	},
+	currentState: function (instance) {
+		return this.compositeState(instance);
 	}
 });
 
 
-module.exports = ClientFSM;
+module.exports = SpriteFSM;

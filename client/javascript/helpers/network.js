@@ -34,9 +34,7 @@ class Network {
 	}
 	_gameUpdate(json) {
 		gd = json;
-		console.log('game update');
 		if(currentGame !== undefined) {
-			console.log('new game update '+JSON.stringify(json));
 			if(json.id === currentGame.id || currentGame.id === undefined) {
 				currentGame.loadJSON(json);
 			} else {

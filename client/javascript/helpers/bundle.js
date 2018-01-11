@@ -13249,6 +13249,9 @@ let AnimationFSM = new machina.BehavioralFsm({
 	},
 	forceEnd: function (instance) {
 		this.handle(instance,'forceEnd');
+	},
+	currentState: function (instance) {
+		return this.compositeState(instance);
 	}
 });
 
@@ -13258,13 +13261,13 @@ const machina = require('machina');
 const helpers = require('../helpers.js');
 const Animation = require('./AnimationFSM.js');
 
-let ClientFSM = new machina.BehavioralFsm({
+let SpriteFSM = new machina.BehavioralFsm({
 	nameSpace: 'client',
 	initialState: 'uninitialized',
 	states: {
 		uninitialized: {
 			"*": function (instance) {
-				instance.clientFSMid = helpers.guid();
+				instance.SpriteFSMid = helpers.guid();
 				this.deferUntilTransition(instance);
 				this.transition(instance, "readyForData");
 			}
@@ -13299,9 +13302,34 @@ let ClientFSM = new machina.BehavioralFsm({
 				this.deferUntilTransition(instance,"readyForData");
 			}
 		},
+		waitingOnSubSprites: {
+			_onEnter: function(instance) {
+				instance.waitingOnSubeSpritesToFinish = Animation.on("animationDone",function (data) {
+					let stillAnimating = false;
+					for(let sprite of instance.subSprites) {
+						stillAnimating = stillAnimating || sprite.isAnimating;
+					}
+					if(!stillAnimating) {
+						this.transition(instance,'readyForData');
+					}}.bind(this));
+			},
+			_onExit: function (instance) {
+				instance.waitingOnSubeSpritesToFinish.off();
+				instance.waitingOnSubeSpritesToFinish = undefined;
+			},
+			loadJSON: function (instance,json) {
+				this.deferUntilTransition(instance,"readyForData");
+			}
+		},
 		syncingData: {
 			_onEnter:function (instance) {
 				instance.currentJSON = instance.nextJSON;
+				for(let sprite of instance.subSprites) {
+					if(sprite.isAnimating) {
+						this.transition(instance,'waitingOnSubSprites');
+						return;
+					}
+				}
 				this.transition(instance,'readyForData');
 			},
 			loadJSON: function (instance,json) {
@@ -13314,18 +13342,21 @@ let ClientFSM = new machina.BehavioralFsm({
 		this.handle(instance,'*');
 	},
 	loadJSON(instance,json) {
-		ClientFSM.handle(instance,'loadJSON',json);
+		this.handle(instance,'loadJSON',json);
+	},
+	currentState: function (instance) {
+		return this.compositeState(instance);
 	}
 });
 
 
-module.exports = ClientFSM;
+module.exports = SpriteFSM;
 },{"../helpers.js":6,"./AnimationFSM.js":3,"machina":2}],5:[function(require,module,exports){
 
 machina = require('machina');
-Animation = require('./StateMachines/AnimationFSM.js');
-Client = require('./StateMachines/ClientFSM.js');
-},{"./StateMachines/AnimationFSM.js":3,"./StateMachines/ClientFSM.js":4,"machina":2}],6:[function(require,module,exports){
+AnimationFSM = require('./StateMachines/AnimationFSM.js');
+SpriteFSM = require('./StateMachines/SpriteFSM.js');
+},{"./StateMachines/AnimationFSM.js":3,"./StateMachines/SpriteFSM.js":4,"machina":2}],6:[function(require,module,exports){
 
 const helpers =  {
 	checkJSONValue: function(that,json,name,possibleNames,defaultValue) {

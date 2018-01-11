@@ -154,6 +154,9 @@ let AnimationFSM = new machina.BehavioralFsm({
 	},
 	forceEnd: function (instance) {
 		this.handle(instance,'forceEnd');
+	},
+	currentState: function (instance) {
+		return this.compositeState(instance);
 	}
 });
 

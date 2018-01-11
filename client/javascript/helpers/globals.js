@@ -1,6 +1,6 @@
 let machina;
-let Animation;
-let Client;
+let AnimationFSM;
+let SpriteFSM;
 let network;
 
 

@@ -70,8 +70,8 @@ class Game {
 			for(let a of this['draft'+key].abilites) {
 				abilitiesJSON.push(a.json);
 			}
-			this.charactersA.push(new Character({
-				archetypes:this['draft'+key].archetype.json,
+			this['characters'+key].push(new Character({
+				archetype:this['draft'+key].archetype.json,
 				title:this['draft'+key].title.json,
 				abilities: abilitiesJSON,
 				benchAbility: this['draft'+key].benchAbility.json
@@ -103,10 +103,9 @@ class Game {
 		}
 	}
 	updatePlayers() {
-		console.log('updating players');
+		console.log('--------------------------------------------------------------------------------updating players');
 		if(this.playerA.isFilled) {
 			console.log(JSON.stringify(this.json,null,'\t'));
-			this.io.sockets.connected[this.playerA.socketID].emit('debug','test');
 			this.io.sockets.connected[this.playerA.socketID].emit('game update',this.json);
 		}
 		if(this.playerB.isFilled) {
