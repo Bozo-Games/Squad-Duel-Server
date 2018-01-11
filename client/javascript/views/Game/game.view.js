@@ -9,6 +9,7 @@ class GameView extends Sprite {
 		this.state = json.state === undefined ? 'newGame' : json.state;
 		this.draftingCharacter = 1;
 		this.playerCharacters = [];
+		this.oppCharacters = [];
 		this.player = {};
 		this.opp = {};
 	}
@@ -38,15 +39,7 @@ class GameView extends Sprite {
 		} else if(this.state === 'drafting' && this.draftingCharacter < 3) {
 			this.draft.loadJSON(json['draft'+network.playerLetter]);
 		} else if(this.state !== 'newGame'){
-			if(this.draft !== undefined) {
-				this.draft.addAnimationDoneCallBack(function () {
-					this.field.loadJSON(json.field);
-					this.removeSubSprite(this.draft);
-					this.draft = undefined;
-				}.bind(this));
-			} else {
-				this.field.loadJSON(json.field);
-			}
+			this.field.loadJSON(json.field);
 			this.animateCharacters(json,'player');
 		}
 	}
@@ -84,16 +77,38 @@ class GameView extends Sprite {
 				connectedPlayers++;
 			}
 			text('Waiting For Players ' + connectedPlayers + '/2',0,0);
-		} else if(this.state === 'drafting' && this.playerCharacters.length < 3) {
-			//super.drawSubSprites();
-			this.draft.draw();
-			textAlign(CENTER,TOP);
-			fill('#000');
-			text('Drafting Character '+(this.draftingCharacter+1) + '/3',0,-this.h/2);
+		} else if(this.state === 'drafting') {
+			if( this.playerCharacters.length < 3) {
+				//super.drawSubSprites();
+				this.draft.draw();
+				textAlign(CENTER, TOP);
+				fill('#000');
+				text('Drafting Character ' + (this.draftingCharacter + 1) + '/3', 0, -this.h / 2);
+			} else {
+				this.field.draw();
+				for(let cha of this.playerCharacters) {
+					cha.draw();
+				}
+				textAlign(CENTER, TOP);
+				fill('#000');
+				text('Waiting For Opponent To Finish Draft', 0, -this.h / 2);
+			}
 		} else {
-			this.field.draw();
 			//super.drawSubSprites();
 		}
 		pop();
+	}
+
+	swapSprite(oldSprite,newSprite) {
+		for(let key of ['playerCharacters','oppCharacters']) {
+			for(let i =0; i < this[key].length; i++) {
+				if(this[key][i].id === oldSprite.id) {
+					this.removeSubSprite(this[key][i]);
+					this[key][i] = newSprite;
+					this.addSubSprite(this[key][i]);
+					return;
+				}
+			}
+		}
 	}
 }

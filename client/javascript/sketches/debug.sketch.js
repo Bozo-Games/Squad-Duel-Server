@@ -1,23 +1,20 @@
-let field;
+let cha;
 function preload() {
 	icons.loading = loadImage('./Assets/icons/uncertainty.svg');
+	icons.getCharacter('Knight','idle');
 }
 
 function setup() {
 	createCanvas(750/1334 * windowHeight,windowHeight);
 	loadAssets(icons);
-	field = [];
 
-	for(let y = -3; y <= 3; y++) {
-		for(let x = 2; x >= -2; x--) {
-
-			field.push(new BiomeView({
-				x: y % 2 === 0 ? (width/2 + x*100) : (width/2 + x*100 + 50),
-				y: height/2 + y*25,
-				number: field.length
-			}));
-		}
-	}
+	cha = new WanderCharacterView({
+		x:width/2,
+		y:height/2,
+		w:100,
+		h:100,
+	});
+	cha.loadJSON({name:'Wandering'})
 }
 
 function windowResized() {
@@ -26,14 +23,9 @@ function windowResized() {
 
 function draw() {
 	background(180);
-	for(let b of field) {
-		b.draw();
-	}
+	cha.draw()
 }
 
 function touchEnded() {
 
-	for(let b of field) {
-		b.touchEnded();
-	}
 }

@@ -15,11 +15,13 @@ class Character {
 			this.abilities.push(new Ability(a));
 		}
 		this.benchAbility = new BenchAbility(json.benchAbility);
+		this.state = 'new';
 	}
 	get json() {
 		return {
 			id:this.id,
-			name: this.title.name + ' ' +this.archetype.name
+			name: this.title.name + ' ' +this.archetype.name,
+			state: this.state,
 		};
 	}
 }

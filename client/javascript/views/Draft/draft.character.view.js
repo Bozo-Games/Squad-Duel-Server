@@ -6,7 +6,7 @@ class DraftCharacterView extends CharacterView {
 
 	}
 
-	draw() { //todo move over to extend duel view only change is the animate
+	draw() {
 		push();
 		super.applyTransformations();
 		imageMode(CENTER);
@@ -21,7 +21,7 @@ class DraftCharacterView extends CharacterView {
 	animate(json) {
 		super.animate(json); //called bcause we want default json load before we do any animation
 		this.animation = {
-			startFrame:{t:1000,loop:'idle'},
+			startFrame:{t:600,loop:'idle'},
 			keyFrames:[
 				{loop:'attack',t:300},
 				{y:-50,t:300},
