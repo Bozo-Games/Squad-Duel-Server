@@ -19,6 +19,12 @@ class Archetype {
 			stamina: this.stamina
 		};
 	}
+	set id(newID) {
+		this._id = newID;
+	}
+	get id() {
+		return this._id;
+	}
 }
 
 module.exports = Archetype;

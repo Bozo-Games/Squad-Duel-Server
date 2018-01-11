@@ -24,7 +24,12 @@ io.on('connection', function(socket) {
 		console.log('debug msg - '+msg);
 	});
 	socket.on('disconnect',function (reason) {
-		currentGame.playerLeave(socket);
+		currentGame = new Game();
+		currentGame.io = io;
+		socket.broadcast.emit('game update',currentGame.json)
+	});
+	socket.on('join game', function () {
+		currentGame.newPlayer(socket);
 	});
 	socket.on('draft archetype',function (archetypeID) {
 		currentGame.playerDraftsArchetype(socket.id,archetypeID);

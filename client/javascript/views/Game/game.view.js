@@ -24,23 +24,28 @@ class GameView extends Sprite {
 		this.player = json['player'+network.playerLetter];
 		this.opp = json['player'+network.oppLetter];
 		this.draftingCharacter = json['characters'+network.playerLetter].length;
-		if(this.state === 'newGame' && json.state !== this.state) {
-			this.animation = {
-				startFrame: {t:300},
-				keyFrames: [
-					{w:0,h:0,t:300},
-					{w:1,h:1}
-				],
-				callBack: function () {
-					this.state = json.state;
-					this.loadJSON(json);
-				}.bind(this)
+		if(this.state === 'newGame') {
+			if(json.state !== this.state){
+				this.animation = {
+					startFrame: {t:300},
+					keyFrames: [
+						{w:0,h:0,t:300},
+						{w:1,h:1}
+					],
+					callBack: function () {
+						this.state = json.state;
+						this.loadJSON(json);
+					}.bind(this)
+				}
+			} else if(this.player.socketID !== network.socket.id) {
+				network.joinGame();
 			}
 		} else if(this.state === 'drafting' && this.draftingCharacter < 3) {
 			this.draft.loadJSON(json['draft'+network.playerLetter]);
 		} else if(this.state !== 'newGame'){
 			this.field.loadJSON(json.field);
-			this.animateCharacters(json,'player');
+			this.animateCharacters(json,true);
+			this.animateCharacters(json,false);
 		}
 	}
 	animateCharacters(json, isPlayer = true) {
@@ -86,6 +91,9 @@ class GameView extends Sprite {
 				text('Drafting Character ' + (this.draftingCharacter + 1) + '/3', 0, -this.h / 2);
 			} else {
 				this.field.draw();
+				for(let cha of this.oppCharacters) {
+					cha.draw();
+				}
 				for(let cha of this.playerCharacters) {
 					cha.draw();
 				}

@@ -37,6 +37,7 @@ class Game {
 	}
 	playerDraftsArchetype(socketID,ArchetypeID) {
 		let key = this.playerA.socketID === socketID ? 'A' : this.playerB.socketID === socketID ? 'B' : undefined;
+		console.log('-------------------------------------------------- '+ArchetypeID+ ' is selected by '+key);
 		if(key !== undefined) {
 			this['draft'+key].selectOption(ArchetypeID);
 		}

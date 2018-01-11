@@ -1,10 +1,10 @@
 class WanderCharacterView extends CharacterView {
 	constructor(json) {
 		super(json);
+		this.animation = this.wander();
 	}
 	animate(json) {
 		super.animate(json);
-		this.animation = this.wander();
 	}
 
 	draw() {
@@ -21,9 +21,9 @@ class WanderCharacterView extends CharacterView {
 	}
 
 	wander() {
-		if(random() > 0.5) {
-			let x = random(this.root.w, width-this.root.w);
-			let y = random(this.root.h, height-this.root.h);
+		if(random() > 0.25) {
+			let x = random(this.root.w/2, width-this.root.w/2);
+			let y = random(this.root.h/2, height-this.root.h/2);
 			let d = ((this.global.x - x) ** 2 + (this.global.y - y) ** 2) ** 0.5;
 			let w = 1;
 			if(x<this.global.x) {

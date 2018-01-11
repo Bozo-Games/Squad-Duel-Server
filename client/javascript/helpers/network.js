@@ -44,6 +44,9 @@ class Network {
 		}
 	}
 	//------------------------------------------------------------------------------------------------------------- POST
+	joinGame() {
+		this.socket.emit('join game');
+	}
 	draftArchetype(archetypeID) {
 		this.socket.emit('draft archetype',archetypeID)
 	}

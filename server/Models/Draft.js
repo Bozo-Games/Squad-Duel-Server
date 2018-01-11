@@ -72,7 +72,7 @@ class Draft {
 		this.currentOptions = [];
 		while(this.currentOptions.length < 3) {
 			let potential = Generator.titles[Math.floor(Math.random()*Generator.titles.length)];
-			potential.id = Generator.guid();
+			potential.id = potential.id === undefined ? Generator.guid() : potential.id;
 			this.currentOptions.pushIfNotExist(potential,function (existing) {
 				return potential.name === existing.name;
 			});
@@ -84,7 +84,7 @@ class Draft {
 		this.currentOptions = [];
 		while(this.currentOptions.length < 3) {
 			let potential = Generator.abilities[Math.floor(Math.random()*Generator.abilities.length)];
-			potential.id = Generator.guid();
+			potential.id = potential.id === undefined ? Generator.guid() : potential.id;
 			let shouldPush = false;
 			for(let availible of potential.availability) {
 				if(availible === '*') {
@@ -110,7 +110,7 @@ class Draft {
 		this.currentOptions = [];
 		while(this.currentOptions.length < 3) {
 			let potential = Generator.benchAbilities[Math.floor(Math.random()*Generator.benchAbilities.length)];
-			potential.id = Generator.guid();
+			potential.id = potential.id === undefined ? Generator.guid() : potential.id;
 			let shouldPush = false;
 			for(let availible of potential.availability) {
 				if(availible === '*') {
