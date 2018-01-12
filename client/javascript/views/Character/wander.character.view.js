@@ -10,13 +10,8 @@ class WanderCharacterView extends CharacterView {
 	draw() {
 		push();
 		super.applyTransformations();
-		imageMode(CENTER);
-		let img = icons.getCharacter('Knight', this.lastAnimationData.loop,this.loopOffSet);
-		image(img,0,0,this.w,this.h);
-		textAlign(CENTER,TOP);
-		fill('#000');
-		if(this.lastAnimationData.w < 0) {scale(-1,1);}
-		text(this.name,0,this.h/2);
+		this.drawCharacter();
+		this.drawName();
 		pop();
 	}
 

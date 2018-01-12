@@ -9,6 +9,12 @@ let icons = {
 		}
 		return img;
 	},
+	stats: {
+		health:'./Assets/icons/health.svg',
+		armor: './Assets/icons/armor.svg',
+		speed: './Assets/icons/speed.svg',
+		power: './Assets/icons/power.svg',
+	},
 	field: {
 		grass: './Assets/field/grass.png',
 		sand: './Assets/field/sand.png',

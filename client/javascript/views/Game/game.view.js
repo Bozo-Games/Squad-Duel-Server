@@ -26,23 +26,27 @@ class GameView extends Sprite {
 		this.draftingCharacter = json['characters'+network.playerLetter].length;
 		if(this.state === 'newGame') {
 			if(json.state !== this.state){
-				this.animation = {
-					startFrame: {t:300},
-					keyFrames: [
-						{w:0,h:0,t:300},
-						{w:1,h:1}
-					],
-					callBack: function () {
-						this.state = json.state;
-						this.loadJSON(json);
-					}.bind(this)
-				}
+				this.screenTransition(function () {
+					this.state = json.state;
+					this.loadJSON(json);
+				}.bind(this));
 			} else if(this.player.socketID !== network.socket.id) {
 				network.joinGame();
 			}
-		} else if(this.state === 'drafting' && this.draftingCharacter < 3) {
-			this.draft.loadJSON(json['draft'+network.playerLetter]);
-		} else if(this.state !== 'newGame'){
+		} else if(this.state === 'drafting') {
+			if(this.draftingCharacter < 3) {
+				this.draft.loadJSON(json['draft' + network.playerLetter]);
+			} else if(json.state === 'drafting') {
+				this.field.loadJSON(json.field);
+				this.animateCharacters(json,true);
+				this.animateCharacters(json,false);
+			} else {
+				this.screenTransition(function () {
+					this.state = json.state;
+					this.loadJSON(json);
+				}.bind(this));
+			}
+		} else if(this.state === 'characterSelect'){
 			this.field.loadJSON(json.field);
 			this.animateCharacters(json,true);
 			this.animateCharacters(json,false);
@@ -51,6 +55,8 @@ class GameView extends Sprite {
 	animateCharacters(json, isPlayer = true) {
 		let key = isPlayer ? 'player' : 'opp';
 		for(let c of json['characters'+network[key+'Letter']]) {
+			c.isPlayer = isPlayer;
+			c.isOpp = !isPlayer;
 			let shouldPush = true;
 			for(let pc of this[key +'Characters']) {
 				if(pc.id === c.id) {
@@ -66,6 +72,16 @@ class GameView extends Sprite {
 				this[key +'Characters'].push(char);
 				char.loadJSON(c);
 			}
+		}
+	}
+	screenTransition(callBack) {
+		this.animation = {
+			startFrame: {t:300},
+			keyFrames: [
+				{w:0,h:0,t:300},
+				{w:1,h:1}
+			],
+			callBack: callBack
 		}
 	}
 

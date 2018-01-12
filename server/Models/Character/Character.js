@@ -16,12 +16,23 @@ class Character {
 		}
 		this.benchAbility = new BenchAbility(json.benchAbility);
 		this.state = 'new';
+
+		for(let key of ['health','armor','speed','stamina','power']) {
+			this[key] = this.archetype[key] + this.title[key];
+		}
+		this.currentStamina = this.stamina;
 	}
 	get json() {
 		return {
 			id:this.id,
 			name: this.title.name + ' ' +this.archetype.name,
 			state: this.state,
+			health: this.health,
+			armor: this.armor,
+			speed:this.speed,
+			power:this.power,
+			stamina: this.stamina,
+			currentStamina:this.currentStamina
 		};
 	}
 }

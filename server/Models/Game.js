@@ -29,17 +29,18 @@ class Game {
 			charactersB:this.charactersB.toBozoJSON()
 		}
 	}
-	// ------------------------------------------------------------------------------------------------------- Drafting
+	// ------------------------------------------------------------------------------------------------ Character Select
+	enterCharacterSelect() {
+		this.state = 'characterSelect';
+	}
 	// ------------------------------------------------------------------------------------------------------- Drafting
 	enterDraftMode() {
 		this.state = 'drafting';
-		console.log('Game is entering Draft Mode ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 		this.draftA = new Draft();
 		this.draftB = new Draft();
 	}
 	playerDraftsArchetype(socketID,ArchetypeID) {
 		let key = this.playerA.socketID === socketID ? 'A' : this.playerB.socketID === socketID ? 'B' : undefined;
-		console.log('-------------------------------------------------- '+ArchetypeID+ ' is selected by '+key);
 		if(key !== undefined) {
 			this['draft'+key].selectOption(ArchetypeID);
 		}
@@ -79,8 +80,11 @@ class Game {
 				abilities: abilitiesJSON,
 				benchAbility: this['draft'+key].benchAbility.json
 			}));
-			console.log(key + ' is requesting new Draft ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-			this['draft'+key] = new Draft();
+			if(this['characters'+key].length < 3) {
+				this['draft'+key] = new Draft();
+			} else {
+				this.enterCharacterSelect();
+			}
 		}
 		this.updatePlayers();
 	}
