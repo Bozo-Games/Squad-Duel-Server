@@ -59,7 +59,7 @@ class Draft {
 		this.state = 'archetypeSelect';
 		this.currentOptions = [];
 		while(this.currentOptions.length < 3) {
-			let potential = Generator.archetypes[Math.floor(Math.random()*Generator.archetypes.length)];
+			let potential = Generator.archetype();
 			potential.id = Generator.guid();
 			this.currentOptions.pushIfNotExist(potential,function (existing) {
 				return potential.name === existing.name;
@@ -71,7 +71,7 @@ class Draft {
 		this.state = 'titleSelect';
 		this.currentOptions = [];
 		while(this.currentOptions.length < 3) {
-			let potential = Generator.titles[Math.floor(Math.random()*Generator.titles.length)];
+			let potential = Generator.title();
 			potential.id = potential.id === undefined ? Generator.guid() : potential.id;
 			this.currentOptions.pushIfNotExist(potential,function (existing) {
 				return potential.name === existing.name;
@@ -83,7 +83,7 @@ class Draft {
 		this.state = 'abilitySelect';
 		this.currentOptions = [];
 		while(this.currentOptions.length < 3) {
-			let potential = Generator.abilities[Math.floor(Math.random()*Generator.abilities.length)];
+			let potential = Generator.ability();
 			potential.id = potential.id === undefined ? Generator.guid() : potential.id;
 			let shouldPush = false;
 			for(let availible of potential.availability) {
@@ -109,7 +109,7 @@ class Draft {
 		this.state = 'benchAbilitySelect';
 		this.currentOptions = [];
 		while(this.currentOptions.length < 3) {
-			let potential = Generator.benchAbilities[Math.floor(Math.random()*Generator.benchAbilities.length)];
+			let potential = Generator.benchAbility();
 			potential.id = potential.id === undefined ? Generator.guid() : potential.id;
 			let shouldPush = false;
 			for(let availible of potential.availability) {

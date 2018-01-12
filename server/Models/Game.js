@@ -30,8 +30,10 @@ class Game {
 		}
 	}
 	// ------------------------------------------------------------------------------------------------------- Drafting
+	// ------------------------------------------------------------------------------------------------------- Drafting
 	enterDraftMode() {
 		this.state = 'drafting';
+		console.log('Game is entering Draft Mode ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 		this.draftA = new Draft();
 		this.draftB = new Draft();
 	}
@@ -77,6 +79,7 @@ class Game {
 				abilities: abilitiesJSON,
 				benchAbility: this['draft'+key].benchAbility.json
 			}));
+			console.log(key + ' is requesting new Draft ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 			this['draft'+key] = new Draft();
 		}
 		this.updatePlayers();

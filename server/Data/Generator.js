@@ -1,4 +1,4 @@
-let generator = {
+let Generator = {
 	archetypes: [
 		{name:'Knight'      ,health:10  ,armor:0    ,power:2    ,speed:1    ,stamina:5},
 		{name:'Barbarian'   ,health:10  ,armor:0    ,power:2    ,speed:1    ,stamina:5},
@@ -38,6 +38,18 @@ let generator = {
 		{name:'shoot'       ,power:5    ,speed:5    ,stamina:1  ,availability:['*']},
 
 	],
+	benchAbility: function () {
+		return JSON.parse(JSON.stringify(Generator.benchAbilities[Math.floor(Math.random()*Generator.benchAbilities.length)]));
+	},
+	ability:function () {
+		return JSON.parse(JSON.stringify(Generator.abilities[Math.floor(Math.random()*Generator.abilities.length)]));
+	},
+	archetype: function () {
+		return JSON.parse(JSON.stringify(Generator.archetypes[Math.floor(Math.random()*Generator.archetypes.length)]));
+	},
+	title: function () {
+		return JSON.parse(JSON.stringify(Generator.titles[Math.floor(Math.random()*Generator.titles.length)]));
+	},
 	guid: function() {
 		function s4() {
 			return Math.floor((1 + Math.random()) * 0x10000)
@@ -80,4 +92,4 @@ Array.prototype.pushIfNotExist = function(element, comparer) {
 Array.prototype.move = function (from, to) {
 	this.splice(to, 0, this.splice(from, 1)[0]);
 };
-module.exports = generator;
+module.exports = Generator;
