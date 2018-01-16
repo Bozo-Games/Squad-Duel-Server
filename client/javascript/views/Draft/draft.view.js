@@ -27,6 +27,7 @@ class DraftView extends Sprite {
 			let optionStep = optionSize+optionX; //set the step
 			optionX = -this.w/2 + optionX + optionSize/2; //move to start
 
+
 			if(json.state === 'archetypeSelect' && this.state === 'new') {
 				this.currentOptions = [];
 				for(let optionJSON of json.currentOptions) {
@@ -38,7 +39,7 @@ class DraftView extends Sprite {
 					this.currentOptions[this.currentOptions.length-1].loadJSON(optionJSON);
 					optionX += optionStep;
 				}
-			} else if(json.state === 'titleSelect') {
+			} else if(json.state === 'titleSelect' && this.state === 'archetypeSelect') {
 				this.archetype = this.currentOptions.find(function (option) {
 					return option.id === json.archetype.id;
 				});
@@ -68,7 +69,7 @@ class DraftView extends Sprite {
 					this.currentOptions[this.currentOptions.length-1].loadJSON(optionJSON);
 					optionX += optionStep;
 				}
-			} else if(json.state === 'abilitySelect') {
+			} else if(json.state === 'abilitySelect' && this.state === 'abilitySelect') {
 				let ability = this.currentOptions.find(function (option) {
 					if(json.abilities.length > this.abilities.length) {
 						return option.id === json.abilities[this.abilities.length].id;
@@ -90,7 +91,7 @@ class DraftView extends Sprite {
 					this.currentOptions[this.currentOptions.length-1].loadJSON(optionJSON);
 					optionX += optionStep;
 				}
-			} else if(json.state === 'benchAbilitySelect') {
+			} else if(json.state === 'benchAbilitySelect' && this.state === 'abilitySelect') {
 				let ability = this.currentOptions.find(function (option) {
 					if(json.abilities.length > this.abilities.length) {
 						return option.id === json.abilities[this.abilities.length].id;
@@ -112,14 +113,88 @@ class DraftView extends Sprite {
 					this.currentOptions[this.currentOptions.length-1].loadJSON(optionJSON);
 					optionX += optionStep;
 				}
-			} else if(json.state === 'finished') {
+			} else if(json.state === 'finished' && this.state === 'benchAbilitySelect') {
 				this.benchAbility = this.currentOptions.find(function (option) {
 					return option.id === json.benchAbility.id;
 				});
 				this.animateBenchAbilityMoveUp(optionSize,json);
+			} else { //now we are looking at a hard load cause states don't align
+				if(json.state === 'archetypeSelect') {
+					this.currentOptions = [];
+					for(let optionJSON of json.currentOptions) {
+						this.currentOptions.push(new ArchetypeDraftView({parentSprite:this,
+							x:optionX,
+							y:this.h/2 - this.h/10,
+							w:optionSize,
+							h:optionSize}));
+						this.currentOptions[this.currentOptions.length-1].loadJSON(optionJSON);
+						optionX += optionStep;
+					}
+				} else if(json.state === 'titleSelect') {
+					this.constructArchetypeFromJSON(optionSize,json.archetype);
+					//current Options
+					this.currentOptions = [];
+					for(let optionJSON of json.currentOptions) {
+						this.currentOptions.push(new TitleDraftView({parentSprite:this,
+							x:optionX,
+							y:this.h/2 - this.h/10,
+							w:optionSize,
+							h:optionSize}));
+						this.currentOptions[this.currentOptions.length-1].loadJSON(optionJSON);
+						optionX += optionStep;
+					}
+				} else if(json.state === 'abilitySelect') {
+					this.constructArchetypeFromJSON(optionSize,json.archetype);
+					this.constructTitleFromJSON(optionSize,json.title);
+					this.constructAbilityFormJSON(optionSize,json.abilities);
+					//current Options
+					this.currentOptions = [];
+					for(let optionJSON of json.currentOptions) {
+						this.currentOptions.push(new AbilityDraftView({parentSprite:this,
+							x:optionX,
+							y:this.h/2 - this.h/10,
+							w:optionSize,
+							h:optionSize}));
+						this.currentOptions[this.currentOptions.length-1].loadJSON(optionJSON);
+						optionX += optionStep;
+					}
+				}
 			}
 
 			this.state = json.state;
+		}
+	}
+	constructArchetypeFromJSON(optionSize,json) {
+		this.archetype = new ArchetypeDraftView({
+			parentSprite: this,
+			x: 0, y: 0,
+			w:optionSize,h:optionSize,
+		});
+		this.archetype.animation = {
+			startFrame: {x: this.w/2, y: -this.h/2-optionSize, t: 300, mode:{x:'g',y:'g'}},
+			endFrame: {x: this.w/2, y: this.h/5 - optionSize/2}
+		};
+		this.archetype.loadJSON(json);
+	}
+	constructTitleFromJSON(optionSize,json) {
+		this.title = new TitleDraftView({
+			parentSprite: this,
+			x: this.w/2, y: this.h*(2/5) - optionSize/2,
+			w:optionSize,h:optionSize,
+		});
+		this.title.loadJSON(json);
+	}
+	constructAbilityFormJSON(optionSize,json) {
+		this.abilities = [];
+		for(let a of json) {
+			let xOff = -optionSize;
+			if(this.abilities.length>1){xOff=optionSize;}
+			this.abilities.push(new AbilityDraftView({
+				parentSprite: this,
+				x: this.w/2+xOff, y: this.h*(3/5) - optionSize/2,
+				w:optionSize,h:optionSize,
+			}))
+
 		}
 	}
 	animateArchetypeMoveUp(optionSize) {

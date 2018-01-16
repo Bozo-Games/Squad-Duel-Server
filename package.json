@@ -17,6 +17,11 @@
     "seedrandom": "^2.4.3"
   },
   "scripts": {
+    "start": "nodemon index.js --ignore 'Logs/' ",
     "test": "find ./Tests -name '*.spec.js' | xargs nyc mocha -R spec"
+  },
+  "nodemonConfig": {
+    "ignore": ["Logs/*", "Test/*"],
+    "delay": "2500"
   }
 }

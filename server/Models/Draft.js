@@ -9,20 +9,51 @@ class Draft {
 		json = json === undefined ? {} : json;
 		this.state = json.state === undefined ? "new" : json.state;
 		this.abilites = [];
+		this.currentOptions = [];
 		if(this.state === 'new') {
 			this.enterArchetypeSelect();
+		} else if(this.state === 'archetypeSelect') {
+			for(let co of json.currentOptions) {
+				this.currentOptions.push(new Archetype(co));
+			}
+		} else if(this.state === 'titleSelect') {
+			this.archetype = new Archetype(json.archetype);
+			for (let co of json.currentOptions) {
+				this.currentOptions.push(new Title(co));
+			}
+		} else if(this.state ===  'abilitySelect') {
+			this.archetype = new Archetype(json.archetype);
+			this.title = new Title(json.title);
+			for (let a of json.abilities) {
+				this.abilites.push(new Ability(a));
+			}
+			for (let co of json.currentOptions) {
+				this.currentOptions.push(new Ability(co));
+			}
+		} else if(this.state === 'benchAbilitySelect') {
+			this.archetype = new Archetype(json.archetype);
+			this.title = new Title(json.title);
+			for (let a of json.abilities) {
+				this.abilites.push(new Ability(a));
+			}
+			for (let co of json.currentOptions) {
+				this.currentOptions.push(new BenchAbility(co));
+			}
+		} else {
+			this.archetype = new Archetype(json.archetype);
+			this.title = new Title(json.title);
+			for (let a of json.abilities) {
+				this.abilites.push(new Ability(a));
+			}
+			this.benchAbility = new BenchAbility(json.benchAbility);
 		}
 	}
 	get json() {
-		let abilitiesJSON = [];
-		for(let a of this.abilites) {
-			abilitiesJSON.push(a.json);
-		}
 		return {
 			state:this.state,
 			archetype: this.archetype === undefined ? undefined : this.archetype.json,
 			title:this.title === undefined ? undefined : this.title.json,
-			abilities: abilitiesJSON,
+			abilities: this.abilites.toBozoJSON(),
 			benchAbility: this.benchAbility === undefined ? undefined : this.benchAbility.json,
 			currentOptions:this.currentOptions
 		};

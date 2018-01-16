@@ -1,33 +1,114 @@
 //const ServerFSM = require('../StateMachines/ServerFSM.js');
+const fs = require('fs');
 const Field = require('./Field.js');
 const Player = require('./Player.js');
 const Generator = require('../Data/Generator.js');
 const Character = require('./Character/Character.js');
 const Draft = require('./Draft.js');
+
+
+const path = './Logs/';
+const version = '0.0.0';
+const gameName = 'bob';//this will be the file loaded
 class Game {
 	constructor(json) {
 		json = json === undefined ? {} : json;
-		this.field = new Field(json.field);
-		this.playerA = new Player(json.playerA);
-		this.playerB = new Player(json.playerB);
-		this.state = 'newGame';
-		this.id = Generator.guid();
+
+		this.playerA = new Player();
+		this.playerB = new Player();
+		this.id = 'new';
+
 		this.charactersA = [];
 		this.charactersB = [];
+		this.checkVersion(function () {
+			this.checkName(function (json) {
+				console.log('now loading');
+				console.log(JSON.stringify(json,null,'\t'));
+				this.playerA = new Player();
+				this.playerB = new Player(); //players need to re join and need to be allowed to things words hard ...
+				this.field = new Field(json.field);
+				this.draftA = new Draft(json.draftA);
+				this.draftB = new Draft(json.draftB);
+				this.state = json.state;
+				this.id = json.id;
+				this.charactersA = [];
+				this.charactersB = [];
+			}.bind(this));
+		}.bind(this));
 		//ServerFSM.initialize(this);
 	}
 	get json() {
-		return  {
-			id:this.id,
-			playerA:this.playerA.json,
-			playerB:this.playerB.json,
-			field: this.field.json,
-			state:this.state,
-			draftA:this.draftA === undefined ? undefined : this.draftA.json,
-			draftB:this.draftB === undefined ? undefined : this.draftB.json,
-			charactersA:this.charactersA.toBozoJSON(),
-			charactersB:this.charactersB.toBozoJSON()
+		let hasPlayers = false;
+		hasPlayers = !(this.playerA === undefined || this.playerB === undefined);
+		if(hasPlayers) {hasPlayers = this.playerA.isFilled && this.playerB.isFilled;}
+		if(hasPlayers) {
+			return  {
+				id:this.id,
+				playerA:this.playerA === undefined ? {}: this.playerA.json,
+				playerB:this.playerB === undefined ? {}: this.playerB.json,
+				field:this.field === undefined ? {}: this.field.json,
+				state:this.state,
+				draftA:this.draftA === undefined ? undefined : this.draftA.json,
+				draftB:this.draftB === undefined ? undefined : this.draftB.json,
+				charactersA:this.charactersA.toBozoJSON(),
+				charactersB:this.charactersB.toBozoJSON()
+			}
+		} else {
+			return  {
+				id:this.id,
+				playerA:this.playerA === undefined ? {}: this.playerA.json,
+				playerB:this.playerB === undefined ? {}: this.playerB.json,
+				field:this.field === undefined ? {}: this.field.json,
+				state:'newGame',
+				draftA:this.draftA === undefined ? undefined : this.draftA.json,
+				draftB:this.draftB === undefined ? undefined : this.draftB.json,
+				charactersA:this.charactersA.toBozoJSON(),
+				charactersB:this.charactersB.toBozoJSON()
+			}
 		}
+
+	}
+	// ------------------------------------------------------------------------------------------------- Logging
+	checkVersion(callBack) {
+		if(fs.existsSync(path+version)) {
+			console.log('version ' + version +' exists checking for existing game named ' + gameName);
+			callBack();
+		} else {
+			console.log('version ' + version + ' is missing creating new version and game');
+			fs.mkdirSync(path + version,function(err) {
+				if (err) {
+					return console.error(err);
+				}
+				callBack();
+			});
+		}
+	}
+	checkName(callBack) {
+		if(fs.existsSync(path+version+'/'+gameName+'.json')) {
+			console.log(gameName + ' loading');
+			fs.readFile(path+version+'/'+gameName+'.json', 'utf8', function(err, data) {
+				if (err) throw err;
+				callBack(JSON.parse(data));
+			});
+		} else {
+			console.log(gameName + ' is a new game');
+			callBack({
+				field: (new Field({})).json,
+				state: 'newGame',
+				id: Generator.guid(),
+				charactersA: [],
+				charactersB: [],
+				gameHistory: [],
+			});
+		}
+	}
+	saveJSON(json) {
+		fs.writeFile(path+version+'/'+gameName+'.json', JSON.stringify(json), function(err) {
+			if(err) {
+				return console.log(err);
+			}
+			console.log("The file was saved!");
+		});
 	}
 	// ------------------------------------------------------------------------------------------------ Character Select
 	enterCharacterSelect() {
@@ -98,7 +179,9 @@ class Game {
 			this.io.sockets.connected[this.playerB.socketID].emit('letter assign','B');
 		}
 		if(this.playerA.isFilled && this.playerB.isFilled) {
-			this.enterDraftMode();
+			if(this.state === 'newGame') {
+				this.enterDraftMode();
+			}
 		}
 		this.updatePlayers();
 	}
@@ -112,13 +195,15 @@ class Game {
 	}
 	updatePlayers() {
 		console.log('--------------------------------------------------------------------------------updating players');
+		let json = this.json;
 		if(this.playerA.isFilled) {
-			console.log(JSON.stringify(this.json,null,'\t'));
-			this.io.sockets.connected[this.playerA.socketID].emit('game update',this.json);
+			console.log(JSON.stringify(json,null,'\t'));
+			this.io.sockets.connected[this.playerA.socketID].emit('game update',json);
 		}
 		if(this.playerB.isFilled) {
-			this.io.sockets.connected[this.playerB.socketID].emit('game update',this.json);
+			this.io.sockets.connected[this.playerB.socketID].emit('game update',json);
 		}
+		this.saveJSON(json);
 	}
 
 
